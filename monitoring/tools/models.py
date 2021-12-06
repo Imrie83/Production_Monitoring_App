@@ -23,3 +23,11 @@ class ToolsModel(models.Model):
         verbose_name='Allowed use time',
         null=True,
     )
+    description = models.TextField(
+        verbose_name='Description',
+        null=True,
+
+    )
+
+    def __str__(self):
+        return self.tool_name
