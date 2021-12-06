@@ -3,6 +3,10 @@ from tools.models import ToolsModel
 
 
 class ComponentsModel(models.Model):
+    """
+    A model storing information about components.
+    :model: `tools.ToolsModel`
+    """
     name = models.CharField(
         max_length=255,
         null=False,
@@ -17,6 +21,11 @@ class ComponentsModel(models.Model):
 
 
 class ComponentToolsModel(models.Model):
+    """
+    Model storing machining time for each tool on a component
+    :model: `products.ComponentsModel`
+    :model: `tools.ToolsModel`
+    """
     component_id = models.ForeignKey(
         ComponentsModel,
         on_delete=models.CASCADE,
@@ -31,6 +40,10 @@ class ComponentToolsModel(models.Model):
 
 
 class ProductsModel(models.Model):
+    """
+    Model storing information about products
+    :model: `products.ComponentsModel`
+    """
     job_no = models.CharField(
         max_length=30,
         null=False,
