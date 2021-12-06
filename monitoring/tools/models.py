@@ -2,6 +2,9 @@ from django.db import models
 
 
 class ToolsModel(models.Model):
+    """
+    A model that stores tools info.
+    """
     tool_name = models.CharField(
         max_length=255,
         null=False,
