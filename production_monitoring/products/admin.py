@@ -13,19 +13,38 @@ from products.models import (
 
 
 class ComponentToolInline(admin.TabularInline):
+    """
+    Class setting inline selection of component
+    tools from transient model.
+    :models: `ComponentToolsModel`
+    """
     model = ComponentToolsModel
 
 
 class GlassToolInline(admin.TabularInline):
+    """
+    Class setting inline selection of glass
+    tools from transient model.
+    :models: `GlassToolModel`
+    """
     model = GlassToolModel
 
 
 class ProductComponentInline(admin.TabularInline):
+    """
+    Class setting inline selection of product
+    components from transient model.
+    :models: `ProductComponent`
+    """
     model = ProductComponent
 
 
 @admin.register(OrderModel)
 class OrderAdmin(admin.ModelAdmin):
+    """
+    Class registering OrderModel in Admin panel.
+    :models: `OrderModel`
+    """
     list_display = [
         'order_number',
         'customer_id',
@@ -34,7 +53,10 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(ComponentsModel)
 class ComponentsAdmin(admin.ModelAdmin):
-
+    """
+    Class registering ComponentsModel in Admin panel.
+    :models: `ComponentsModel`
+    """
     inlines = [
       ComponentToolInline,
     ]
@@ -49,6 +71,10 @@ class ComponentsAdmin(admin.ModelAdmin):
 
 @admin.register(ProductsModel)
 class ProductAdmin(admin.ModelAdmin):
+    """
+    Class registering ProductModel in Admin Panel.
+    :models: `ProductsModel`
+    """
     inlines = [
         ProductComponentInline,
     ]
@@ -63,6 +89,10 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(CustomerModel)
 class CustomerAdmin(admin.ModelAdmin):
+    """
+    Class registering CustomerModel in Admin panel.
+    :models: `CustomerModel`
+    """
     list_display = [
         'customer_name',
         'customer_email',
@@ -72,6 +102,10 @@ class CustomerAdmin(admin.ModelAdmin):
 
 @admin.register(DoorStyleModel)
 class DoorStyleAdmin(admin.ModelAdmin):
+    """
+    Class registering DoorStyleModel in Admin panel.
+    :models: `DoorStyleModel`
+    """
     list_display = [
         'style_name',
         'style_type',
@@ -80,6 +114,10 @@ class DoorStyleAdmin(admin.ModelAdmin):
 
 @admin.register(GlassModel)
 class GlassAdmin(admin.ModelAdmin):
+    """
+    Class registering GlassModel in Admin panel.
+    :models: `GlassModel`
+    """
     inlines = [
         GlassToolInline,
     ]
