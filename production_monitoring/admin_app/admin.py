@@ -13,7 +13,7 @@ class EmployeeAdmin(admin.ModelAdmin):
 
 
 @admin.register(DepartmentModel)
-class SectionAdmin(admin.ModelAdmin):
+class DepartmentAdmin(admin.ModelAdmin):
     form = UserForm
 
 

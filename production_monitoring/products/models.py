@@ -36,6 +36,25 @@ HANDING = (
 )
 
 
+class OrderModel(models.Model):
+    """
+    Model stores JOB numbers and customers
+    """
+    order_number = models.CharField(
+        max_length=20,
+        null=False,
+        default='JOB',
+        verbose_name='Order Num.'
+    )
+    customer_id = models.ForeignKey(
+        to='CustomerModel',
+        null=False,
+        on_delete=models.CASCADE,
+        default=0,
+        verbose_name='Customer'
+    )
+
+
 class ComponentsModel(models.Model):
     """
     A model storing information about components.
@@ -56,19 +75,21 @@ class ComponentsModel(models.Model):
         choices=DOOR_TYPES,
         verbose_name='Type',
         max_length=255,
-        default='Select Type'
+        default=DOOR_TYPES[0]
+    )
+    product_type = models.IntegerField(
+        choices=PRODUCT_TYPE,
+        verbose_name='Type',
+        default=PRODUCT_TYPE[0]
     )
     component_description = models.TextField(
         null=True,
         verbose_name='Component description'
     )
-    product_type = models.IntegerField(
-        choices=PRODUCT_TYPE,
-        verbose_name='Type'
-    )
     img = models.ImageField(
         verbose_name='Image',
         null=True,
+        upload_to='static/img/fixtures',
     )
 
     class Meta:
@@ -107,11 +128,24 @@ class ProductsModel(models.Model):
     Model storing information about products
     :model: `products.ComponentsModel`
     """
+    order_num = models.ForeignKey(
+        to=OrderModel,
+        null=True,
+        verbose_name='Order number',
+        on_delete=models.CASCADE,
+    )
     job_no = models.CharField(
-        max_length=30,
+        max_length=4,
         null=False,
         unique=True,
-        verbose_name='Job number'
+        verbose_name='Line number',
+    )
+    door_type = models.CharField(
+        choices=DOOR_TYPES,
+        verbose_name='Type',
+        max_length=255,
+        default='Select Type',
+        null=False
     )
     color = models.CharField(
         choices=DOOR_COLOR,
@@ -146,10 +180,14 @@ class ProductsModel(models.Model):
         max_length=255,
         default=HANDING[0],
     )
-    customer_id = models.ForeignKey(
-        to='CustomerModel',
+    door_width = models.FloatField(
+        verbose_name='Door width',
         null=False,
-        on_delete=models.CASCADE,
+        default=0,
+    )
+    door_height = models.FloatField(
+        verbose_name='Door height',
+        null=False,
         default=0,
     )
     delivery_date = models.DateField(
@@ -162,22 +200,12 @@ class ProductsModel(models.Model):
     )
     machining_time = models.IntegerField(
         null=True,
-        verbose_name='Total machining time'
-    )
-    frame_size = models.IntegerField(
-        null=False,
-        verbose_name='Frame total length'
+        verbose_name='Total machining time',
+        editable=False,
     )
     production_date = models.DateField(
         verbose_name='Production date',
         null=True
-    )
-    door_type = models.CharField(
-        choices=DOOR_TYPES,
-        verbose_name='Type',
-        max_length=255,
-        default='Select Type',
-        null=False
     )
 
     class Meta:
@@ -206,6 +234,10 @@ class ProductComponent(models.Model):
         verbose_name='Component count'
     )
 
+    class Meta:
+        verbose_name = 'Door component'
+        verbose_name_plural = 'Door compoonents'
+
 
 class CustomerModel(models.Model):
     """
@@ -216,8 +248,7 @@ class CustomerModel(models.Model):
         verbose_name='Customer name',
         null=False,
     )
-    customer_email = models.CharField(
-        max_length=50,
+    customer_email = models.EmailField(
         verbose_name='e-mail',
         null=True,
     )
@@ -245,12 +276,14 @@ class DoorStyleModel(models.Model):
         null=False,
     )
     style_type = models.CharField(
+        choices=DOOR_TYPES,
         max_length=255,
         verbose_name='Door type',
         null=False,
     )
     img = models.ImageField(
         verbose_name='Image',
+        upload_to='static/img/styles/'
     )
 
     class Meta:
@@ -292,7 +325,8 @@ class GlassModel(models.Model):
     )
     img = models.ImageField(
         null=True,
-        verbose_name='Image'
+        verbose_name='Image',
+        upload_to='static/img/glass/'
     )
 
     class Meta:

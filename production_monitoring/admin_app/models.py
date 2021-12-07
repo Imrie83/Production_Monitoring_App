@@ -13,6 +13,12 @@ class MachineModel(models.Model):
         null=False,
         unique=True,
     )
+    machine_location = models.ForeignKey(
+        to='DepartmentModel',
+        verbose_name='Machine location',
+        null=True,
+        on_delete=models.SET(None),
+    )
 
     class Meta:
         verbose_name = 'Machine'
