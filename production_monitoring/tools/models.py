@@ -19,15 +19,23 @@ class ToolsModel(models.Model):
         verbose_name='In stock',
         null=False
     )
-    wear_limit = models.IntegerField(
-        verbose_name='Allowed use time',
+    max_run_time = models.IntegerField(
+        verbose_name='Allowed use time (in seconds)',
         null=True,
     )
     description = models.TextField(
         verbose_name='Description',
         null=True,
-
     )
+    img = models.ImageField(
+        verbose_name='Image',
+        name='image',
+        null=True,
+    )
+
+    class Meta:
+        verbose_name = 'Tool'
+        verbose_name_plural = 'Tools'
 
     def __str__(self):
         return self.tool_name
