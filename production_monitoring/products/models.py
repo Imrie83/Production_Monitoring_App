@@ -44,7 +44,8 @@ class OrderModel(models.Model):
         max_length=20,
         null=False,
         default='JOB',
-        verbose_name='Order Num.'
+        verbose_name='Order Num.',
+        help_text='order num. format - "JOB0000000"',
     )
     customer_id = models.ForeignKey(
         to='CustomerModel',
@@ -53,6 +54,13 @@ class OrderModel(models.Model):
         default=0,
         verbose_name='Customer'
     )
+
+    class Meta:
+        verbose_name = 'Order',
+        verbose_name_plural = 'Orders',
+
+    def __str__(self):
+        return self.order_number
 
 
 class ComponentsModel(models.Model):
@@ -139,6 +147,8 @@ class ProductsModel(models.Model):
         null=False,
         unique=True,
         verbose_name='Line number',
+        help_text='four digit line number',
+        default='0000',
     )
     door_type = models.CharField(
         choices=DOOR_TYPES,
@@ -205,12 +215,17 @@ class ProductsModel(models.Model):
     )
     production_date = models.DateField(
         verbose_name='Production date',
-        null=True
+        null=True,
+    )
+    finished = models.BooleanField(
+        verbose_name='Finished?',
+        editable=False,
+        null=True,
     )
 
     class Meta:
-        verbose_name = 'Product'
-        verbose_name_plural = 'Products'
+        verbose_name = 'Door Order'
+        verbose_name_plural = 'Door Orders'
 
     def __str__(self):
         return self.job_no

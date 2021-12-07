@@ -8,6 +8,7 @@ from products.models import (
     CustomerModel,
     DoorStyleModel,
     GlassModel,
+    OrderModel,
 )
 
 
@@ -21,6 +22,14 @@ class GlassToolInline(admin.TabularInline):
 
 class ProductComponentInline(admin.TabularInline):
     model = ProductComponent
+
+
+@admin.register(OrderModel)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = [
+        'order_number',
+        'customer_id',
+    ]
 
 
 @admin.register(ComponentsModel)

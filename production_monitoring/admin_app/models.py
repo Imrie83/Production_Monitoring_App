@@ -61,7 +61,7 @@ class EmployeeModel(models.Model):
     section_id = models.ManyToManyField(
         to='DepartmentModel',
         related_name='employees',
-        verbose_name='Department name'
+        verbose_name='Department name',
     )
     position = models.CharField(
         max_length=255,
@@ -75,7 +75,8 @@ class EmployeeModel(models.Model):
     machine = models.ManyToManyField(
         to=MachineModel,
         through=MachineEmployeeModel,
-        verbose_name='Machine used'
+        verbose_name='Machine used',
+        editable=False,
     )
 
     class Meta:
