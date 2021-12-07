@@ -18,6 +18,7 @@ class MachineModel(models.Model):
         verbose_name='Machine location',
         null=True,
         on_delete=models.SET(None),
+        blank=True,
     )
 
     class Meta:
@@ -57,6 +58,7 @@ class EmployeeModel(models.Model):
         verbose_name='Employee id number',
         null=False,
         default=None,
+        unique=True,
     )
     section_id = models.ManyToManyField(
         to='DepartmentModel',
@@ -65,8 +67,9 @@ class EmployeeModel(models.Model):
     )
     position = models.CharField(
         max_length=255,
-        null=False,
-        verbose_name='Position'
+        null=True,
+        blank=True,
+        verbose_name='Position',
     )
     products = models.ManyToManyField(
         to=ProductsModel,
@@ -119,7 +122,8 @@ class DepartmentModel(models.Model):
     section_name = models.CharField(
         max_length=255,
         null=False,
-        verbose_name='Department'
+        verbose_name='Department',
+        unique=True,
     )
 
     class Meta:

@@ -46,6 +46,7 @@ class OrderModel(models.Model):
         default='JOB',
         verbose_name='Order Num.',
         help_text='order num. format - "JOB0000000"',
+        unique=True,
     )
     customer_id = models.ForeignKey(
         to='CustomerModel',
@@ -71,9 +72,14 @@ class ComponentsModel(models.Model):
     name = models.CharField(
         max_length=255,
         null=False,
-        verbose_name='Component name'
+        verbose_name='Component name',
+        unique=True,
     )
-    stock = models.IntegerField(verbose_name='Stock')
+    stock = models.IntegerField(
+        verbose_name='Stock',
+        null=False,
+        default=0,
+    )
     tools_req = models.ManyToManyField(
         to=ToolsModel,
         through='ComponentToolsModel',
@@ -92,11 +98,13 @@ class ComponentsModel(models.Model):
     )
     component_description = models.TextField(
         null=True,
+        blank=True,
         verbose_name='Component description'
     )
     img = models.ImageField(
         verbose_name='Image',
         null=True,
+        blank=True,
         upload_to='static/img/fixtures',
     )
 
@@ -202,11 +210,13 @@ class ProductsModel(models.Model):
     )
     delivery_date = models.DateField(
         null=True,
+        blank=True,
         verbose_name='Delivery date',
     )
     delivery_address = models.TextField(
         verbose_name='Delivery address',
         null=True,
+        blank=True,
     )
     machining_time = models.IntegerField(
         null=True,
@@ -216,6 +226,7 @@ class ProductsModel(models.Model):
     production_date = models.DateField(
         verbose_name='Production date',
         null=True,
+        blank=True,
     )
     finished = models.BooleanField(
         verbose_name='Finished?',
@@ -266,11 +277,13 @@ class CustomerModel(models.Model):
     customer_email = models.EmailField(
         verbose_name='e-mail',
         null=True,
+        blank=True,
     )
     customer_phone = models.CharField(
         max_length=30,
         verbose_name='Phone no.',
         null=True,
+        blank=True,
     )
 
     class Meta:
@@ -318,6 +331,7 @@ class GlassModel(models.Model):
         max_length=255,
         verbose_name='Glass name',
         null=False,
+        unique=True,
     )
     glass_door_type = models.CharField(
         max_length=255,
@@ -332,16 +346,19 @@ class GlassModel(models.Model):
     )
     stock = models.IntegerField(
         null=False,
+        default=0,
         verbose_name='In stock'
     )
     description = models.TextField(
         null=True,
-        verbose_name='Description'
+        verbose_name='Description',
+        blank=True,
     )
     img = models.ImageField(
         null=True,
         verbose_name='Image',
-        upload_to='static/img/glass/'
+        upload_to='static/img/glass/',
+        blank=True,
     )
 
     class Meta:

@@ -20,3 +20,4 @@ class DepartmentAdmin(admin.ModelAdmin):
 @admin.register(MachineModel)
 class MachineAdmin(admin.ModelAdmin):
     list_display = ['name']
+    search_fields = ['name']

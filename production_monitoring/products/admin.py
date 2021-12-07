@@ -128,3 +128,5 @@ class GlassAdmin(admin.ModelAdmin):
         'stock',
         'description',
     ]
+    search_fields = ['glass_name', 'glass_door_type']
+    ordering = ['glass_name']

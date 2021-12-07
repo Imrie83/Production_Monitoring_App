@@ -10,30 +10,36 @@ class ToolsModel(models.Model):
         null=False,
         verbose_name='Tool name',
         help_text='Short tool name',
+        unique=True,
     )
     type = models.CharField(
         max_length=255,
         null=True,
         verbose_name='Type',
-        help_text='PCD - HSS - Carbide'
+        help_text='PCD - HSS - Carbide',
+        blank=True,
     )
     stock = models.IntegerField(
         verbose_name='In stock',
-        null=False
+        null=False,
+        default=0,
     )
     max_run_time = models.IntegerField(
         verbose_name='Allowed run time',
-        null=True,
+        null=False,
+        default=0,
         help_text='Maximum run time allowed before tool change - in minutes!'
     )
     description = models.TextField(
         verbose_name='Description',
         null=True,
+        blank=True,
     )
     img = models.ImageField(
         verbose_name='Image',
         name='image',
         null=True,
+        blank=True,
         upload_to='static/img/tools/'
     )
 
