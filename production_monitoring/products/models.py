@@ -8,14 +8,14 @@ DOOR_TYPES = (
 )
 
 PRODUCT_TYPE = (
-    (1, 'Lock'),
-    (2, 'Handle'),
-    (3, 'Viewer'),
-    (4, 'Knocker'),
-    (5, 'Letter plate'),
-    (6, 'Hinges'),
-    (7, 'Apertures'),
-    (8, 'Numerals'),
+    ('lock', 'Lock'),
+    ('handle', 'Handle'),
+    ('viewer', 'Viewer'),
+    ('knocker', 'Knocker'),
+    ('letter plate', 'Letter plate'),
+    ('hinges', 'Hinges'),
+    ('apertures', 'Apertures'),
+    ('numerals', 'Numerals'),
 )
 
 DOOR_COLOR = (
@@ -99,10 +99,11 @@ class ComponentsModel(models.Model):
         max_length=255,
         default=DOOR_TYPES[0]
     )
-    product_type = models.IntegerField(
+    product_type = models.CharField(
         choices=PRODUCT_TYPE,
         verbose_name='Type',
-        default=PRODUCT_TYPE[0]
+        default=PRODUCT_TYPE[0],
+        max_length=255,
     )
     component_description = models.TextField(
         null=True,
@@ -122,6 +123,8 @@ class ComponentsModel(models.Model):
 
     def short_description(self):
         return self.component_description[:50]
+
+    short_description.short_description = 'Description'
 
     def __str__(self):
         return f'{self.name}'
@@ -159,6 +162,7 @@ class ProductsModel(models.Model):
         to=OrderModel,
         null=True,
         verbose_name='Order number',
+        related_name='order',
         on_delete=models.CASCADE,
     )
     job_no = models.CharField(
@@ -257,7 +261,7 @@ class ProductsModel(models.Model):
     full_job_no.short_description = 'Job number'
 
     def __str__(self):
-        return self.full_job_no
+        return self.full_job_no()
 
 
 class ProductComponent(models.Model):

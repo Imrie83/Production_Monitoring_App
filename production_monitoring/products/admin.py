@@ -49,8 +49,14 @@ class OrderAdmin(admin.ModelAdmin):
         'order_number',
         'customer_id',
     ]
-    readonly_fields = ['show_all_lines']
+    readonly_fields = [
+        'show_all_lines',
+    ]
     list_per_page = 20
+    search_fields = [
+        'order_number',
+        'customer_id__customer_name',
+    ]
 
 
 
@@ -72,6 +78,11 @@ class ComponentsAdmin(admin.ModelAdmin):
         'stock',
     ]
     list_per_page = 20
+    search_fields = [
+        'name',
+        'product_type',
+        'door_type',
+    ]
 
 
 @admin.register(ProductsModel)
@@ -91,8 +102,13 @@ class ProductAdmin(admin.ModelAdmin):
         'delivery_date',
         'finished',
     ]
-    list_per_page = 20
-    # search_fields = ['order_num']
+    list_per_page = 201
+    search_fields = [
+        'order_num__order_number',
+        'door_type',
+        'production_date',
+        'delivery_date',
+    ]
 
 
 @admin.register(CustomerModel)
@@ -107,6 +123,11 @@ class CustomerAdmin(admin.ModelAdmin):
         'customer_phone',
     ]
     list_per_page = 20
+    search_fields = [
+        'customer_name',
+        'customer_email',
+        'customer_phone',
+    ]
 
 
 @admin.register(DoorStyleModel)
@@ -143,5 +164,11 @@ class GlassAdmin(admin.ModelAdmin):
         'description',
     ]
     list_per_page = 20
-    search_fields = ['glass_name', 'glass_door_type', 'stock']
-    ordering = ['glass_name']
+    search_fields = [
+        'glass_name',
+        'glass_door_type',
+        'stock',
+    ]
+    ordering = [
+        'glass_name',
+    ]

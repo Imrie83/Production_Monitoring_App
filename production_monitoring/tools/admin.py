@@ -18,5 +18,11 @@ class ToolsAdmin(admin.ModelAdmin):
     ]
 
     list_per_page = 20
-    ordering = ['tool_name']
-    search_fields = ['tool_name', 'type', 'stock']
+    ordering = [
+        'tool_name',
+    ]
+    search_fields = [
+        'tool_name',
+        'type',
+        'stock',
+    ]

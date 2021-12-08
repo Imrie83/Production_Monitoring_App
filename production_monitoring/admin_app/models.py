@@ -145,5 +145,14 @@ class DepartmentModel(models.Model):
         verbose_name = 'Department'
         verbose_name_plural = 'Departments'
 
+    def all_staff(self):
+        output = ''
+        staff = EmployeeModel.objects.filter(section_id=self.id)
+        for s in staff:
+            output += f'{s}\n'
+        return output
+
+    all_staff.short_description = 'Staff in department'
+
     def __str__(self):
         return self.section_name
