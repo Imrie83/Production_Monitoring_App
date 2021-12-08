@@ -16,7 +16,11 @@
                     <a href="{% url 'logout' %}">Logout</a>
                     {% endif  %}
                 </div>
-                <div class="top_menu"
+                <div class="top_menu">
+                    {% if user %}
+                    <a href="{% url 'tools' %}">Tools</a>
+                    {% endif %}
+                </div>
             </div>
             <div class="columns">
                 <div class="menu-left">

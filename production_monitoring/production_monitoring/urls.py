@@ -20,6 +20,7 @@ from admin_app.views import (
     PanelView,
     AddToolView,
     LogoutView,
+    ToolListView,
 )
 
 urlpatterns = [
@@ -29,4 +30,5 @@ urlpatterns = [
     path('panel/', PanelView.as_view(), name='panel'),
     path('add_tools/', AddToolView.as_view(), name='add_tools'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('tool_list/', ToolListView.as_view(), name='tools'),
 ]

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+    <a href="/tool_list/">Tool List</a><br>
+    <a href="/add_tools/">Add Tool</a>
+{% endblock %}
+{% block content %}
+    <ul>
+    {% for tool in tool_list %}
+        <li>
+            <h2>{{ tool.tool_name }}</h2>
+            <ol>{{ tool.type }}</ol>
+            <ol>{{ tool.stock }}</ol>
+            <ol>{{ tool.description }}</ol>
+            <ol>{{ tool.max_run_time }}</ol>
+            <ol>{{ tool.img }}</ol>
+        </li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

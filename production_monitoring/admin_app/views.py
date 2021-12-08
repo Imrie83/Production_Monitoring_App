@@ -12,12 +12,14 @@ from django.views.generic.edit import (
     DeleteView,
 )
 from admin_app.forms import LoginForm
+from tools.models import ToolsModel
 
 
 class LoginView(View):
     """
     Class displaying and validating a login form
     """
+
     def get(self, request):
         if request.user.is_authenticated:
             return redirect('/panel/')
@@ -42,9 +44,10 @@ class AddToolView(FormView):
     Class display a form allowing
     to add a new tool to database.
     """
-    template_name = 'admin_app/tool.html'
+    template_name = 'admin_app/add_tool.html'
     form_class = AddToolForm
     success_url = '/tools/'
+
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
@@ -54,9 +57,24 @@ class LogoutView(View):
     """
     Class log user out and redirects to main page
     """
+
     def get(self, request):
         logout(request)
         return redirect('/')
+
+
+class ToolListView(View):
+    """
+    Class displaying a list of all tools
+    available in database
+    """
+    def get(self, request):
+        tool_list = ToolsModel.objects.all()
+        return render(
+            request,
+            'admin_app/tool_list.html',
+            {'tool_list': tool_list}
+        )
 
 
 class PanelView(View):
@@ -64,5 +82,6 @@ class PanelView(View):
     Class display panel view
     visible after successful log in
     """
+
     def get(self, request):
         return render(request, 'admin_app/main.html')
