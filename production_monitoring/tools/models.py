@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils.html import mark_safe
+from django.utils.html import escape
 
 
 class ToolsModel(models.Model):
@@ -46,6 +48,11 @@ class ToolsModel(models.Model):
     class Meta:
         verbose_name = 'Tool'
         verbose_name_plural = 'Tools'
+
+    def short_description(self):
+        return self.description[:50]
+
+    short_description.short_description = 'Description'
 
     def __str__(self):
         return self.tool_name

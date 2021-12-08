@@ -38,7 +38,7 @@ HANDING = (
 
 class OrderModel(models.Model):
     """
-    Model stores JOB numbers and customers
+    Model stores JOB numbers and customers associated.
     """
     order_number = models.CharField(
         max_length=20,
@@ -59,6 +59,14 @@ class OrderModel(models.Model):
     class Meta:
         verbose_name = 'Order',
         verbose_name_plural = 'Orders',
+
+    @property
+    def show_all_lines(self):
+        lines = ProductsModel.objects.filter(order_num=self.id)
+        output = ''
+        for line in lines:
+            output += f'{line}\n'
+        return output
 
     def __str__(self):
         return self.order_number
@@ -87,7 +95,7 @@ class ComponentsModel(models.Model):
     )
     door_type = models.CharField(
         choices=DOOR_TYPES,
-        verbose_name='Type',
+        verbose_name='Door type',
         max_length=255,
         default=DOOR_TYPES[0]
     )
@@ -112,8 +120,11 @@ class ComponentsModel(models.Model):
         verbose_name = 'Component'
         verbose_name_plural = 'Components'
 
+    def short_description(self):
+        return self.component_description[:50]
+
     def __str__(self):
-        return f'{self.name} - {self.component_description[:30]}'
+        return f'{self.name}'
 
 
 class ComponentToolsModel(models.Model):
@@ -232,14 +243,21 @@ class ProductsModel(models.Model):
         verbose_name='Finished?',
         editable=False,
         null=True,
+        default=False,
     )
 
     class Meta:
         verbose_name = 'Door Order'
         verbose_name_plural = 'Door Orders'
+        unique_together = ['order_num', 'job_no']
+
+    def full_job_no(self):
+        return f'{self.order_num}-{self.job_no}'
+
+    full_job_no.short_description = 'Job number'
 
     def __str__(self):
-        return self.job_no
+        return self.full_job_no
 
 
 class ProductComponent(models.Model):
@@ -311,7 +329,8 @@ class DoorStyleModel(models.Model):
     )
     img = models.ImageField(
         verbose_name='Image',
-        upload_to='static/img/styles/'
+        upload_to='static/img/styles/',
+        blank=True
     )
 
     class Meta:
@@ -337,7 +356,7 @@ class GlassModel(models.Model):
         max_length=255,
         choices=DOOR_TYPES,
         default=DOOR_TYPES[0],
-        verbose_name='for door type',
+        verbose_name='Door type',
     )
     tools_req = models.ManyToManyField(
         to=ToolsModel,
@@ -364,6 +383,9 @@ class GlassModel(models.Model):
     class Meta:
         verbose_name = 'Glass'
         verbose_name_plural = 'Glass'
+
+    def short_description(self):
+        return self.description[:50]
 
     def __str__(self):
         return f'{self.glass_name} - door type allowed: {self.glass_door_type}'

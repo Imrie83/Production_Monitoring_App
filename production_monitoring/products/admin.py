@@ -49,6 +49,9 @@ class OrderAdmin(admin.ModelAdmin):
         'order_number',
         'customer_id',
     ]
+    readonly_fields = ['show_all_lines']
+    list_per_page = 20
+
 
 
 @admin.register(ComponentsModel)
@@ -64,9 +67,11 @@ class ComponentsAdmin(admin.ModelAdmin):
     list_display = [
         'name',
         'product_type',
-        'component_description',
+        'door_type',
+        'short_description',
         'stock',
     ]
+    list_per_page = 20
 
 
 @admin.register(ProductsModel)
@@ -80,11 +85,14 @@ class ProductAdmin(admin.ModelAdmin):
     ]
 
     list_display = [
-        'job_no',
+        'full_job_no',
         'door_type',
         'production_date',
-        'machining_time',
+        'delivery_date',
+        'finished',
     ]
+    list_per_page = 20
+    # search_fields = ['order_num']
 
 
 @admin.register(CustomerModel)
@@ -98,6 +106,7 @@ class CustomerAdmin(admin.ModelAdmin):
         'customer_email',
         'customer_phone',
     ]
+    list_per_page = 20
 
 
 @admin.register(DoorStyleModel)
@@ -107,6 +116,11 @@ class DoorStyleAdmin(admin.ModelAdmin):
     :models: `DoorStyleModel`
     """
     list_display = [
+        'style_name',
+        'style_type',
+    ]
+    list_per_page = 20
+    search_fields = [
         'style_name',
         'style_type',
     ]
@@ -128,5 +142,6 @@ class GlassAdmin(admin.ModelAdmin):
         'stock',
         'description',
     ]
-    search_fields = ['glass_name', 'glass_door_type']
+    list_per_page = 20
+    search_fields = ['glass_name', 'glass_door_type', 'stock']
     ordering = ['glass_name']

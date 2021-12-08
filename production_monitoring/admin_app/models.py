@@ -86,8 +86,23 @@ class EmployeeModel(models.Model):
         verbose_name = 'Employee'
         verbose_name_plural = 'Employees'
 
+    def display_employee_name(self):
+        return f'{self.user.first_name} {self.user.last_name}'
+
+    display_employee_name.short_description = 'Employee'
+
+    def show_all_departments(self):
+        output = ''
+        departments = DepartmentModel.objects.filter(employees=self.id)
+        for dept in departments:
+            output += f'{dept}, '
+
+        return output
+
+    show_all_departments.short_description = 'Departments'
+
     def __str__(self):
-        return f'{self.user}'
+        return self.display_employee_name()
 
 
 class UserProductModel(models.Model):
