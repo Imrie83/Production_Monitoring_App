@@ -11,11 +11,17 @@
     <div class="main-container">
         <div class="rows">
             <div class="top-banner">
-                sdf
+                <div class="login">
+                    {% if user %}
+                    <a href="{% url 'logout' %}">Logout</a>
+                    {% endif  %}
+                </div>
+                <div class="top_menu"
             </div>
             <div class="columns">
                 <div class="menu-left">
-                    sdf
+                    {% block side_menu %}
+                    {% endblock %}
                 </div>
                 <div class="content">
                     {% block content %}

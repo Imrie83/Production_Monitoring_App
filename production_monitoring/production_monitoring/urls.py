@@ -18,11 +18,15 @@ from django.urls import path, include
 from admin_app.views import (
     LoginView,
     PanelView,
+    AddToolView,
+    LogoutView,
 )
 
 urlpatterns = [
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
     path('', LoginView.as_view(), name='login'),
-    path('panel/', PanelView.as_view(), name='panel')
+    path('panel/', PanelView.as_view(), name='panel'),
+    path('add_tools/', AddToolView.as_view(), name='add_tools'),
+    path('logout/', LogoutView.as_view(), name='logout'),
 ]
