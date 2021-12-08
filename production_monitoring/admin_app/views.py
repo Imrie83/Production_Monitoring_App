@@ -4,7 +4,6 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.views import View
-from admin_app.forms import AddToolForm
 from django.views.generic.edit import (
     FormView,
     CreateView,
@@ -39,20 +38,6 @@ class LoginView(View):
             return render(request, 'admin_app/login.html', {'form': form})
 
 
-class AddToolView(FormView):
-    """
-    Class display a form allowing
-    to add a new tool to database.
-    """
-    template_name = 'admin_app/add_tool.html'
-    form_class = AddToolForm
-    success_url = '/tools/'
-
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
-
-
 class LogoutView(View):
     """
     Class log user out and redirects to main page
@@ -61,20 +46,6 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('/')
-
-
-class ToolListView(View):
-    """
-    Class displaying a list of all tools
-    available in database
-    """
-    def get(self, request):
-        tool_list = ToolsModel.objects.all()
-        return render(
-            request,
-            'admin_app/tool_list.html',
-            {'tool_list': tool_list}
-        )
 
 
 class PanelView(View):

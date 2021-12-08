@@ -19,9 +19,3 @@ class LoginForm(forms.Form):
     """
     login = forms.CharField(label='Login')
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
-
-
-class AddToolForm(forms.ModelForm):
-    class Meta:
-        model = ToolsModel
-        exclude = ['']

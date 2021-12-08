@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.utils.html import mark_safe
 from django.utils.html import escape
