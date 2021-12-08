@@ -15,8 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from admin_app.views import (
+    LoginView,
+    PanelView,
+)
 
 urlpatterns = [
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
+    path('', LoginView.as_view(), name='login'),
+    path('panel/', PanelView.as_view(), name='panel')
 ]
