@@ -24,6 +24,16 @@ from tools.views import (
     DeleteToolView,
     ToolDetailsView,
 )
+
+from products.views import (
+    OrderListView,
+    OrderDetailView,
+    AddOrderView,
+    EditOrderView,
+    DeleteOrderView,
+    ComponentListView,
+)
+
 from admin_app.views import (
     LoginView,
     PanelView,
@@ -36,9 +46,18 @@ urlpatterns = [
     path('', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('panel/', PanelView.as_view(), name='panel'),
+
     path('tool_list/', ToolListView.as_view(), name='tools'),
     path('add_tools/', AddToolView.as_view(), name='add_tools'),
     path('edit_tool/<int:pk>/', EditToolView.as_view(), name='edit_tool'),
     path('delete_tool/<int:pk>/', DeleteToolView.as_view(), name='delete_tool'),
-    path('tool_details/<int:pk>/', ToolDetailsView.as_view(), name='tool_details')
+    path('tool_details/<int:pk>/', ToolDetailsView.as_view()),
+
+    path('order_list/', OrderListView.as_view(), name='order_list'),
+    path('order_details/<int:pk>/', OrderDetailView.as_view()),
+    path('add_order/', AddOrderView.as_view(), name='add_order'),
+    path('edit_order/<int:pk>/', EditOrderView.as_view(), name='edit_order'),
+    path('delete_order/<int:pk>/', DeleteOrderView.as_view(), name='delete_order'),
+
+    path('component_list/', ComponentListView.as_view(), name='component_list'),
 ]

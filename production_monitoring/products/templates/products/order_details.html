@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+    <a href="/order_list/">Order List</a><br>
+    <a href="/add_order/">Add Order</a><br>
+{#    <a href="/add_line/">Add to order</a>#}
+{% endblock %}
+{% block content %}
+    <h2>Order: {{ order_details.order_number }}</h2>
+    <h3>Customer:
+        <ul>
+            <ol>{{ order_details.customer_id.customer_name }}</ol>
+            <ol>{{ order_details.customer_id.customer_email }}</ol>
+            <ol>{{ order_details.customer_id.customer_phone }}</ol>
+        </ul>
+    </h3>
+    <h4>Jobs in order:
+        <ul>
+            {% for job in order_details.product.all %}
+                <ol>
+                    Line:{{ job.full_job_no }} <br>
+                    Production date: {{ job.production_date }}<br>
+                    Delivery date: {{ job.delivery_date }}<hr>
+                </ol>
+            {% endfor %}
+        </ul>
+    </h4>
+    <a href="/edit_order/{{ order_details.id }}/">Edit</a>
+    <a href="/delete_order/{{ order_details.id }}/">Delete</a>
+{#    <br>#}
+    <a href="{% url 'order_list' %}">Back</a>
+
+{% endblock %}

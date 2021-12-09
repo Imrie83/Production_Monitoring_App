@@ -2,9 +2,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import FormView, CreateView, UpdateView, DeleteView
-
 from tools.models import ToolsModel
-from tools.forms import AddToolForm
 
 
 class ToolListView(View):
@@ -37,6 +35,7 @@ class ToolDetailsView(View):
             )
         except KeyError:
             return redirect('/tool_list/')
+
 
 class AddToolView(PermissionRequiredMixin, CreateView):
     """

@@ -162,7 +162,7 @@ class ProductsModel(models.Model):
         to=OrderModel,
         null=True,
         verbose_name='Order number',
-        related_name='order',
+        related_name='product',
         on_delete=models.CASCADE,
     )
     job_no = models.CharField(

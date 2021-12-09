@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+    <a href="/component_list/">Components List</a><br>
+{#    <a href="/add_order/">Add Order</a><br>#}
+{#    <a href="/add_line/">Add to order</a>#}
+{% endblock %}
+{% block content %}
+    <ul>
+    {% for component in component_list %}
+        <li>
+            <a href="/component_details/{{ component.id }}/">{{ component.name }}</a>
+             Door type: {{ component.door_type }}  Comp. type: {{ component.product_type }}
+        </li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}
