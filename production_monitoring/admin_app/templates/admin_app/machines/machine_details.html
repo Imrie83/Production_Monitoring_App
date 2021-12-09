@@ -1,0 +1,17 @@
+{% extends "grid_base.html" %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+    <a href="/machine_list/">Machine List</a><br>
+    <a href="/add_machine/">Add Machine</a><br>
+{% endblock %}
+{% block content %}
+    <h2>Machine: {{ machine_detail.name }}</h2>
+    <p>Location: {{ machine_detail.machine_location }}</p>
+
+    <a href="/edit_machine/{{ machine_detail.id }}/">Edit</a>
+    <a href="/delete_machine/{{ machine_detail.id }}/">Delete</a>
+{#    <br>#}
+    <a href="{% url 'machine_list' %}">Back</a>
+
+{% endblock %}

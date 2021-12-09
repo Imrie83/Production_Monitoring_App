@@ -9,6 +9,7 @@
 </head>
 <body>
     <div class="container">
+    <div class="Logo"></div>
       <div class="Footer"></div>
       <div class="Content">
           {% block content %}
@@ -46,6 +47,10 @@
 
             {% if user %}{% if perms.products.view_doorstylemodel %}
                 <a href="{% url 'style_list' %}">Door-Styles</a>
+            {% endif %}{% endif %}
+
+            {% if user %}{% if perms.products.view_machinemodel %}
+                <a href="{% url 'machine_list' %}">CNC Machines</a>
             {% endif %}{% endif %}
       </div>
     </div>

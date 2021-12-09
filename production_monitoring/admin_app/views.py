@@ -5,13 +5,16 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic.edit import (
-    FormView,
     CreateView,
     UpdateView,
     DeleteView,
 )
 from admin_app.forms import LoginForm
-from tools.models import ToolsModel
+from admin_app.models import (
+    MachineModel,
+    EmployeeModel,
+    DepartmentModel,
+)
 
 
 class LoginView(View):
@@ -56,3 +59,67 @@ class PanelView(View):
 
     def get(self, request):
         return render(request, 'admin_app/main.html')
+
+
+class MachineListView(View):
+    """
+    Class display a list of all
+    cnc machines available.
+    """
+    def get(self, request):
+        machine_list = MachineModel.objects.all()
+        return render(
+            request,
+            'admin_app/machines/machine_list.html',
+            {'machine_list': machine_list}
+        )
+
+
+class MachineDetailView(View):
+    """
+    Class display detailed view of
+    specific machine.
+    """
+    def get(self, request, pk):
+        try:
+            machine_detail = MachineModel.objects.get(id=pk)
+            return render(
+                request,
+                'admin_app/machines/machine_details.html',
+                {'machine_detail': machine_detail}
+            )
+        except KeyError:
+            return redirect('/machine_list/')
+
+
+class MachineAddView(PermissionRequiredMixin, CreateView):
+    """
+    Class displaying a form allowing
+    to add a new machine to database.
+    """
+    permission_required = 'admin_app.add_machinemodel'
+    template_name = 'admin_app/machines/machinemodel_form.html'
+    model = MachineModel
+    fields = '__all__'
+    success_url = '/machine_list/'
+
+
+class MachineEditView(PermissionRequiredMixin, UpdateView):
+    """
+    Class display form view allowing to edit machine information.
+    """
+    permission_required = 'admin_app.edit_machinemodel'
+    template_name = 'admin_app/machines/machinemodel_form.html'
+    model = MachineModel
+    fields = '__all__'
+    success_url = '/machine_list/'
+
+
+class MachineDeleteView(PermissionRequiredMixin, DeleteView):
+    """
+    Class deleting a machine info from database.
+    """
+    permission_required = 'admin_app.delete_machinemodel'
+    template_name = 'admin_app/machines/machinemodel_confirm_delete.html'
+    model = MachineModel
+    success_url = '/machine_list/'

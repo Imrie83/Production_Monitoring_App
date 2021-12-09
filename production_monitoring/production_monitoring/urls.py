@@ -57,6 +57,11 @@ from admin_app.views import (
     LoginView,
     PanelView,
     LogoutView,
+    MachineListView,
+    MachineDetailView,
+    MachineAddView,
+    MachineEditView,
+    MachineDeleteView,
 )
 
 urlpatterns = [
@@ -101,5 +106,11 @@ urlpatterns = [
     path('add_customer/', CustomerAddView.as_view(), name='add_customer'),
     path('edit_customer/<int:pk>/', CustomerEditView.as_view(), name='edit_customer'),
     path('delete_customer/<int:pk>/', CustomerDeleteView.as_view(), name='delete_customer'),
+
+    path('machine_list/', MachineListView.as_view(), name='machine_list'),
+    path('machine_details/<int:pk>/', MachineDetailView.as_view(), name='machine_detail'),
+    path('add_machine/', MachineAddView.as_view(), name='add_machine'),
+    path('edit_machine/<int:pk>/', MachineEditView.as_view(), name='edit_machine'),
+    path('delete_machine/<int:pk>/', MachineDeleteView.as_view(), name='delete_machine'),
 
 ]
