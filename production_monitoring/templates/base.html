@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <title>{% block title %}{% endblock title %}</title>
+</head>
+<body>
+    <div class="main-container">
+        <div class="rows">
+            <div class="top-banner">
+                <div class="login">
+                    {% if user %}
+                    <a href="{% url 'logout' %}">Logout</a>
+                    {% endif  %}
+                </div>
+                <div class="top_menu">
+                    {% if user %}{% if perms.tools.view_toolsmodel %}
+                    <a href="{% url 'tools' %}">Tools</a>
+                    {% endif %}{% endif %}
+                </div>
+            </div>
+            <div class="columns">
+                <div class="menu-left">
+                    {% block side_menu %}
+                    {% endblock %}
+                </div>
+                <div class="content">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

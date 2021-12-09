@@ -1,0 +1,35 @@
+.main-container{
+    display: flex;
+    flex: 1;
+}
+
+.rows{
+    display:flex;
+    flex: 1;
+    flex-flow: column;
+}
+.columns{
+    display: flex;
+    flex-flow: row;
+}
+.menu-left{
+    width: 150px;
+    background: #664357;
+    padding: 10px 10px 10px 10px;
+
+}
+.top-banner{
+    background: #664357;
+    height: 100px;
+    display: inline-flex;
+    justify-content: space-around;
+
+}
+.content{
+    display: flex;
+    margin: auto;
+    align-items: center;
+    justify-content: center;
+    flex: 2;
+    padding:50px;
+}
