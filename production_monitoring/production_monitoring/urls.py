@@ -46,6 +46,11 @@ from products.views import (
     StyleAddView,
     StyleEditView,
     StyleDeleteView,
+    CustomerListView,
+    CustomerDetailView,
+    CustomerAddView,
+    CustomerEditView,
+    CustomerDeleteView,
 )
 
 from admin_app.views import (
@@ -91,5 +96,10 @@ urlpatterns = [
     path('edit_style/<int:pk>/', StyleEditView.as_view(), name='edit_style'),
     path('delete_style/<int:pk>/', StyleDeleteView.as_view(), name='delete_style'),
 
+    path('customer_list/', CustomerListView.as_view(), name='customer_list'),
+    path('customer_details/<int:pk>/', CustomerDetailView.as_view(), name='customer_detail'),
+    path('add_customer/', CustomerAddView.as_view(), name='add_customer'),
+    path('edit_customer/<int:pk>/', CustomerEditView.as_view(), name='edit_customer'),
+    path('delete_customer/<int:pk>/', CustomerDeleteView.as_view(), name='delete_customer'),
 
 ]

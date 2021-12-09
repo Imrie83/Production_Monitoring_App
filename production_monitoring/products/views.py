@@ -263,3 +263,67 @@ class StyleDeleteView(PermissionRequiredMixin, DeleteView):
     template_name = 'products/styles/doorstylemodel_confirm_delete.html'
     model = DoorStyleModel
     success_url = '/style_list/'
+
+
+class CustomerListView(View):
+    """
+    Class display a list of all
+    customers available.
+    """
+    def get(self, request):
+        customer_list = CustomerModel.objects.all()
+        return render(
+            request,
+            'products/customers/customer_list.html',
+            {'customer_list': customer_list}
+        )
+
+
+class CustomerDetailView(View):
+    """
+    Class display detailed view of
+    specific customer.
+    """
+    def get(self, request, pk):
+        try:
+            customer_detail = CustomerModel.objects.get(id=pk)
+            return render(
+                request,
+                'products/customers/customer_details.html',
+                {'customer_detail': customer_detail}
+            )
+        except KeyError:
+            return redirect('/customer_list/')
+
+
+class CustomerAddView(PermissionRequiredMixin, CreateView):
+    """
+    Class displaying a form allowing
+    to add a new customer to database.
+    """
+    permission_required = 'products.add_customermodel'
+    template_name = 'products/customers/customermodel_form.html'
+    model = CustomerModel
+    fields = '__all__'
+    success_url = '/customer_list/'
+
+
+class CustomerEditView(PermissionRequiredMixin, UpdateView):
+    """
+    Class display form view allowing to edit customer information.
+    """
+    permission_required = 'products.edit_customermodel'
+    template_name = 'products/customers/customermodel_form.html'
+    model = CustomerModel
+    fields = '__all__'
+    success_url = '/customer_list/'
+
+
+class CustomerDeleteView(PermissionRequiredMixin, DeleteView):
+    """
+    Class deleting a customer info from database.
+    """
+    permission_required = 'products.delete_customermodel'
+    template_name = 'products/customers/customermodel_confirm_delete.html'
+    model = CustomerModel
+    success_url = '/customer_list/'
