@@ -12,6 +12,7 @@
         {% for employee in department_detail.employees.all %}
             <ol>{{ employee }}</ol>
         {% endfor %}
+        </ul>
         </p>
 
     <a href="/edit_department/{{ department_detail.id }}/">Edit</a>

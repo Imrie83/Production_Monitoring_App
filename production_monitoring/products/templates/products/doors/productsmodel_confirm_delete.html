@@ -2,13 +2,13 @@
 {% load static %}
 {% block title %}{% endblock %}
 {% block side_menu %}
-    <a href="/glass_list/">Glass List</a><br>
-    <a href="/add_glass/">Add Glass</a><br>
+    <a href="/door_list/">Door List</a><br>
+    <a href="/add_door/">Add Door Line</a><br>
 {% endblock %}
 {% block content %}
     <form method="post">
         {% csrf_token %}
         <input type="submit" value="Usuń">
-        <a href="{% url 'glass_list' %}">Back</a>
+        <a href="{% url 'door_list' %}">Back</a>
     </form>
 {% endblock %}

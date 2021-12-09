@@ -1,0 +1,18 @@
+{% extends "grid_base.html" %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+    <a href="/door_list/">Door List</a><br>
+    <a href="/add_door/">Add Door Line</a><br>
+{% endblock %}
+{% block content %}
+    <ul>
+    {% for door in door_list %}
+        <li>
+            <a href="/door_details/{{ door.id }}/">{{ door }}</a> | {{ door.production_date }}
+        | {{ door.delivery_date }}
+        </li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

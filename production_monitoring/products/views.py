@@ -327,3 +327,67 @@ class CustomerDeleteView(PermissionRequiredMixin, DeleteView):
     template_name = 'products/customers/customermodel_confirm_delete.html'
     model = CustomerModel
     success_url = '/customer_list/'
+
+
+class ProductListView(View):
+    """
+    Class display a list of all
+    door lines available.
+    """
+    def get(self, request):
+        door_list = ProductsModel.objects.all()
+        return render(
+            request,
+            'products/doors/products_list.html',
+            {'door_list': door_list}
+        )
+
+
+class ProductDetailView(View):
+    """
+    Class display detailed view of
+    specific door.
+    """
+    def get(self, request, pk):
+        try:
+            door_detail = ProductsModel.objects.get(id=pk)
+            return render(
+                request,
+                'products/doors/products_details.html',
+                {'door_detail': door_detail}
+            )
+        except KeyError:
+            return redirect('/door_list/')
+
+
+class ProductAddView(PermissionRequiredMixin, CreateView):
+    """
+    Class displaying a form allowing
+    to add a new door line to database.
+    """
+    permission_required = 'products.add_productsmodel'
+    template_name = 'products/doors/productsmodel_form.html'
+    model = ProductsModel
+    fields = '__all__'
+    success_url = '/door_list/'
+
+
+class ProductEditView(PermissionRequiredMixin, UpdateView):
+    """
+    Class display form view allowing to edit door information.
+    """
+    permission_required = 'products.edit_productsmodel'
+    template_name = 'products/doors/productsmodel_form.html'
+    model = ProductsModel
+    fields = '__all__'
+    success_url = '/door_list/'
+
+
+class ProductDeleteView(PermissionRequiredMixin, DeleteView):
+    """
+    Class deleting a door line from database.
+    """
+    permission_required = 'products.delete_productsmodel'
+    template_name = 'products/doors/productsmodel_confirm_delete.html'
+    model = ProductsModel
+    success_url = '/door_list/'

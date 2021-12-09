@@ -41,6 +41,10 @@
                 <a href="{% url 'order_list' %}">Orders</a>
             {% endif %}{% endif %}
 
+            {% if user %}{% if perms.products.view_productsmodel %}
+                <a href="{% url 'door_list' %}">Doors / Lines</a>
+            {% endif %}{% endif %}
+
             {% if user %}{% if perms.products.view_componentsmodel %}
                 <a href="{% url 'component_list' %}">Components</a>
             {% endif %}{% endif %}
