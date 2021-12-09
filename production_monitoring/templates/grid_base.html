@@ -29,6 +29,10 @@
                 <a href="{% url 'customer_list' %}">Customers</a>
             {% endif %}{% endif %}
 
+            {% if user %}{% if perms.products.view_departmentmodel %}
+                <a href="{% url 'department_list' %}">Departments</a>
+            {% endif %}{% endif %}
+
             {% if user %}{% if perms.tools.view_toolsmodel %}
                 <a href="{% url 'tools' %}">Tools</a>
             {% endif %}{% endif %}

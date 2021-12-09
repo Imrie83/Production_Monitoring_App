@@ -62,6 +62,12 @@ from admin_app.views import (
     MachineAddView,
     MachineEditView,
     MachineDeleteView,
+    DepartmentListView,
+    DepartmentDetailView,
+    DepartmentAddView,
+    DepartmentEditView,
+    DepartmentDeleteView,
+
 )
 
 urlpatterns = [
@@ -112,5 +118,12 @@ urlpatterns = [
     path('add_machine/', MachineAddView.as_view(), name='add_machine'),
     path('edit_machine/<int:pk>/', MachineEditView.as_view(), name='edit_machine'),
     path('delete_machine/<int:pk>/', MachineDeleteView.as_view(), name='delete_machine'),
+
+    path('department_list/', DepartmentListView.as_view(), name='department_list'),
+    path('department_details/<int:pk>/', DepartmentDetailView.as_view(), name='department_details'),
+    path('add_department/', DepartmentAddView.as_view(), name='add_department'),
+    path('edit_department/<int:pk>/', DepartmentEditView.as_view(), name='edit_department'),
+    path('delete_department/<int:pk>/', DepartmentDeleteView.as_view(), name='delete_department'),
+
 
 ]

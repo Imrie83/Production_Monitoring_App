@@ -123,3 +123,67 @@ class MachineDeleteView(PermissionRequiredMixin, DeleteView):
     template_name = 'admin_app/machines/machinemodel_confirm_delete.html'
     model = MachineModel
     success_url = '/machine_list/'
+
+
+class DepartmentListView(View):
+    """
+    Class display a list of all
+    cnc departments available.
+    """
+    def get(self, request):
+        department_list = DepartmentModel.objects.all()
+        return render(
+            request,
+            'admin_app/departments/department_list.html',
+            {'department_list': department_list}
+        )
+
+
+class DepartmentDetailView(View):
+    """
+    Class display detailed view of
+    department.
+    """
+    def get(self, request, pk):
+        try:
+            department_detail = DepartmentModel.objects.get(id=pk)
+            return render(
+                request,
+                'admin_app/departments/department_details.html',
+                {'department_detail': department_detail}
+            )
+        except KeyError:
+            return redirect('/department_list/')
+
+
+class DepartmentAddView(PermissionRequiredMixin, CreateView):
+    """
+    Class displaying a form allowing
+    to add a new department to database.
+    """
+    permission_required = 'admin_app.add_departmentmodel'
+    template_name = 'admin_app/departments/departmentmodel_form.html'
+    model = DepartmentModel
+    fields = '__all__'
+    success_url = '/department_list/'
+
+
+class DepartmentEditView(PermissionRequiredMixin, UpdateView):
+    """
+    Class display form view allowing to edit department information.
+    """
+    permission_required = 'admin_app.edit_departmentmodel'
+    template_name = 'admin_app/departments/departmentmodel_form.html'
+    model = DepartmentModel
+    fields = '__all__'
+    success_url = '/department_list/'
+
+
+class DepartmentDeleteView(PermissionRequiredMixin, DeleteView):
+    """
+    Class deleting a department info from database.
+    """
+    permission_required = 'admin_app.delete_departmentmodel'
+    template_name = 'admin_app/departments/departmentmodel_confirm_delete.html'
+    model = DepartmentModel
+    success_url = '/department_list/'

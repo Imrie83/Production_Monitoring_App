@@ -1,0 +1,13 @@
+{% extends "grid_base.html" %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+    <a href="/department_list/">Department List</a><br>
+    <a href="/add_department/">Add Department</a><br>
+{% endblock %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}
