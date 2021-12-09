@@ -20,6 +20,8 @@ from django.urls import path, include
 from tools.views import (
     AddToolView,
     ToolListView,
+    EditToolView,
+    DeleteToolView
 )
 from admin_app.views import (
     LoginView,
@@ -31,8 +33,11 @@ urlpatterns = [
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
     path('', LoginView.as_view(), name='login'),
-    path('panel/', PanelView.as_view(), name='panel'),
-    path('add_tools/', AddToolView.as_view(), name='add_tools'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('panel/', PanelView.as_view(), name='panel'),
     path('tool_list/', ToolListView.as_view(), name='tools'),
+    path('add_tools/', AddToolView.as_view(), name='add_tools'),
+    path('edit_tool/<int:pk>/', EditToolView.as_view(), name='edit_tool'),
+    path('delete_tool/<int:pk>/', DeleteToolView.as_view(), name='delete_tool'),
+
 ]

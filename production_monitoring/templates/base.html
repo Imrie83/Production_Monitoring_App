@@ -17,9 +17,9 @@
                     {% endif  %}
                 </div>
                 <div class="top_menu">
-                    {% if user %}
+                    {% if user %}{% if perms.tools.view_toolsmodel %}
                     <a href="{% url 'tools' %}">Tools</a>
-                    {% endif %}
+                    {% endif %}{% endif %}
                 </div>
             </div>
             <div class="columns">

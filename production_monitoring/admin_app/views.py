@@ -27,15 +27,15 @@ class LoginView(View):
 
     def post(self, request):
         form = LoginForm(request.POST)
-        form.is_valid()
-        log_in = form.cleaned_data['login']
-        password = form.cleaned_data['password']
-        user = authenticate(username=log_in, password=password)
-        if user:
-            login(request, user)
-            return redirect('/panel/')
-        else:
-            return render(request, 'admin_app/login.html', {'form': form})
+        if form.is_valid():
+            log_in = form.cleaned_data['login']
+            password = form.cleaned_data['password']
+            user = authenticate(username=log_in, password=password)
+            if user:
+                login(request, user)
+                return redirect('/panel/')
+
+        return render(request, 'admin_app/login.html', {'form': form})
 
 
 class LogoutView(View):

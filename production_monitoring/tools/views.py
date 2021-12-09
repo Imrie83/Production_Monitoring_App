@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import FormView, CreateView, DetailView, UpdateView
@@ -13,22 +14,41 @@ class ToolListView(View):
     """
     def get(self, request):
         tool_list = ToolsModel.objects.all()
+
         return render(
             request,
-            'admin_app/tool_list.html',
+            'tools/tool_list.html',
             {'tool_list': tool_list}
         )
 
 
-class AddToolView(FormView):
+class AddToolView(PermissionRequiredMixin, CreateView):
     """
     Class display a form allowing
     to add a new tool to database.
     """
-    template_name = 'admin_app/add_tool.html'
-    form_class = AddToolForm
-    success_url = '/tools/'
+    permission_required = 'tools.add_toolsmodel'
+    model = ToolsModel
+    fields = '__all__'
+    success_url = '/tool_list/'
 
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
+
+class EditToolView(PermissionRequiredMixin, UpdateView):
+    """
+    Class display a form allowing
+    to edit a tool in database.
+    """
+    permission_required = 'tools.update_toolsmodel'
+    model = ToolsModel
+    fields = '__all__'
+    success_url = '/tool_list/'
+
+
+class DeleteToolView(PermissionRequiredMixin, DetailView):
+    """
+    Class allows to delete
+    a tool from database
+    """
+    permission_required = 'tools.delete_toolsmodel'
+    model = ToolsModel
+    success_url = '/tool_list/'
