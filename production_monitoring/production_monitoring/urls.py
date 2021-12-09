@@ -21,7 +21,8 @@ from tools.views import (
     AddToolView,
     ToolListView,
     EditToolView,
-    DeleteToolView
+    DeleteToolView,
+    ToolDetailsView,
 )
 from admin_app.views import (
     LoginView,
@@ -39,5 +40,5 @@ urlpatterns = [
     path('add_tools/', AddToolView.as_view(), name='add_tools'),
     path('edit_tool/<int:pk>/', EditToolView.as_view(), name='edit_tool'),
     path('delete_tool/<int:pk>/', DeleteToolView.as_view(), name='delete_tool'),
-
+    path('tool_details/<int:pk>/', ToolDetailsView.as_view(), name='tool_details')
 ]

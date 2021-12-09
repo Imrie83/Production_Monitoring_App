@@ -4,14 +4,6 @@ from django.core.validators import validate_email, URLValidator
 from django.core.exceptions import ValidationError
 from tools.models import ToolsModel
 
-from .models import (
-    MachineModel,
-    EmployeeModel,
-    MachineEmployeeModel,
-    UserProductModel,
-    DepartmentModel,
-)
-
 
 class LoginForm(forms.Form):
     """
