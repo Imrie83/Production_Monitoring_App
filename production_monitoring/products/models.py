@@ -146,7 +146,10 @@ class ComponentToolsModel(models.Model):
         on_delete=models.CASCADE,
         related_name='tool'
     )
-    machine_time = models.IntegerField()
+    machine_time = models.IntegerField(
+        null=True,
+        default=0,
+    )
 
     class Meta:
         verbose_name = 'Component Tool'
@@ -411,7 +414,10 @@ class GlassToolModel(models.Model):
         on_delete=models.CASCADE,
         related_name='glass_tool'
     )
-    machine_time = models.IntegerField()
+    machine_time = models.IntegerField(
+        null=True,
+        default=0,
+    )
 
     class Meta:
         verbose_name = 'Aperture Tool'

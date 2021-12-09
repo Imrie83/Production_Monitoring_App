@@ -7,12 +7,9 @@
 {#    <a href="/add_line/">Add to order</a>#}
 {% endblock %}
 {% block content %}
-    <ul>
-    {% for order in orders %}
-        <li>
-            <a href="/order_details/{{ order.id }}/">{{ order.order_number }}</a> - Customer: {{ order.customer_id }}
-        </li>
-    {% endfor %}
-    </ul>
-
+    <form method="post">
+        {% csrf_token %}
+        <input type="submit" value="Usuń">
+        <a href="{% url 'tools' %}">Back</a>
+    </form>
 {% endblock %}

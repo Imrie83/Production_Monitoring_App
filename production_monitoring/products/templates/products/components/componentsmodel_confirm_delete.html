@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+    <a href="/component_list/">Components List</a><br>
+    <a href="/add_component/">Add Component</a><br>
+{% endblock %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <input type="submit" value="Usuń">
+        <a href="{% url 'tools' %}">Back</a>
+    </form>
+{% endblock %}

@@ -32,6 +32,20 @@ from products.views import (
     EditOrderView,
     DeleteOrderView,
     ComponentListView,
+    ComponentDetailView,
+    AddComponentView,
+    EditComponentView,
+    DeleteComponentView,
+    GlassListView,
+    GlassDetailView,
+    GlassAddView,
+    GlassEditView,
+    GlassDeleteView,
+    StyleListView,
+    StyleDetailView,
+    StyleAddView,
+    StyleEditView,
+    StyleDeleteView,
 )
 
 from admin_app.views import (
@@ -60,4 +74,22 @@ urlpatterns = [
     path('delete_order/<int:pk>/', DeleteOrderView.as_view(), name='delete_order'),
 
     path('component_list/', ComponentListView.as_view(), name='component_list'),
+    path('component_details/<int:pk>/', ComponentDetailView.as_view()),
+    path('add_component/', AddComponentView.as_view(), name='add_component'),
+    path('edit_component/<int:pk>/', EditComponentView.as_view(), name='edit_component'),
+    path('delete_component/<int:pk>/', DeleteComponentView.as_view(), name='delete_component'),
+
+    path('glass_list/', GlassListView.as_view(), name='glass_list'),
+    path('glass_detail/<int:pk>/', GlassDetailView.as_view(), name='glass_detail'),
+    path('add_glass/', GlassAddView.as_view(), name='add_glass'),
+    path('edit_glass/<int:pk>/', GlassEditView.as_view(), name='edit_glass'),
+    path('delete_glass/<int:pk>/', GlassDeleteView.as_view(), name='delete_glass'),
+
+    path('style_list/', StyleListView.as_view(), name='style_list'),
+    path('style_details/<int:pk>/', StyleDetailView.as_view(), name='style_detail'),
+    path('add_style/', StyleAddView.as_view(), name='add_style'),
+    path('edit_style/<int:pk>/', StyleEditView.as_view(), name='edit_style'),
+    path('delete_style/<int:pk>/', StyleDeleteView.as_view(), name='delete_style'),
+
+
 ]

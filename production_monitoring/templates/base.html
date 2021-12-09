@@ -28,6 +28,14 @@
                     {% if user %}{% if perms.products.view_componentsmodel %}
                         <a href="{% url 'component_list' %}">Components</a>
                     {% endif %}{% endif %}
+
+                    {% if user %}{% if perms.products.view_glassmodel %}
+                        <a href="{% url 'glass_list' %}">Glass</a>
+                    {% endif %}{% endif %}
+
+                    {% if user %}{% if perms.products.view_doorstylemodel %}
+                        <a href="{% url 'style_list' %}">Door-Styles</a>
+                    {% endif %}{% endif %}
                 </div>
             </div>
             <div class="columns">

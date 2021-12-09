@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+    <a href="/glass_list/">Glass List</a><br>
+    <a href="/add_glass/">Add Glass</a><br>
+{% endblock %}
+{% block content %}
+    <ul>
+    {% for glass in glass_list %}
+        <li>
+            <a href="/glass_detail/{{ glass.id }}/">{{ glass.glass_name }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

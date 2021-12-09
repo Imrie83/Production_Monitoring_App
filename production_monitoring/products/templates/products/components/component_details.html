@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+    <a href="/component_list/">Components List</a><br>
+    <a href="/add_component/">Add Component</a><br>
+{% endblock %}
+{% block content %}
+    <h2>Name: {{ component_details.name }}</h2>
+    <p>Door type: {{ component_details.door_type }}</p>
+    <p>Product type: {{ component_details.product_type }}</p>
+    <p>In stock: {{ component_details.stock }}</p>
+    <p>Tools req.
+        <ul>
+            {% for tool in component_details.tools_req.all %}
+            <li>{{ tool.tool_name }}</li>
+            {% endfor %}
+        </ul>
+    </p>
+    <p>{{ component_details.component_description }}</p>
+    <h4>Jobs in order:
+        <ul>
+            {% for job in order_details.product.all %}
+                <ol>
+                    Line:{{ job.full_job_no }} <br>
+                    Production date: {{ job.production_date }}<br>
+                    Delivery date: {{ job.delivery_date }}<hr>
+                </ol>
+            {% endfor %}
+        </ul>
+    </h4>
+    <a href="/edit_component/{{ component_details.id }}/">Edit</a>
+    <a href="/delete_component/{{ component_details.id }}/">Delete</a>
+{#    <br>#}
+    <a href="{% url 'order_list' %}">Back</a>
+
+{% endblock %}
