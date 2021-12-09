@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{% static "css/alt_style.css" %}">
+    <title>{% block title %}{% endblock title %}</title>
+</head>
+<body>
+    <div class="container">
+      <div class="Footer"></div>
+      <div class="Content">
+          {% block content %}
+          {% endblock %}
+      </div>
+      <div class="Additional"></div>
+      <div class="Menu">
+          {% block side_menu %}
+          {% endblock %}
+      </div>
+      <div class="Header">
+            {% if user %}
+                <a href="{% url 'logout' %}">Logout</a>
+            {% endif  %}
+
+            {% if user %}{% if perms.products.view_customermodel %}
+                <a href="{% url 'customer_list' %}">Customers</a>
+            {% endif %}{% endif %}
+
+            {% if user %}{% if perms.tools.view_toolsmodel %}
+                <a href="{% url 'tools' %}">Tools</a>
+            {% endif %}{% endif %}
+
+            {% if user %}{% if perms.products.view_ordermodel %}
+                <a href="{% url 'order_list' %}">Orders</a>
+            {% endif %}{% endif %}
+
+            {% if user %}{% if perms.products.view_componentsmodel %}
+                <a href="{% url 'component_list' %}">Components</a>
+            {% endif %}{% endif %}
+
+            {% if user %}{% if perms.products.view_glassmodel %}
+                <a href="{% url 'glass_list' %}">Glass</a>
+            {% endif %}{% endif %}
+
+            {% if user %}{% if perms.products.view_doorstylemodel %}
+                <a href="{% url 'style_list' %}">Door-Styles</a>
+            {% endif %}{% endif %}
+      </div>
+    </div>
+</body>
+</html>
