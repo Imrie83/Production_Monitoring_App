@@ -1,10 +1,10 @@
 {% extends "grid_base.html" %}
 {% load static %}
 {% block title %}{% endblock %}
+
 {% block side_menu %}
-    <a href="/department_list/">Department List</a><br>
-    <a href="/add_department/">Add Department</a><br>
 {% endblock %}
+
 {% block content %}
     <ul>
     {% for department in department_list %}

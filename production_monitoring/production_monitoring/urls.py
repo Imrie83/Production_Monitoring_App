@@ -85,7 +85,7 @@ urlpatterns = [
     path('panel/', PanelView.as_view(), name='panel'),
 
     path('tool_list/', ToolListView.as_view(), name='tools'),
-    path('add_tools/', AddToolView.as_view(), name='add_tools'),
+    path('add_tool/', AddToolView.as_view(), name='add_tools'),
     path('edit_tool/<int:pk>/', EditToolView.as_view(), name='edit_tool'),
     path('delete_tool/<int:pk>/', DeleteToolView.as_view(), name='delete_tool'),
     path('tool_details/<int:pk>/', ToolDetailsView.as_view()),
