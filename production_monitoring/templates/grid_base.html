@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="{% static "css/alt_style.css" %}">
     <link rel='stylesheet' href="{% static "css/menu_style.css" %}">
-    <script src='scripts/script.js'></script><body>
+    <script src='{% static "scripts/script.js" %}'></script>
     <title>{% block title %}{% endblock title %}</title>
 </head>
 <body>
@@ -18,10 +18,17 @@
           {% endblock %}
         </div>
       </div>
-      <div class="Additional"></div>
+      <div class="Additional">
+        <div class="Additional-inner">
+          {% block additional %}
+          {% endblock %}
+        </div>
+      </div>
       <div class="Menu">
+        <div class="menu-inner">
           {% block side_menu %}
           {% endblock %}
+        </div>
       </div>
       <div class="Header">
           <nav id='menu'>
@@ -49,7 +56,7 @@
             <li><a class='dropdown-arrow'>Parts</a>
               <ul class='sub-menus'>
                 <li><a href="/component_list/">List Components</a></li>
-                <li><a href="/add_component'/">Add Component</a></li>
+                <li><a href="/add_component/">Add Component</a></li>
                 <li><a href="/glass_list/">Show Glass</a></li>
                 <li><a href="/add_glass/">Add Glass</a></li>
                 <li><a href="/style_list/">Show Styles</a></li>

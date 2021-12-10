@@ -13,7 +13,7 @@
             <ol>Max allowed runtime: {{ tool_details.max_run_time }}</ol>
             <ol>{{ tool_details.short_description }}</ol>
             {% if tool_details.image.url|length > 0 %}
-            <ol><img src="{{ tool_details.image.url }}" alt="{{ tool_details.tool_name }}"></ol>
+            <ol><img src="{{ tool_details.image.url }}" alt="{{ tool_details.tool_name }}" width="50%"></ol>
             {% endif %}
         </li>
     </ul>
@@ -22,4 +22,13 @@
     <br>
     <a href="{% url 'tools' %}">Back</a>
 
+{% endblock %}
+
+{% block additional %}
+    <h1>Tool List</h1>
+    <ul>
+    {% for tool in tool_list %}
+        <ol><a href="/tool_details/{{ tool.id }}/">{{ tool.tool_small_list }}</a></ol>
+    {% endfor %}
+    </ul>
 {% endblock %}

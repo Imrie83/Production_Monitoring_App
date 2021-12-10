@@ -1,14 +1,17 @@
+from django.contrib.admin import TabularInline
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import FormView, CreateView, UpdateView, DeleteView
+
+
 from products.models import (
     OrderModel,
     ProductsModel,
     ComponentsModel,
     CustomerModel,
     DoorStyleModel,
-    GlassModel,
+    GlassModel, ComponentToolsModel,
 )
 
 

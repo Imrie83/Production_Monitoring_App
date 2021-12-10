@@ -50,6 +50,9 @@ class ToolsModel(models.Model):
         verbose_name = 'Tool'
         verbose_name_plural = 'Tools'
 
+    def tool_small_list(self):
+        return f'Name: {self.tool_name} Stock: {self.stock}'
+
     def short_description(self):
         return self.description[:50]
 
