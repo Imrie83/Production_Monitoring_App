@@ -37,7 +37,7 @@ def username_validator(value):
 class EmployeeAddForm(forms.Form):
     """
     Class defining a custom form allowing to add
-    and edit an employee information.
+    an employee information.
     :var: username
     :var: password_1
     :var: password_2
@@ -84,7 +84,6 @@ class EmployeeAddForm(forms.Form):
     staff = forms.BooleanField(
         initial=True,
         required=False,
-        disabled=True,
     )
 
     def clean(self):
@@ -99,3 +98,44 @@ class EmployeeAddForm(forms.Form):
         if password1 != password2:
             raise ValidationError('Password does not match')
         return cleaned_data
+
+
+class EmployeeEditForm(forms.Form):
+    """
+    Class defining a custom form allowing to edit
+    an employee information.
+    :var: username
+    :var: password_1
+    :var: password_2
+    :var: first_name
+    :var: last_name
+    :var: employee_id
+    :var: position
+    :var: department
+    :var: user_email
+    :var: staff
+    """
+
+    first_name = forms.CharField(
+        label='Name'
+    )
+    last_name = forms.CharField(
+        label='Surname'
+    )
+    employee_id = forms.IntegerField(
+        label='Employee ID',
+    )
+    position = forms.CharField(
+        label='Position'
+    )
+    department = forms.ModelMultipleChoiceField(
+        label='Department',
+        queryset=DepartmentModel.objects.all(),
+    )
+    user_email = forms.EmailField(
+        label='E-mail'
+    )
+    staff = forms.BooleanField(
+        initial=True,
+        required=False,
+    )

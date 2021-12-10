@@ -9,7 +9,11 @@ from django.views.generic.edit import (
     UpdateView,
     DeleteView, FormView,
 )
-from admin_app.forms import LoginForm, EmployeeAddForm
+from admin_app.forms import (
+    LoginForm,
+    EmployeeAddForm,
+    EmployeeEditForm,
+)
 from admin_app.models import (
     MachineModel,
     EmployeeModel,
@@ -258,37 +262,79 @@ class EmployeeAddView(PermissionRequiredMixin, FormView):
         return super().form_valid(form)
 
 
-class EmployeeEditView(PermissionRequiredMixin, FormView):
-    permission_required = 'admin_app.edit_employeemodel'
-    template_name = 'admin_app/employees/employeemodel_form.html'
-    form_class = EmployeeAddForm
-    success_url = '/employee_list/'
+class EmployeeEditView(PermissionRequiredMixin, View):
+    permission_required = 'admin_app.update_employeemodel'
+    def get(self, request, pk):
+        employee = EmployeeModel.objects.get(id=pk)
+        user = User.objects.get(id=employee.user_id)
+        form = EmployeeEditForm(
+            initial={
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'employee_id': employee.id_num,
+                'position': employee.position,
+                'department': employee.section_id.all(),
+                'user_email': user.email,
+                'staff': user.is_staff,
+            }
+        )
+        return render(
+            request,
+            'admin_app/employees/employeemodel_form.html',
+            {'form': form}
+        )
 
-    def form_valid(self, form):
-        username = form.cleaned_data['username']
-        password = form.cleaned_data['password_1']
-        first_name = form.cleaned_data['first_name']
-        last_name = form.cleaned_data['last_name']
-        email = form.cleaned_data['user_email']
-        staff = form.cleaned_data['staff']
-        new_user = User.objects.update(
-            username=username,
-            password=password,
-            first_name=first_name,
-            last_name=last_name,
-            email=email,
-            is_staff=staff,
+    def post(self, request, pk):
+        form = EmployeeEditForm(request.POST)
+        updated_user = User.objects.get(employee=pk)
+        updated_employee = EmployeeModel.objects.get(id=pk)
+
+        if form.is_valid():
+            updated_user.first_name = form.cleaned_data['first_name']
+            updated_user.last_name = form.cleaned_data['last_name']
+            updated_user.email = form.cleaned_data['user_email']
+            updated_user.is_staff = form.cleaned_data['staff']
+
+            updated_employee.employee_id = form.cleaned_data['employee_id']
+            updated_employee.position = form.cleaned_data['position']
+            department = form.cleaned_data['department']
+            updated_employee.section_id.set(department)
+
+            updated_user.save()
+            updated_employee.save()
+            return redirect('employee_list')
+
+        return render(
+            request,
+            'admin_app/employees/employeemodel_form.html',
+            {'form': form},
         )
-        employee_id = form.cleaned_data['employee_id']
-        position = form.cleaned_data['position']
-        department = form.cleaned_data['department']
-        new_employee = EmployeeModel.objects.update(
-            user=new_user,
-            id_num=employee_id,
-            position=position,
-        )
-        new_employee.section_id = department
-        return super().form_valid(form)
+
+    # def form_valid(self, form):
+    #     username = form.cleaned_data['username']
+    #     password = form.cleaned_data['password_1']
+    #     first_name = form.cleaned_data['first_name']
+    #     last_name = form.cleaned_data['last_name']
+    #     email = form.cleaned_data['user_email']
+    #     staff = form.cleaned_data['staff']
+    #     new_user = User.objects.update(
+    #         username=username,
+    #         password=password,
+    #         first_name=first_name,
+    #         last_name=last_name,
+    #         email=email,
+    #         is_staff=staff,
+    #     )
+    #     employee_id = form.cleaned_data['employee_id']
+    #     position = form.cleaned_data['position']
+    #     department = form.cleaned_data['department']
+    #     new_employee = EmployeeModel.objects.update(
+    #         user=new_user,
+    #         id_num=employee_id,
+    #         position=position,
+    #     )
+    #     new_employee.section_id = department
+    #     return super().form_valid(form)
 
 
 class EmployeeDeleteView(PermissionRequiredMixin, DeleteView):
