@@ -1,0 +1,25 @@
+{% extends "grid_base.html" %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+    <a href="/employee_list/">Employee List</a><br>
+    <a href="/add_employee/">Add Employee</a><br>
+{% endblock %}
+{% block content %}
+    <h2>Name: {{ employee_detail.display_employee_name }}</h2>
+    <p>ID: {{ employee_detail.id_num }}</p>
+    <p>Position: {{ employee_detail.position }}</p>
+    <p>Department:
+        <ul>
+        {% for dept in employee_detail.section_id.all %}
+            <ol>{{ dept.section_name }}</ol>
+        {% endfor %}
+        </ul>
+    </p>
+    <p>Staff: {{ employee_detail.user.is_staff }}</p>
+
+    <a href="/edit_employee/{{ employee_detail.id }}/">Edit</a>
+    <a href="/delete_employee/{{ employee_detail.id }}/">Delete</a>
+    <a href="{% url 'employee_list' %}">Back</a>
+
+{% endblock %}

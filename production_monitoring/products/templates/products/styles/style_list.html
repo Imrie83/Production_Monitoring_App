@@ -1,0 +1,17 @@
+{% extends "grid_base.html" %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+    <a href="/style_list/">Styles List</a><br>
+    <a href="/add_style/">Add Style</a><br>
+{% endblock %}
+{% block content %}
+    <ul>
+    {% for style in style_list %}
+        <li>
+            <a href="/style_details/{{ style.id }}/">{{ style.style_name }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

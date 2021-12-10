@@ -1,0 +1,26 @@
+{% extends "grid_base.html" %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+    <a href="/tool_list/">Tool List</a><br>
+    <a href="/add_tools/">Add Tool</a>
+{% endblock %}
+{% block content %}
+    <ul>
+        <li>
+            <h2>{{ tool_details.tool_name }}</h2>
+            <ol>Type: {{ tool_details.type }}</ol>
+            <ol>In stock: {{ tool_details.stock }}</ol>
+            <ol>Max allowed runtime: {{ tool_details.max_run_time }}</ol>
+            <ol>{{ tool_details.short_description }}</ol>
+            {% if tool_details.image.url|length > 0 %}
+            <ol><img src="{{ tool_details.image.url }}" alt="{{ tool_details.tool_name }}"></ol>
+            {% endif %}
+        </li>
+    </ul>
+    <a href="/edit_tool/{{ tool_details.id }}/">Edit</a>
+    <a href="/delete_tool/{{ tool_details.id }}/">Delete</a>
+    <br>
+    <a href="{% url 'tools' %}">Back</a>
+
+{% endblock %}

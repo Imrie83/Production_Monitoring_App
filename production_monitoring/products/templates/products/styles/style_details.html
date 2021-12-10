@@ -1,0 +1,18 @@
+{% extends "grid_base.html" %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+    <a href="/style_list/">Styles List</a><br>
+    <a href="/add_style/">Add Style</a><br>
+{#    <a href="/add_line/">Add to order</a>#}
+{% endblock %}
+{% block content %}
+    <h2>Style: {{ style_detail.style_name }}</h2>
+    <p>Door type: {{ style_detail.style_type }}</p>
+
+    <a href="/edit_style/{{ style_detail.id }}/">Edit</a>
+    <a href="/delete_style/{{ style_detail.id }}/">Delete</a>
+{#    <br>#}
+    <a href="{% url 'style_list' %}">Back</a>
+
+{% endblock %}

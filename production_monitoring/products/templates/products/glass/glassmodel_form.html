@@ -1,9 +1,13 @@
 {% extends "grid_base.html" %}
 {% block title %}{% endblock %}
+{% block side_menu %}
+    <a href="/glass_list/">Glass List</a><br>
+    <a href="/add_glass/">Add Glass</a><br>
+{% endblock %}
 {% block content %}
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Login">
+        <input type="submit" value="Submit">
     </form>
 {% endblock %}

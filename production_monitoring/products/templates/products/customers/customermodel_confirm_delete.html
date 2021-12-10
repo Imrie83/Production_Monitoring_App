@@ -1,0 +1,14 @@
+{% extends "grid_base.html" %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+    <a href="/customer_list/">Customer List</a><br>
+    <a href="/add_customer/">Add Customer</a><br>
+{% endblock %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <input type="submit" value="Usuń">
+        <a href="{% url 'customer_list' %}">Back</a>
+    </form>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "grid_base.html" %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+    <a href="/customer_list/">Customer List</a><br>
+    <a href="/add_customer/">Add Customer</a><br>
+{% endblock %}
+{% block content %}
+    <h2>Customer: {{ customer_detail.customer_name }}</h2>
+    <p>e-mail: {{ customer_detail.customer_email }}</p>
+    <p>phone: {{ customer_detail.customer_phone }}</p>
+
+    <a href="/edit_customer/{{ customer_detail.id }}/">Edit</a>
+    <a href="/delete_customer/{{ customer_detail.id }}/">Delete</a>
+    <a href="{% url 'customer_list' %}">Back</a>
+
+{% endblock %}

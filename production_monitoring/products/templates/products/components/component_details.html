@@ -1,0 +1,26 @@
+{% extends "grid_base.html" %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+    <a href="/component_list/">Components List</a><br>
+    <a href="/add_component/">Add Component</a><br>
+{% endblock %}
+{% block content %}
+    <h2>Name: {{ component_details.name }}</h2>
+    <p>Door type: {{ component_details.door_type }}</p>
+    <p>Product type: {{ component_details.product_type }}</p>
+    <p>In stock: {{ component_details.stock }}</p>
+    <p>Tools req.
+        <ul>
+            {% for tool in component_details.tools_req.all %}
+            <li>{{ tool.tool_name }}</li>
+            {% endfor %}
+        </ul>
+    </p>
+    <p>{{ component_details.component_description }}</p>
+
+    <a href="/edit_component/{{ component_details.id }}/">Edit</a>
+    <a href="/delete_component/{{ component_details.id }}/">Delete</a>
+    <a href="{% url 'component_list' %}">Back</a>
+
+{% endblock %}

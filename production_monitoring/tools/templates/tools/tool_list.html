@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "grid_base.html" %}
 {% load static %}
 {% block title %}{% endblock %}
 {% block side_menu %}
@@ -9,14 +9,12 @@
     <ul>
     {% for tool in tool_list %}
         <li>
-            <h2>{{ tool.tool_name }}</h2>
-            <ol>{{ tool.type }}</ol>
-            <ol>{{ tool.stock }}</ol>
+            <h2><a href="/tool_details/{{ tool.id }}/">{{ tool.tool_name }}</a></h2>
+            <ol>In stock: {{ tool.stock }}</ol>
             <ol>{{ tool.short_description }}</ol>
-            <ol>{{ tool.max_run_time }}</ol>
-            {% if tool.image.url|length > 0 %}
-            <ol><img src="{{ tool.image.url }}" alt="{{ tool.tool_name }}"></ol>
-            {% endif %}
+{#            {% if tool.image.url|length > 0 %}#}
+{#            <ol><img src="{{ tool.image.url }}" alt="{{ tool.tool_name }}"></ol>#}
+{#            {% endif %}#}
         </li>
     {% endfor %}
     </ul>

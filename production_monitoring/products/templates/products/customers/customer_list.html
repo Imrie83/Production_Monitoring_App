@@ -1,0 +1,17 @@
+{% extends "grid_base.html" %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+    <a href="/customer_list/">Customer List</a><br>
+    <a href="/add_customer/">Add Customer</a><br>
+{% endblock %}
+{% block content %}
+    <ul>
+    {% for customer in customer_list %}
+        <li>
+            <a href="/customer_details/{{ customer.id }}/">{{ customer.customer_name }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

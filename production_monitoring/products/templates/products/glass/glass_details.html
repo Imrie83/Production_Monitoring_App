@@ -1,0 +1,25 @@
+{% extends "grid_base.html" %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+    <a href="/glass_list/">Glass List</a><br>
+    <a href="/add_glass/">Add Glass</a><br>
+{% endblock %}
+{% block content %}
+    <h2>Name: {{ glass_detail.glass_name }}</h2>
+    <p>Door type: {{ glass_detail.glass_door_type }}</p>
+    <p>In stock: {{ glass_detail.stock }}</p>
+    <p>Tools req.
+        <ul>
+            {% for tool in glass_detail.tools_req.all %}
+            <li>{{ tool.tool_name }}</li>
+            {% endfor %}
+        </ul>
+    </p>
+    <p>{{ glass_detail.component_description }}</p>
+    <a href="/edit_glass/{{ glass_detail.id }}/">Edit</a>
+    <a href="/delete_glass/{{ glass_detail.id }}/">Delete</a>
+{#    <br>#}
+    <a href="{% url 'glass_list' %}">Back</a>
+
+{% endblock %}
