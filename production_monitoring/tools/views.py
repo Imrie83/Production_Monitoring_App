@@ -21,9 +21,8 @@ class ToolListView(View):
         )
 
     def post(self, request):
-        tool_list = ToolsModel.objects.order_by('tool_name')
-        search_q = request.POST['search']
-        if search_q:
+        if 'search' in request.POST:
+            search_q = request.POST['search']
             tool_list = ToolsModel.objects.filter(
                 Q(tool_name__icontains=search_q) |
                 Q(type__icontains=search_q)
@@ -33,12 +32,14 @@ class ToolListView(View):
                 'tools/tool_list.html',
                 {'tool_list': tool_list}
             )
-        else:
-            return render(
-                request,
-                'tools/tool_list.html',
-                {'tool_list': tool_list}
-            )
+        # TODO : set ordering
+        # elif 'type' in request.POST:
+        #     tool_list = ToolsModel.objects.order_by(request.POST['type'])
+        #     return render(
+        #         request,
+        #         'tools/tool_list.html',
+        #         {'tool_list': tool_list}
+        #     )
 
 
 class ToolDetailsView(View):
@@ -57,6 +58,19 @@ class ToolDetailsView(View):
             )
         except KeyError:
             return redirect('/tool_list/')
+
+    def post(self, request, pk):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            tool_list = ToolsModel.objects.filter(
+                Q(tool_name__icontains=search_q) |
+                Q(type__icontains=search_q)
+            ).order_by('tool_name')
+            return render(
+                request,
+                'tools/tool_list.html',
+                {'tool_list': tool_list}
+            )
 
 
 class AddToolView(PermissionRequiredMixin, CreateView):
