@@ -7,9 +7,9 @@ from django.views import View
 from django.views.generic.edit import (
     CreateView,
     UpdateView,
-    DeleteView,
+    DeleteView, FormView,
 )
-from admin_app.forms import LoginForm
+from admin_app.forms import LoginForm, EmployeeAddForm
 from admin_app.models import (
     MachineModel,
     EmployeeModel,
@@ -66,6 +66,7 @@ class MachineListView(View):
     Class display a list of all
     cnc machines available.
     """
+
     def get(self, request):
         machine_list = MachineModel.objects.all()
         return render(
@@ -80,6 +81,7 @@ class MachineDetailView(View):
     Class display detailed view of
     specific machine.
     """
+
     def get(self, request, pk):
         try:
             machine_detail = MachineModel.objects.get(id=pk)
@@ -128,8 +130,9 @@ class MachineDeleteView(PermissionRequiredMixin, DeleteView):
 class DepartmentListView(View):
     """
     Class display a list of all
-    cnc departments available.
+    departments available.
     """
+
     def get(self, request):
         department_list = DepartmentModel.objects.all()
         return render(
@@ -144,6 +147,7 @@ class DepartmentDetailView(View):
     Class display detailed view of
     department.
     """
+
     def get(self, request, pk):
         try:
             department_detail = DepartmentModel.objects.get(id=pk)
@@ -187,3 +191,111 @@ class DepartmentDeleteView(PermissionRequiredMixin, DeleteView):
     template_name = 'admin_app/departments/departmentmodel_confirm_delete.html'
     model = DepartmentModel
     success_url = '/department_list/'
+
+
+class EmployeeListView(View):
+    """
+    Class display a list of all
+    employees in the company.
+    """
+
+    def get(self, request):
+        employee_list = EmployeeModel.objects.all()
+        return render(
+            request,
+            'admin_app/employees/employee_list.html',
+            {'employee_list': employee_list}
+        )
+
+
+class EmployeeDetailView(View):
+    """
+    Class display detailed information about an employee.
+    """
+
+    def get(self, request, pk):
+        try:
+            employee_detail = EmployeeModel.objects.get(id=pk)
+            return render(
+                request,
+                'admin_app/employees/employee_details.html',
+                {'employee_detail': employee_detail}
+            )
+        except KeyError:
+            return redirect('/employee_list/')
+
+
+class EmployeeAddView(PermissionRequiredMixin, FormView):
+    permission_required = 'admin_app.add_employeemodel'
+    template_name = 'admin_app/employees/employeemodel_form.html'
+    form_class = EmployeeAddForm
+    success_url = '/employee_list/'
+
+    def form_valid(self, form):
+        username=form.cleaned_data['username']
+        password = form.cleaned_data['password_1']
+        first_name = form.cleaned_data['first_name']
+        last_name = form.cleaned_data['last_name']
+        email = form.cleaned_data['user_email']
+        staff = form.cleaned_data['staff']
+        new_user = User.objects.create_user(
+            username=username,
+            password=password,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            is_staff=staff,
+        )
+        employee_id = form.cleaned_data['employee_id']
+        position = form.cleaned_data['position']
+        department = form.cleaned_data['department']
+        new_employee = EmployeeModel.objects.create(
+            user=new_user,
+            id_num=employee_id,
+            position=position,
+        )
+        new_employee.section_id.set(department)
+        return super().form_valid(form)
+
+
+class EmployeeEditView(PermissionRequiredMixin, FormView):
+    permission_required = 'admin_app.edit_employeemodel'
+    template_name = 'admin_app/employees/employeemodel_form.html'
+    form_class = EmployeeAddForm
+    success_url = '/employee_list/'
+
+    def form_valid(self, form):
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password_1']
+        first_name = form.cleaned_data['first_name']
+        last_name = form.cleaned_data['last_name']
+        email = form.cleaned_data['user_email']
+        staff = form.cleaned_data['staff']
+        new_user = User.objects.update(
+            username=username,
+            password=password,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            is_staff=staff,
+        )
+        employee_id = form.cleaned_data['employee_id']
+        position = form.cleaned_data['position']
+        department = form.cleaned_data['department']
+        new_employee = EmployeeModel.objects.update(
+            user=new_user,
+            id_num=employee_id,
+            position=position,
+        )
+        new_employee.section_id = department
+        return super().form_valid(form)
+
+
+class EmployeeDeleteView(PermissionRequiredMixin, DeleteView):
+    """
+    Class deleting an employee from database.
+    """
+    permission_required = 'admin_app.delete_employeemodel'
+    template_name = 'admin_app/employees/employeemodel_confirm_delete.html'
+    model = EmployeeModel
+    success_url = '/employee_list/'

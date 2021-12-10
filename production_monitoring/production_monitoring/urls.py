@@ -70,7 +70,11 @@ from admin_app.views import (
     DepartmentAddView,
     DepartmentEditView,
     DepartmentDeleteView,
-
+    EmployeeListView,
+    EmployeeDetailView,
+    EmployeeAddView,
+    EmployeeEditView,
+    EmployeeDeleteView,
 )
 
 urlpatterns = [
@@ -133,4 +137,10 @@ urlpatterns = [
     path('add_door/', ProductAddView.as_view(), name='add_door'),
     path('edit_door/<int:pk>/', ProductEditView.as_view(), name='edit_door'),
     path('delete_door/<int:pk>/', ProductDeleteView.as_view(), name='delete_door'),
+
+    path('employee_list/', EmployeeListView.as_view(), name='employee_list'),
+    path('employee_details/<int:pk>/', EmployeeDetailView.as_view(), name='employee_detail'),
+    path('add_employee/', EmployeeAddView.as_view(), name='add_employee'),
+    path('edit_employee/<int:pk>/', EmployeeEditView.as_view(), name='edit_employee'),
+    path('delete_employee/<int:pk>/', EmployeeDeleteView.as_view(), name='delete_employee'),
 ]
