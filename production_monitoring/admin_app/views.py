@@ -230,6 +230,10 @@ class EmployeeDetailView(View):
 
 
 class EmployeeAddView(PermissionRequiredMixin, FormView):
+    """
+    Class display and process a custom form allowing for
+    addition of a new employee to database.
+    """
     permission_required = 'admin_app.add_employeemodel'
     template_name = 'admin_app/employees/employeemodel_form.html'
     form_class = EmployeeAddForm
@@ -263,6 +267,10 @@ class EmployeeAddView(PermissionRequiredMixin, FormView):
 
 
 class EmployeeEditView(PermissionRequiredMixin, View):
+    """
+    Class display and process a custom form allowing  for
+    editting of an employee.
+    """
     permission_required = 'admin_app.update_employeemodel'
     def get(self, request, pk):
         employee = EmployeeModel.objects.get(id=pk)
@@ -309,32 +317,6 @@ class EmployeeEditView(PermissionRequiredMixin, View):
             'admin_app/employees/employeemodel_form.html',
             {'form': form},
         )
-
-    # def form_valid(self, form):
-    #     username = form.cleaned_data['username']
-    #     password = form.cleaned_data['password_1']
-    #     first_name = form.cleaned_data['first_name']
-    #     last_name = form.cleaned_data['last_name']
-    #     email = form.cleaned_data['user_email']
-    #     staff = form.cleaned_data['staff']
-    #     new_user = User.objects.update(
-    #         username=username,
-    #         password=password,
-    #         first_name=first_name,
-    #         last_name=last_name,
-    #         email=email,
-    #         is_staff=staff,
-    #     )
-    #     employee_id = form.cleaned_data['employee_id']
-    #     position = form.cleaned_data['position']
-    #     department = form.cleaned_data['department']
-    #     new_employee = EmployeeModel.objects.update(
-    #         user=new_user,
-    #         id_num=employee_id,
-    #         position=position,
-    #     )
-    #     new_employee.section_id = department
-    #     return super().form_valid(form)
 
 
 class EmployeeDeleteView(PermissionRequiredMixin, DeleteView):
