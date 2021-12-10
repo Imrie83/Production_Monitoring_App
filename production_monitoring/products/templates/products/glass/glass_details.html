@@ -2,8 +2,7 @@
 {% load static %}
 {% block title %}{% endblock %}
 {% block side_menu %}
-    <a href="/glass_list/">Glass List</a><br>
-    <a href="/add_glass/">Add Glass</a><br>
+
 {% endblock %}
 {% block content %}
     <h2>Name: {{ glass_detail.glass_name }}</h2>
@@ -19,7 +18,6 @@
     <p>{{ glass_detail.component_description }}</p>
     <a href="/edit_glass/{{ glass_detail.id }}/">Edit</a>
     <a href="/delete_glass/{{ glass_detail.id }}/">Delete</a>
-{#    <br>#}
     <a href="{% url 'glass_list' %}">Back</a>
 
 {% endblock %}

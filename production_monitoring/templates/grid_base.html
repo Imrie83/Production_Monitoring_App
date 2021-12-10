@@ -5,15 +5,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="{% static "css/alt_style.css" %}">
+    <link rel='stylesheet' href="{% static "css/menu_style.css" %}">
+    <script src='scripts/script.js'></script><body>
     <title>{% block title %}{% endblock title %}</title>
 </head>
 <body>
     <div class="container">
-    <div class="Logo"></div>
       <div class="Footer"></div>
       <div class="Content">
+        <div class="inner-content">
           {% block content %}
           {% endblock %}
+        </div>
       </div>
       <div class="Additional"></div>
       <div class="Menu">
@@ -21,49 +24,50 @@
           {% endblock %}
       </div>
       <div class="Header">
-            {% if user %}
-                <a href="{% url 'logout' %}">Logout</a>
-            {% endif  %}
-
-            {% if user %}{% if perms.products.view_customermodel %}
-                <a href="{% url 'customer_list' %}">Customers</a>
-            {% endif %}{% endif %}
-
-            {% if user %}{% if perms.products.view_user %}
-                <a href="{% url 'employee_list' %}">Employees</a>
-            {% endif %}{% endif %}
-
-            {% if user %}{% if perms.products.view_departmentmodel %}
-                <a href="{% url 'department_list' %}">Departments</a>
-            {% endif %}{% endif %}
-
-            {% if user %}{% if perms.tools.view_toolsmodel %}
-                <a href="{% url 'tools' %}">Tools</a>
-            {% endif %}{% endif %}
-
-            {% if user %}{% if perms.products.view_ordermodel %}
-                <a href="{% url 'order_list' %}">Orders</a>
-            {% endif %}{% endif %}
-
-            {% if user %}{% if perms.products.view_productsmodel %}
-                <a href="{% url 'door_list' %}">Doors / Lines</a>
-            {% endif %}{% endif %}
-
-            {% if user %}{% if perms.products.view_componentsmodel %}
-                <a href="{% url 'component_list' %}">Components</a>
-            {% endif %}{% endif %}
-
-            {% if user %}{% if perms.products.view_glassmodel %}
-                <a href="{% url 'glass_list' %}">Glass</a>
-            {% endif %}{% endif %}
-
-            {% if user %}{% if perms.products.view_doorstylemodel %}
-                <a href="{% url 'style_list' %}">Door-Styles</a>
-            {% endif %}{% endif %}
-
-            {% if user %}{% if perms.products.view_machinemodel %}
-                <a href="{% url 'machine_list' %}">CNC Machines</a>
-            {% endif %}{% endif %}
+          <nav id='menu'>
+          <input type='checkbox' id='responsive-menu' onclick='updatemenu()'><label></label>
+          <ul>
+            <li><a href="{% url 'panel' %}">Home</a></li>
+            <li><a class='dropdown-arrow'>Admin</a>
+              <ul class='sub-menus'>
+                <li><a href="/customer_list/">Show Customers</a></li>
+                <li><a href="/add_customer/">Add Customer</a></li>
+                <li><a href="/department_list/">Show Departments</a></li>
+                <li><a href="/add_department/">Add Department</a></li>
+                <li><a href="/employee_list/">List Employees</a></li>
+                <li><a href="/add_employee/">Add Employee</a></li>
+              </ul>
+            </li>
+            <li><a class='dropdown-arrow'>Orders</a>
+              <ul class='sub-menus'>
+                <li><a href="/order_list/">List Orders</a></li>
+                <li><a href="/add_order/">Create Order</a></li>
+                <li><a href="/door_list/">List Doors</a></li>
+                <li><a href="/add_door/">Add Door</a></li>
+              </ul>
+            </li>
+            <li><a class='dropdown-arrow'>Parts</a>
+              <ul class='sub-menus'>
+                <li><a href="/component_list/">List Components</a></li>
+                <li><a href="/add_component'/">Add Component</a></li>
+                <li><a href="/glass_list/">Show Glass</a></li>
+                <li><a href="/add_glass/">Add Glass</a></li>
+                <li><a href="/style_list/">Show Styles</a></li>
+                <li><a href="/add_style/">Add Style</a></li>
+              </ul>
+            </li>
+            <li><a class='dropdown-arrow'>CNC Menu</a>
+              <ul class='sub-menus'>
+                <li><a href="/machine_list/">Show Machines</a></li>
+                <li><a href="/add_machine/">Add Machine</a></li>
+                <li><a href="/tool_list/">Show Tools</a></li>
+                <li><a href="/add_tool/">CreateTools</a></li>
+              </ul>
+            </li>
+{#            <li><a class='dropdown-arrow' href="{{request.META.HTTP_REFERER|escape}}">BACK</a>#}
+{#            </li>#}
+          </ul>
+        </nav>
       </div>
     </div>
 </body>

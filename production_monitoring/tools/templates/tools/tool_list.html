@@ -2,8 +2,7 @@
 {% load static %}
 {% block title %}{% endblock %}
 {% block side_menu %}
-    <a href="/tool_list/">Tool List</a><br>
-    <a href="/add_tools/">Add Tool</a>
+
 {% endblock %}
 {% block content %}
     <ul>
@@ -12,9 +11,6 @@
             <h2><a href="/tool_details/{{ tool.id }}/">{{ tool.tool_name }}</a></h2>
             <ol>In stock: {{ tool.stock }}</ol>
             <ol>{{ tool.short_description }}</ol>
-{#            {% if tool.image.url|length > 0 %}#}
-{#            <ol><img src="{{ tool.image.url }}" alt="{{ tool.tool_name }}"></ol>#}
-{#            {% endif %}#}
         </li>
     {% endfor %}
     </ul>
