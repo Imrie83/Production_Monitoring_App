@@ -1,0 +1,13 @@
+{% extends "grid_base.html" %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+
+{% endblock %}
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ scan_in_form.as_table }}
+        <input type="submit" value="Start" name="start">
+        <input type="submit" value="Finish" name="finish">
+    </form>
+{% endblock %}

@@ -60,7 +60,6 @@ class PanelView(View):
     Class display panel view
     visible after successful log in
     """
-
     def get(self, request):
         return render(request, 'admin_app/main.html')
 
@@ -263,6 +262,8 @@ class EmployeeAddView(PermissionRequiredMixin, FormView):
             position=position,
         )
         new_employee.section_id.set(department)
+        employee_group = form.cleaned_data['user_group']
+        new_employee.user.groups.set(employee_group)
         return super().form_valid(form)
 
 

@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.core.validators import validate_email, URLValidator
 from django.core.exceptions import ValidationError
 from tools.models import ToolsModel
@@ -66,6 +66,10 @@ class EmployeeAddForm(forms.Form):
     )
     last_name = forms.CharField(
         label='Surname'
+    )
+    user_group = forms.ModelMultipleChoiceField(
+        label='Employee Permission Level',
+        queryset=Group.objects.all(),
     )
     employee_id = forms.IntegerField(
         validators=[employee_id_validator],

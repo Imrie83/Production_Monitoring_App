@@ -1,4 +1,5 @@
 {% load static %}
+{% load products_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,43 +35,82 @@
           <nav id='menu'>
           <input type='checkbox' id='responsive-menu' onclick='updatemenu()'><label></label>
           <ul>
+            {% if user.is_authenticated %}
             <li><a href="{% url 'panel' %}">Home</a></li>
+            {% endif %}
+              {% if perms.products.view_customermodel %}
             <li><a class='dropdown-arrow'>Admin</a>
               <ul class='sub-menus'>
                 <li><a href="/customer_list/">Show Customers</a></li>
+                {% if perms.products.add_customermodel %}
                 <li><a href="/add_customer/">Add Customer</a></li>
+                {% endif %}
                 <li><a href="/department_list/">Show Departments</a></li>
+                {% if perms.admin_app.add_departmentmodel %}
                 <li><a href="/add_department/">Add Department</a></li>
+                {% endif %}
                 <li><a href="/employee_list/">List Employees</a></li>
+                {% if perms.admin_app.add_employeemodel %}
                 <li><a href="/add_employee/">Add Employee</a></li>
+                {% endif %}
               </ul>
             </li>
+              {% endif %}
+            {% if perms.products.view_ordermodel %}
             <li><a class='dropdown-arrow'>Orders</a>
               <ul class='sub-menus'>
                 <li><a href="/order_list/">List Orders</a></li>
+                {% if perms.products.add_ordermodel %}
                 <li><a href="/add_order/">Create Order</a></li>
+                {% endif %}
                 <li><a href="/door_list/">List Doors</a></li>
+                {% if perms.products.add_productmodel %}
                 <li><a href="/add_door/">Add Door</a></li>
+                {% endif %}
               </ul>
             </li>
+            {% endif %}
+            {% if perms.products.view_ordermodel %}
             <li><a class='dropdown-arrow'>Parts</a>
               <ul class='sub-menus'>
                 <li><a href="/component_list/">List Components</a></li>
+                {% if perms.products.add_componentmodel %}
                 <li><a href="/add_component/">Add Component</a></li>
+                {% endif %}
                 <li><a href="/glass_list/">Show Glass</a></li>
+                {% if perms.products.add_glassmodel %}
                 <li><a href="/add_glass/">Add Glass</a></li>
+                {% endif %}
                 <li><a href="/style_list/">Show Styles</a></li>
+                {% if perms.products.add_doorstylemodel %}
                 <li><a href="/add_style/">Add Style</a></li>
+                {% endif %}
               </ul>
             </li>
+            {% endif %}
+            {% if perms.admin_app.view_machinemodel %}
             <li><a class='dropdown-arrow'>CNC Menu</a>
               <ul class='sub-menus'>
                 <li><a href="/machine_list/">Show Machines</a></li>
+                {% if perms.admin_app.add_machinemodel %}
                 <li><a href="/add_machine/">Add Machine</a></li>
+                {% endif %}
                 <li><a href="/tool_list/">Show Tools</a></li>
+                {% if perms.tools.add_toolmodel %}
                 <li><a href="/add_tool/">CreateTools</a></li>
+                {% endif %}
               </ul>
             </li>
+            {% endif %}
+            {% if user|has_group:"Shop floor staff" %}
+                <li><a class="dropdown-arrow" href="/scan_product/">Scan</a></li>
+            {% endif %}
+            {% if user.is_authenticated %}
+                <li><a class="dropdown-arrow" href="/logout/">Logout</a></li>
+            {% endif %}
+            {% if not user.is_authenticated %}
+                <li><a class="dropdown-arrow" href="/">Login</a></li>
+            {% endif %}
 {#            <li><a class='dropdown-arrow' href="{{request.META.HTTP_REFERER|escape}}">BACK</a>#}
 {#            </li>#}
           </ul>

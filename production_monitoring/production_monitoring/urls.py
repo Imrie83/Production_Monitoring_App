@@ -54,6 +54,7 @@ from products.views import (
     ProductAddView,
     ProductEditView,
     ProductDeleteView,
+    ScanProductionView,
 )
 
 from admin_app.views import (
@@ -143,4 +144,6 @@ urlpatterns = [
     path('add_employee/', EmployeeAddView.as_view(), name='add_employee'),
     path('edit_employee/<int:pk>/', EmployeeEditView.as_view(), name='edit_employee'),
     path('delete_employee/<int:pk>/', EmployeeDeleteView.as_view(), name='delete_employee'),
+
+    path('scan_product/', ScanProductionView.as_view(), name='scan_product'),
 ]

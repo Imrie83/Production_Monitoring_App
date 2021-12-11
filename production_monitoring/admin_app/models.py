@@ -127,7 +127,7 @@ class UserProductModel(models.Model):
     )
     prod_end = models.DateTimeField(
         verbose_name='Work ended',
-        null=True
+        null=True,
     )
 
 

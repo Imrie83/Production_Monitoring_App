@@ -1,10 +1,17 @@
+from datetime import datetime
+from django.utils import timezone
+
 from django.contrib.admin import TabularInline
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.forms import inlineformset_factory
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import FormView, CreateView, UpdateView, DeleteView
+import re
 
-
+from admin_app.models import UserProductModel, EmployeeModel
+from products.forms import ComponentAddForm, ScanProductionForm
 from products.models import (
     OrderModel,
     ProductsModel,
@@ -13,6 +20,7 @@ from products.models import (
     DoorStyleModel,
     GlassModel, ComponentToolsModel,
 )
+from tools.models import ToolsModel
 
 
 class OrderListView(View):
@@ -105,6 +113,18 @@ class ComponentDetailView(View):
         except KeyError:
             return redirect('/component_list/')
 
+# TODO: figure out many-to-many with additional fields!
+# class AddComponentView(PermissionRequiredMixin, CreateView):
+#     """
+#     Class displaying form allowing to add a new component
+#     in to the database.
+#     """
+#     permission_required = 'products.add_componentsmodel'
+#     template_name = 'products/components/componentsmodel_form.html'
+#     model = ComponentsModel
+#     fields = '__all__'
+#     success_url = '/component_list/'
+
 
 class AddComponentView(PermissionRequiredMixin, CreateView):
     """
@@ -114,8 +134,22 @@ class AddComponentView(PermissionRequiredMixin, CreateView):
     permission_required = 'products.add_componentsmodel'
     template_name = 'products/components/componentsmodel_form.html'
     model = ComponentsModel
-    fields = '__all__'
+    # fields = '__all__'
+    form_class = ComponentAddForm
     success_url = '/component_list/'
+
+
+#
+# class AddComponentView(PermissionRequiredMixin, FormView):
+#     permission_required = 'products.add_componentsmodel'
+#     template_name = 'products/components/componentsmodel_form.html'
+#     form_class = ComponentAddForm
+#     success_url = '/component_list/'
+#
+#
+#     def form_valid(self, form):
+#         form.save()
+#         return super().form_valid(form)
 
 
 class EditComponentView(PermissionRequiredMixin, UpdateView):
@@ -394,3 +428,123 @@ class ProductDeleteView(PermissionRequiredMixin, DeleteView):
     template_name = 'products/doors/productsmodel_confirm_delete.html'
     model = ProductsModel
     success_url = '/door_list/'
+
+
+class ScanProductionView(View):
+    """
+    class allowing to scan doors on shop floor
+    on start and end of production on each
+    production stage
+    """
+    def get(self, request):
+        scan_in_form = ScanProductionForm()
+
+        return render(
+            request,
+            'products/production/user_scanner_form.html',
+            {'scan_in_form': scan_in_form}
+        )
+
+    def post(self, request):
+        current_employee = EmployeeModel.objects.get(user=request.user)
+        scan_filter = r'^(?P<prefix>job)(?P<order>\d{1,7})-(?P<job>\d{1,4})'
+        # now = f'{datetime.now().strftime("%Y-%m-%d %H:%M")}'
+        now = timezone.make_aware(datetime.now())
+        print(now)
+        # aware_start_time = timezone.make_aware(datetime.now())
+        if 'start' in request.POST:
+            full_number = re.match(
+                scan_filter,
+                request.POST['job_no'],
+                flags=re.IGNORECASE,
+            )
+            prefix = full_number['prefix']
+            ord_no = full_number['order']
+            if len(ord_no) < 7:
+                ord_no = ord_no.rjust(7, '0')
+            job_no = full_number['job']
+            if len(job_no) < 4:
+                job_no = job_no.rjust(4, '0')
+
+            try:
+                order = OrderModel.objects.get(
+                    order_number__icontains=prefix + ord_no
+                )
+            except ObjectDoesNotExist:
+                return redirect(to='/scan_product/')
+
+            try:
+                job = ProductsModel.objects.get(
+                    order_num=order,
+                    job_no__icontains=job_no
+                )
+            except ObjectDoesNotExist:
+                return redirect(to='/scan_product/')
+
+            if not UserProductModel.objects.filter(
+                    product_id=job,
+                    user_id=current_employee,
+            ):
+                scan = UserProductModel.objects.create(
+                    product_id=job,
+                    user_id=current_employee,
+                    prod_start=now,
+                )
+            else:
+                scan = UserProductModel.objects.update(
+                    product_id=job,
+                    user_id=current_employee,
+                    prod_start=now,
+                )
+            return redirect(to='/scan_product/')
+
+        if 'finish' in request.POST:
+            full_number = re.match(
+                scan_filter,
+                request.POST['job_no'],
+                flags=re.IGNORECASE,
+            )
+            prefix = full_number['prefix']
+            ord_no = full_number['order']
+            if len(ord_no) < 7:
+                ord_no = ord_no.rjust(7, '0')
+            job_no = full_number['job']
+            if len(job_no) < 4:
+                job_no = job_no.rjust(4, '0')
+
+            try:
+                order = OrderModel.objects.get(
+                    order_number__icontains=prefix + ord_no
+                )
+            except ObjectDoesNotExist:
+                return redirect(to='/scan_product/')
+
+            try:
+                job = ProductsModel.objects.get(
+                    order_num=order,
+                    job_no__icontains=job_no
+                )
+            except ObjectDoesNotExist:
+                return redirect(to='/scan_product/')
+
+            if not UserProductModel.objects.filter(
+                    product_id=job,
+                    user_id=current_employee,
+            ):
+                scan = UserProductModel.objects.create(
+                    product_id=job,
+                    user_id=current_employee,
+                    prod_end=now,
+                )
+            else:
+                scan = UserProductModel.objects.update(
+                    product_id=job,
+                    user_id=current_employee,
+                    prod_end=now,
+                )
+            return redirect(to='/scan_product/')
+
+        else:
+            return redirect(to='/scan_product/')
+
+

@@ -68,6 +68,11 @@ class OrderModel(models.Model):
             output += f'{line}\n'
         return output
 
+    def save(self, *args, **kwargs):
+        self.order_number = (self.order_number).upper()
+        return super(OrderModel, self).save(*args, **kwargs)
+
+
     def __str__(self):
         return self.order_number
 
