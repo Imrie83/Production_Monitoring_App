@@ -3,19 +3,39 @@ from django.contrib.auth.models import User
 from django.core.validators import validate_email, URLValidator
 from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet, inlineformset_factory, \
-    CheckboxSelectMultiple
+    CheckboxSelectMultiple, formset_factory
 
-from products.models import ComponentsModel, ComponentToolsModel, ProductsModel
+from products.models import ComponentsModel, ComponentToolsModel, ProductsModel, \
+    OrderModel, DOOR_TYPES, PRODUCT_TYPE, GlassModel, GlassToolModel
 from tools.models import ToolsModel
 
 
-class ComponentToolForm(forms.ModelForm):
+class GlassAddForm(forms.ModelForm):
+    """
+    Class creating a custom form allowing
+    to add a new piece of glass to the database.
+    """
     class Meta:
-        model = ComponentToolsModel
-        exclude = []
+        model = GlassModel
+        exclude = ['tools_req']
+
+
+class GlassToolAddForm(forms.ModelForm):
+    """
+    Class creating a custom form allowing to add
+    required tools with machining times to the
+    glass.
+    """
+    class Meta:
+        model = GlassToolModel
+        exclude = ['glass_id']
 
 
 class ComponentAddForm(forms.ModelForm):
+    """
+    Class creating a custom form allowing to add a new component
+    to database.
+    """
     class Meta:
 
         model = ComponentsModel
@@ -26,20 +46,19 @@ class ComponentAddForm(forms.ModelForm):
             'product_type',
             'component_description',
             'img',
-            'tools_req'
         ]
-    # tools_req = forms.ModelMultipleChoiceField(
-    #     queryset=ToolsModel.objects.all(),
-    #     widget=forms.CheckboxSelectMultiple
-    # )
-
-    #     tools_req = forms.ModelMultipleChoiceField(queryset=ToolsModel.objects.all(), widget=forms.CheckboxSelectMultiple)
 
 
-# ComponentToolFormSet = inlineformset_factory(
-#     ToolsModel, ComponentToolsModel, form=ComponentAddForm,
-#     fields=['tools_id', 'machine_time'], extra=1, can_delete=True
-#     )
+class ComponentToolsForm(forms.ModelForm):
+    """
+    Class displaying a custom form
+    allowing to add tool required to machine
+    a particular component together with
+    machining time.
+    """
+    class Meta:
+        model = ComponentToolsModel
+        exclude = ['component_id']
 
 
 class ScanProductionForm(forms.Form):
@@ -57,10 +76,10 @@ class ProductAddForm(forms.Form):
     """
     Class creating a custom product form
     """
-    pass
-
-
-class ComponentAddForm(forms.Form):
-    """
-    Class creating a custom component form
-    """
+    # order = forms.ChoiceField(
+    #     choices=OrderModel.objects.all(),
+    #
+    # )
+    # class Meta:
+    #     model = ProductsModel
+    #     exclude = []

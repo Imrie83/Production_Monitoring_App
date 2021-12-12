@@ -96,7 +96,7 @@ class ComponentsModel(models.Model):
     tools_req = models.ManyToManyField(
         to=ToolsModel,
         through='ComponentToolsModel',
-        verbose_name='Tools Required'
+        verbose_name='Tools Required',
     )
     door_type = models.CharField(
         choices=DOOR_TYPES,

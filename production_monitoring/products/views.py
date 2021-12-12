@@ -11,7 +11,8 @@ from django.views.generic import FormView, CreateView, UpdateView, DeleteView
 import re
 
 from admin_app.models import UserProductModel, EmployeeModel
-from products.forms import ComponentAddForm, ScanProductionForm
+from products.forms import ComponentAddForm, ScanProductionForm, ProductAddForm, \
+    ComponentToolsForm, GlassAddForm, GlassToolAddForm
 from products.models import (
     OrderModel,
     ProductsModel,
@@ -118,43 +119,73 @@ class ComponentDetailView(View):
             return redirect('/component_list/')
 
 
-# TODO: figure out many-to-many with additional fields!
-# class AddComponentView(PermissionRequiredMixin, CreateView):
-#     """
-#     Class displaying form allowing to add a new component
-#     in to the database.
-#     """
-#     permission_required = 'products.add_componentsmodel'
-#     template_name = 'products/components/componentsmodel_form.html'
-#     model = ComponentsModel
-#     fields = '__all__'
-#     success_url = '/component_list/'
-
-
-class AddComponentView(PermissionRequiredMixin, CreateView):
+class AddComponentView(PermissionRequiredMixin, View):
     """
     Class displaying form allowing to add a new component
     in to the database.
     """
     permission_required = 'products.add_componentsmodel'
-    template_name = 'products/components/componentsmodel_form.html'
-    model = ComponentsModel
-    # fields = '__all__'
-    form_class = ComponentAddForm
-    success_url = '/component_list/'
+
+    def get(self, request):
+        form = ComponentAddForm()
+        return render(
+            request,
+            'products/components/componentsmodel_form.html',
+            {'form': form}
+        )
+
+    def post(self, request):
+        form = ComponentAddForm(request.POST)
+        if form.is_valid():
+            new_component = ComponentsModel.objects.create(
+                name=form.cleaned_data['name'],
+                stock=form.cleaned_data['stock'],
+                door_type=form.cleaned_data['door_type'],
+                product_type=form.cleaned_data['product_type'],
+                component_description=form.cleaned_data[
+                    'component_description'],
+                img=form.cleaned_data['img']
+            )
+            return redirect(to=f'/component_details/{new_component.pk}')
+        else:
+            return render(
+                request,
+                'products/components/componentsmodel_form.html/',
+                {'form': form}
+            )
 
 
-#
-# class AddComponentView(PermissionRequiredMixin, FormView):
-#     permission_required = 'products.add_componentsmodel'
-#     template_name = 'products/components/componentsmodel_form.html'
-#     form_class = ComponentAddForm
-#     success_url = '/component_list/'
-#
-#
-#     def form_valid(self, form):
-#         form.save()
-#         return super().form_valid(form)
+class AddComponentToolView(PermissionRequiredMixin, View):
+    """
+    Class creating a form allowing to
+    add tools with machining times to each component.
+    """
+    permission_required = 'product.edit_componenttoolsmodel'
+
+    def get(self, request, pk):
+        form = ComponentToolsForm()
+        return render(
+            request,
+            'products/components/componentsmodel_form.html',
+            {'form': form}
+        )
+
+    def post(self, request, pk):
+        form = ComponentToolsForm(request.POST)
+        assign_to_comp = ComponentsModel.objects.get(id=pk)
+        if form.is_valid():
+            add_tool = ComponentToolsModel.objects.create(
+                component_id=assign_to_comp,
+                tools_id=form.cleaned_data['tools_id'],
+                machine_time=form.cleaned_data['machine_time'],
+            )
+            return redirect(to=f'/component_details/{assign_to_comp.pk}')
+        else:
+            return render(
+                request,
+                'products/components/componentsmodel_form.html/',
+                {'form': form}
+            )
 
 
 class EditComponentView(PermissionRequiredMixin, UpdateView):
@@ -212,16 +243,72 @@ class GlassDetailView(View):
             return redirect('/glass_list/')
 
 
-class GlassAddView(PermissionRequiredMixin, CreateView):
+class GlassAddView(PermissionRequiredMixin, View):
     """
     Class displaying a form allowing
     to add a new piece of glass  to database.
     """
     permission_required = 'products.add_glassmodel'
-    template_name = 'products/glass/glassmodel_form.html'
-    model = GlassModel
-    fields = '__all__'
-    success_url = '/glass_list/'
+
+    def get(self, request):
+        form = GlassAddForm
+        return render(
+            request,
+            'products/glass/glassmodel_form.html',
+            {'form': form}
+        )
+
+    def post(self, request):
+        form = GlassAddForm(request.POST)
+        if form.is_valid():
+            new_glass = GlassModel.objects.create(
+                glass_name=form.cleaned_data['glass_name'],
+                glass_door_type=form.cleaned_data['glass_door_type'],
+                stock=form.cleaned_data['stock'],
+                description=form.cleaned_data['description'],
+                img=form.cleaned_data['img'],
+            )
+            return redirect(to=f'/glass_detail/{new_glass.pk}/')
+        else:
+            return render(
+                request,
+                'products/glass/glassmodel_form.html',
+                {'form': form},
+            )
+
+
+class GlassToolAddView(PermissionRequiredMixin, View):
+    """
+    Class display a form allowing to
+    add tool and machining time to a piece
+    of glass.
+    """
+    permission_required = 'products.add_glasstoolmodel'
+
+    def get(self, request, pk):
+        form = GlassToolAddForm()
+        return render(
+            request,
+            'products/glass/glassmodel_form.html',
+            {'form': form}
+        )
+
+    def post(self, request, pk):
+        form = GlassToolAddForm(request.POST)
+        assign_to_glass = GlassModel.objects.get(id=pk)
+        if form.is_valid():
+            new_glass_too = GlassToolModel.objects.create(
+                glass_id=assign_to_glass,
+                tool_id=form.cleaned_data['tool_id'],
+                machine_time=form.cleaned_data['machine_time'],
+            )
+            return redirect(to=f'/glass_detail/{assign_to_glass.pk}/')
+        else:
+            return render(
+                request,
+                'products/glass/glassmodel_form.html',
+                {'form': form}
+            )
 
 
 class GlassEditView(PermissionRequiredMixin, UpdateView):
@@ -418,7 +505,8 @@ class ProductAddView(PermissionRequiredMixin, CreateView):
     permission_required = 'products.add_productsmodel'
     template_name = 'products/doors/productsmodel_form.html'
     model = ProductsModel
-    fields = '__all__'
+    # fields = '__all__'
+    form_class = ProductAddForm
     success_url = '/door_list/'
 
 
@@ -614,7 +702,6 @@ class ScanProductionView(View):
                     door_trim_tool.save()
 
                     return redirect(to='/scan_product/')
-
 
                     # Take components and glass from the stock after machining.
                 # for component in ProductComponent.objects.filter(product_id=job.pk):

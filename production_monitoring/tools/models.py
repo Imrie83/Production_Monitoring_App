@@ -12,7 +12,7 @@ class ToolsModel(models.Model):
         max_length=255,
         null=False,
         verbose_name='Tool name',
-        help_text='Short tool name',
+        # help_text='Short tool name',
         unique=True,
     )
     feed_rate = models.IntegerField(
@@ -24,7 +24,7 @@ class ToolsModel(models.Model):
         max_length=255,
         null=True,
         verbose_name='Type',
-        help_text='PCD - HSS - Carbide',
+        # help_text='PCD - HSS - Carbide',
         blank=True,
     )
     stock = models.IntegerField(
@@ -36,7 +36,7 @@ class ToolsModel(models.Model):
         verbose_name='Allowed run time',
         null=False,
         default=0,
-        help_text='Maximum run time allowed before tool change - in minutes!'
+        # help_text='Maximum run time allowed before tool change - in minutes!'
     )
     description = models.TextField(
         verbose_name='Description',
@@ -69,7 +69,10 @@ class ToolsModel(models.Model):
         return f'Name: {self.tool_name} Stock: {self.stock}'
 
     def short_description(self):
-        return self.description[:50]
+        short_desc = ''
+        if self.description:
+            short_desc = self.description[:50]
+        return short_desc
 
     short_description.short_description = 'Description'
 

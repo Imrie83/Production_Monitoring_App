@@ -15,11 +15,12 @@
             <li>{{ tool.tool_name }}</li>
             {% endfor %}
         </ul>
+    <a href="/add_tool_component/{{ component_details.id }}/" type="button">Add Tool</a>
     </p>
     <p>{{ component_details.component_description }}</p>
 
-    <a href="/edit_component/{{ component_details.id }}/">Edit</a>
-    <a href="/delete_component/{{ component_details.id }}/">Delete</a>
-    <a href="{% url 'component_list' %}">Back</a>
+    <a href="/edit_component/{{ component_details.id }}/" type="button">Edit</a>
+    <a href="/delete_component/{{ component_details.id }}/" type="button">Delete</a>
+    <a href="{% url 'component_list' %}" type="button">Back</a>
 
 {% endblock %}
