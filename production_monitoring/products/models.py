@@ -149,9 +149,9 @@ class ComponentToolsModel(models.Model):
     tools_id = models.ForeignKey(
         ToolsModel,
         on_delete=models.CASCADE,
-        related_name='tool'
+        related_name='comp_tool'
     )
-    machine_time = models.IntegerField(
+    machine_time = models.FloatField(
         null=True,
         default=0,
     )
@@ -208,6 +208,7 @@ class ProductsModel(models.Model):
         null=False,
         on_delete=models.SET('None'),
         default=None,
+        related_name='door_glass'
     )
     components = models.ManyToManyField(
         to=ComponentsModel,
@@ -231,6 +232,13 @@ class ProductsModel(models.Model):
         null=False,
         default=0,
     )
+    trim_with = models.ForeignKey(
+        to=ToolsModel,
+        verbose_name='Trim with?',
+        default=ToolsModel.objects.get(tool_name='Turbo Cutter').pk,
+        related_name='trim_with',
+        on_delete=models.SET(1),
+    )
     delivery_date = models.DateField(
         null=True,
         blank=True,
@@ -241,7 +249,7 @@ class ProductsModel(models.Model):
         null=True,
         blank=True,
     )
-    machining_time = models.IntegerField(
+    machining_time = models.FloatField(
         null=True,
         verbose_name='Total machining time',
         editable=False,
@@ -285,6 +293,7 @@ class ProductComponent(models.Model):
     component_id = models.ForeignKey(
         to=ComponentsModel,
         on_delete=models.CASCADE,
+        related_name='comp_id'
     )
     count = models.IntegerField(
         verbose_name='Component count'
@@ -419,7 +428,7 @@ class GlassToolModel(models.Model):
         on_delete=models.CASCADE,
         related_name='glass_tool'
     )
-    machine_time = models.IntegerField(
+    machine_time = models.FloatField(
         null=True,
         default=0,
     )

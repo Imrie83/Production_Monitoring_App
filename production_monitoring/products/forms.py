@@ -51,3 +51,16 @@ class ScanProductionForm(forms.Form):
         max_length=255,
         required=True,
     )
+
+
+class ProductAddForm(forms.Form):
+    """
+    Class creating a custom product form
+    """
+    pass
+
+
+class ComponentAddForm(forms.Form):
+    """
+    Class creating a custom component form
+    """

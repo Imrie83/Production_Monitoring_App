@@ -18,7 +18,7 @@ from products.models import (
     ComponentsModel,
     CustomerModel,
     DoorStyleModel,
-    GlassModel, ComponentToolsModel,
+    GlassModel, ComponentToolsModel, GlassToolModel, ProductComponent,
 )
 from tools.models import ToolsModel
 
@@ -28,6 +28,7 @@ class OrderListView(View):
     Class display a list of all orders
     available in database.
     """
+
     def get(self, request):
         orders = OrderModel.objects.all()
         return render(
@@ -41,6 +42,7 @@ class OrderDetailView(View):
     """
     Class display a detailed view of each order.
     """
+
     def get(self, request, pk):
         try:
             order_details = OrderModel.objects.get(id=pk)
@@ -89,6 +91,7 @@ class ComponentListView(View):
     """
     Class display a list of all components available.
     """
+
     def get(self, request):
         component_list = ComponentsModel.objects.all()
         return render(
@@ -102,6 +105,7 @@ class ComponentDetailView(View):
     """
     Class displaying component details.
     """
+
     def get(self, request, pk):
         try:
             component_details = ComponentsModel.objects.get(id=pk)
@@ -112,6 +116,7 @@ class ComponentDetailView(View):
             )
         except KeyError:
             return redirect('/component_list/')
+
 
 # TODO: figure out many-to-many with additional fields!
 # class AddComponentView(PermissionRequiredMixin, CreateView):
@@ -179,6 +184,7 @@ class GlassListView(View):
     Class display a list of all
     glass available.
     """
+
     def get(self, request):
         glass_list = GlassModel.objects.all()
         return render(
@@ -193,6 +199,7 @@ class GlassDetailView(View):
     Class display detailed view of
     specific glass.
     """
+
     def get(self, request, pk):
         try:
             glass_detail = GlassModel.objects.get(id=pk)
@@ -243,6 +250,7 @@ class StyleListView(View):
     Class display a list of all
     styles available.
     """
+
     def get(self, request):
         style_list = DoorStyleModel.objects.all()
         return render(
@@ -257,6 +265,7 @@ class StyleDetailView(View):
     Class display detailed view of
     specific door style.
     """
+
     def get(self, request, pk):
         try:
             style_detail = DoorStyleModel.objects.get(id=pk)
@@ -307,6 +316,7 @@ class CustomerListView(View):
     Class display a list of all
     customers available.
     """
+
     def get(self, request):
         customer_list = CustomerModel.objects.all()
         return render(
@@ -321,6 +331,7 @@ class CustomerDetailView(View):
     Class display detailed view of
     specific customer.
     """
+
     def get(self, request, pk):
         try:
             customer_detail = CustomerModel.objects.get(id=pk)
@@ -371,6 +382,7 @@ class ProductListView(View):
     Class display a list of all
     door lines available.
     """
+
     def get(self, request):
         door_list = ProductsModel.objects.all()
         return render(
@@ -385,6 +397,7 @@ class ProductDetailView(View):
     Class display detailed view of
     specific door.
     """
+
     def get(self, request, pk):
         try:
             door_detail = ProductsModel.objects.get(id=pk)
@@ -436,6 +449,7 @@ class ScanProductionView(View):
     on start and end of production on each
     production stage
     """
+
     def get(self, request):
         scan_in_form = ScanProductionForm()
 
@@ -445,106 +459,171 @@ class ScanProductionView(View):
             {'scan_in_form': scan_in_form}
         )
 
+    # TODO: set error messages for the operator!
+    # TODO: refactor - shorten the repeated code!
     def post(self, request):
         current_employee = EmployeeModel.objects.get(user=request.user)
+        user_departments = []
+
+        for key, value in list(current_employee.section_id.values_list()):
+            user_departments.append(value)
+
         scan_filter = r'^(?P<prefix>job)(?P<order>\d{1,7})-(?P<job>\d{1,4})'
-        # now = f'{datetime.now().strftime("%Y-%m-%d %H:%M")}'
         now = timezone.make_aware(datetime.now())
-        print(now)
-        # aware_start_time = timezone.make_aware(datetime.now())
-        if 'start' in request.POST:
-            full_number = re.match(
-                scan_filter,
-                request.POST['job_no'],
-                flags=re.IGNORECASE,
-            )
-            prefix = full_number['prefix']
-            ord_no = full_number['order']
-            if len(ord_no) < 7:
-                ord_no = ord_no.rjust(7, '0')
-            job_no = full_number['job']
-            if len(job_no) < 4:
-                job_no = job_no.rjust(4, '0')
+        scan_in_form = ScanProductionForm(request.POST)
+        if scan_in_form.is_valid():
+            job_scan = scan_in_form.cleaned_data['job_no']
 
-            try:
-                order = OrderModel.objects.get(
-                    order_number__icontains=prefix + ord_no
+            if 'start' in request.POST:
+                full_number = re.match(
+                    scan_filter,
+                    job_scan,
+                    flags=re.IGNORECASE,
                 )
-            except ObjectDoesNotExist:
+                prefix = full_number['prefix']
+                ord_no = full_number['order']
+                if len(ord_no) < 7:
+                    ord_no = ord_no.rjust(7, '0')
+                job_no = full_number['job']
+                if len(job_no) < 4:
+                    job_no = job_no.rjust(4, '0')
+
+                try:
+                    order = OrderModel.objects.get(
+                        order_number__icontains=prefix + ord_no
+                    )
+                except ObjectDoesNotExist:
+                    return redirect(to='/scan_product/')
+
+                try:
+                    job = ProductsModel.objects.get(
+                        order_num=order,
+                        job_no__icontains=job_no
+                    )
+                except ObjectDoesNotExist:
+                    return redirect(to='/scan_product/')
+
+                if not UserProductModel.objects.filter(
+                        product_id=job,
+                        user_id=current_employee,
+                ):
+                    scan = UserProductModel.objects.create(
+                        product_id=job,
+                        user_id=current_employee,
+                        prod_start=now,
+                    )
+                else:
+                    scan = UserProductModel.objects.update(
+                        product_id=job,
+                        user_id=current_employee,
+                        prod_start=now,
+                    )
                 return redirect(to='/scan_product/')
 
-            try:
-                job = ProductsModel.objects.get(
-                    order_num=order,
-                    job_no__icontains=job_no
+            if 'finish' in request.POST:
+                full_number = re.match(
+                    scan_filter,
+                    job_scan,
+                    flags=re.IGNORECASE,
                 )
-            except ObjectDoesNotExist:
-                return redirect(to='/scan_product/')
+                prefix = full_number['prefix']
+                ord_no = full_number['order']
+                if len(ord_no) < 7:
+                    ord_no = ord_no.rjust(7, '0')
+                job_no = full_number['job']
+                if len(job_no) < 4:
+                    job_no = job_no.rjust(4, '0')
 
-            if not UserProductModel.objects.filter(
-                    product_id=job,
-                    user_id=current_employee,
-            ):
-                scan = UserProductModel.objects.create(
-                    product_id=job,
-                    user_id=current_employee,
-                    prod_start=now,
-                )
-            else:
-                scan = UserProductModel.objects.update(
-                    product_id=job,
-                    user_id=current_employee,
-                    prod_start=now,
-                )
-            return redirect(to='/scan_product/')
+                try:
+                    order = OrderModel.objects.get(
+                        order_number__icontains=prefix + ord_no
+                    )
+                except ObjectDoesNotExist:
+                    return redirect(to='/scan_product/')
 
-        if 'finish' in request.POST:
-            full_number = re.match(
-                scan_filter,
-                request.POST['job_no'],
-                flags=re.IGNORECASE,
-            )
-            prefix = full_number['prefix']
-            ord_no = full_number['order']
-            if len(ord_no) < 7:
-                ord_no = ord_no.rjust(7, '0')
-            job_no = full_number['job']
-            if len(job_no) < 4:
-                job_no = job_no.rjust(4, '0')
+                try:
+                    job = ProductsModel.objects.get(
+                        order_num=order,
+                        job_no__icontains=job_no
+                    )
+                except ObjectDoesNotExist:
+                    return redirect(to='/scan_product/')
 
-            try:
-                order = OrderModel.objects.get(
-                    order_number__icontains=prefix + ord_no
-                )
-            except ObjectDoesNotExist:
-                return redirect(to='/scan_product/')
+                if not UserProductModel.objects.filter(
+                        product_id=job,
+                        user_id=current_employee,
+                ):
+                    scan = UserProductModel.objects.create(
+                        product_id=job,
+                        user_id=current_employee,
+                        prod_end=now,
+                    )
+                else:
+                    scan = UserProductModel.objects.update(
+                        product_id=job,
+                        user_id=current_employee,
+                        prod_end=now,
+                    )
 
-            try:
-                job = ProductsModel.objects.get(
-                    order_num=order,
-                    job_no__icontains=job_no
+                component_tools = ComponentToolsModel.objects.filter(
+                    component_id=job.pk
                 )
-            except ObjectDoesNotExist:
-                return redirect(to='/scan_product/')
 
-            if not UserProductModel.objects.filter(
-                    product_id=job,
-                    user_id=current_employee,
-            ):
-                scan = UserProductModel.objects.create(
-                    product_id=job,
-                    user_id=current_employee,
-                    prod_end=now,
-                )
-            else:
-                scan = UserProductModel.objects.update(
-                    product_id=job,
-                    user_id=current_employee,
-                    prod_end=now,
-                )
-            return redirect(to='/scan_product/')
+                if 'CNC' in user_departments:
+                    # TODO: sort out duplicate code!
+                    for tools in component_tools:
+                        try:
+                            tool = tools.tools_id
+                            tool.current_run_time += tools.machine_time
+                            if tool.current_run_time >= tool.max_run_time:
+                                tool.current_run_time = (
+                                        tool.current_run_time - tool.max_run_time
+                                )
+                                tool.stock -= 1
+                            tool.save()
+                            # TODO: sort out exception handling
+                        except ObjectDoesNotExist:
+                            return redirect('/scan_product/')
+                        except AttributeError:
+                            return redirect('/scan_product/')
 
+                    glass = GlassToolModel.objects.filter(glass_id=job.glass.pk)
+                    # print(glass)
+                    for tools in glass:
+                        # print(tool.machine_time)
+                        try:
+                            tool = tools.tool_id
+                            tool.current_run_time += tools.machine_time
+                            if tool.current_run_time >= tool.max_run_time:
+                                tool.current_run_time = (
+                                        tool.current_run_time - tool.max_run_time
+                                )
+                                tool.stock -= 1
+                            tool.save()
+                        except ObjectDoesNotExist:
+                            return redirect('/scan_product/')
+                        except AttributeError:
+                            return redirect('/scan_product/')
+
+                    door_trim_time = (
+                            ((job.door_height * 2) + (job.door_width * 2))
+                            / 1000 / job.trim_with.feed_rate
+                    )
+                    door_trim_tool = job.trim_with
+                    door_trim_tool.current_run_time += door_trim_time
+                    door_trim_tool.save()
+
+                    return redirect(to='/scan_product/')
+
+
+                    # Take components and glass from the stock after machining.
+                # for component in ProductComponent.objects.filter(product_id=job.pk):
+                #     comp = ComponentsModel.objects.get(id=component.component_id.id)
+                #     comp.stock -= component.count
+                #     comp.save()
+                #
+                # glass = job.glass
+                # glass.stock -= 1
+                # glass.save()
         else:
             return redirect(to='/scan_product/')
-
-

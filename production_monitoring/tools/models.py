@@ -15,6 +15,11 @@ class ToolsModel(models.Model):
         help_text='Short tool name',
         unique=True,
     )
+    feed_rate = models.IntegerField(
+        default=5,
+        null=False,
+        verbose_name='Feed Rate',
+    )
     type = models.CharField(
         max_length=255,
         null=True,
@@ -27,7 +32,7 @@ class ToolsModel(models.Model):
         null=False,
         default=0,
     )
-    max_run_time = models.IntegerField(
+    max_run_time = models.FloatField(
         verbose_name='Allowed run time',
         null=False,
         default=0,
@@ -44,6 +49,16 @@ class ToolsModel(models.Model):
         null=True,
         blank=True,
         upload_to='static/img/tools/'
+    )
+    total_run_time = models.IntegerField(
+        null=True,
+        default=0,
+        editable=False,
+    )
+    current_run_time = models.FloatField(
+        null=True,
+        default=0,
+        editable=False,
     )
 
     class Meta:
