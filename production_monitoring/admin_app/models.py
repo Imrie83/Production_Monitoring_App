@@ -115,7 +115,8 @@ class UserProductModel(models.Model):
     """
     product_id = models.ForeignKey(
         ProductsModel,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='user_product'
     )
     user_id = models.ForeignKey(
         to=EmployeeModel,

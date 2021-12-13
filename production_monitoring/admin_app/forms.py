@@ -143,3 +143,11 @@ class EmployeeEditForm(forms.Form):
         initial=True,
         required=False,
     )
+
+
+class DateChoose(forms.DateInput):
+    input_type = 'date'
+
+class DatePicker(forms.Form):
+
+    change_date = forms.DateField(widget=DateChoose)

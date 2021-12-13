@@ -94,3 +94,6 @@ html, body , .container {
   justify-content: center;
 }
 
+#id_change_date{
+  width: 200px;
+}

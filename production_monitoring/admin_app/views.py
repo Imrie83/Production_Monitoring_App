@@ -14,13 +14,15 @@ from django.views.generic.edit import (
 from admin_app.forms import (
     LoginForm,
     EmployeeAddForm,
-    EmployeeEditForm,
+    EmployeeEditForm, DatePicker,
 )
 from admin_app.models import (
     MachineModel,
     EmployeeModel,
-    DepartmentModel, UserProductModel,
+    DepartmentModel,
+    UserProductModel,
 )
+from products.models import ProductsModel, ProductComponent
 
 
 class LoginView(View):
@@ -385,3 +387,41 @@ class EmployeeDeleteView(PermissionRequiredMixin, DeleteView):
     template_name = 'admin_app/employees/employeemodel_confirm_delete.html'
     model = EmployeeModel
     success_url = '/employee_list/'
+
+
+# TODO: add current location
+class TodayProductionView(View):
+    def get(self, request):
+        form = DatePicker()
+        now = datetime.now().strftime('%Y-%m-%d')
+        output = ProductsModel.objects.filter(
+            production_date__icontains=now,
+        ).order_by('order_num', 'job_no', '-finished')
+        return render(
+            request,
+            'admin_app/today_production.html',
+            {
+                'output': output,
+                'form': form,
+                'date': now,
+            }
+        )
+
+    def post(self, request):
+        form = DatePicker(request.POST)
+        if form.is_valid():
+            pick_date = form.cleaned_data['change_date']
+            print(pick_date)
+            output = ProductsModel.objects.filter(
+                production_date__icontains=pick_date,
+            ).order_by('order_num', 'job_no', '-finished')
+            return render(
+                request,
+                'admin_app/today_production.html',
+                {
+                    'output': output,
+                    'form': form,
+                    'date': pick_date,
+                }
+            )
+

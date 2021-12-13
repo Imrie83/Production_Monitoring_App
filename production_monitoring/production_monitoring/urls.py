@@ -76,7 +76,7 @@ from admin_app.views import (
     EmployeeDetailView,
     EmployeeAddView,
     EmployeeEditView,
-    EmployeeDeleteView,
+    EmployeeDeleteView, TodayProductionView,
 )
 
 urlpatterns = [
@@ -150,4 +150,6 @@ urlpatterns = [
     path('delete_employee/<int:pk>/', EmployeeDeleteView.as_view(), name='delete_employee'),
 
     path('scan_product/', ScanProductionView.as_view(), name='scan_product'),
+
+    path('today_production/', TodayProductionView.as_view(), name='today_production')
 ]
