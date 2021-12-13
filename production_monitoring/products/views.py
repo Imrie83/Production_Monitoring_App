@@ -66,10 +66,14 @@ class OrderDetailView(View):
     def get(self, request, pk):
         try:
             order_details = OrderModel.objects.get(id=pk)
+            order_list = OrderModel.objects.all()
             return render(
                 request,
                 'products/orders/order_details.html',
-                {'order_details': order_details}
+                {
+                    'order_details': order_details,
+                    'order_list': order_list,
+                }
             )
         except KeyError:
             return redirect('/order_list/')
@@ -513,12 +517,16 @@ class CustomerDetailView(View):
     """
 
     def get(self, request, pk):
+        customer_list = CustomerModel.objects.all()
         try:
             customer_detail = CustomerModel.objects.get(id=pk)
             return render(
                 request,
                 'products/customers/customer_details.html',
-                {'customer_detail': customer_detail}
+                {
+                    'customer_detail': customer_detail,
+                    'customer_list': customer_list,
+                }
             )
         except KeyError:
             return redirect('/customer_list/')
@@ -595,12 +603,16 @@ class ProductDetailView(View):
     """
 
     def get(self, request, pk):
+        product_list = ProductsModel.objects.all()
         try:
             door_detail = ProductsModel.objects.get(id=pk)
             return render(
                 request,
                 'products/doors/products_details.html',
-                {'door_detail': door_detail}
+                {
+                    'door_detail': door_detail,
+                    'door_list': product_list,
+                }
             )
         except KeyError:
             return redirect('/door_list/')

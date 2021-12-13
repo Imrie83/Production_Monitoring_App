@@ -26,3 +26,11 @@
     <a href="{% url 'employee_list' %}">Back</a>
 
 {% endblock %}
+{% block additional %}
+    <h1>Employees</h1>
+    <ul>
+    {% for employee in employee_list %}
+        <ol><a href="/employee_details/{{ employee.id }}/">{{ employee }}</a></ol>
+    {% endfor %}
+    </ul>
+{% endblock %}

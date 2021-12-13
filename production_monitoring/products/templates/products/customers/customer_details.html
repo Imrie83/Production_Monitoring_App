@@ -18,3 +18,12 @@
     <a href="{% url 'customer_list' %}">Back</a>
 
 {% endblock %}
+
+{% block additional %}
+    <h1>Customer List</h1>
+    <ul>
+    {% for customer in customer_list %}
+        <ol><a href="/customer_details/{{ customer.id }}/">{{ customer }}</a></ol>
+    {% endfor %}
+    </ul>
+{% endblock %}

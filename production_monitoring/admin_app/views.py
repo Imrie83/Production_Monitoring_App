@@ -236,10 +236,14 @@ class EmployeeDetailView(View):
     def get(self, request, pk):
         try:
             employee_detail = EmployeeModel.objects.get(id=pk)
+            employee_list = EmployeeModel.objects.all()
             return render(
                 request,
                 'admin_app/employees/employee_details.html',
-                {'employee_detail': employee_detail}
+                {
+                    'employee_detail': employee_detail,
+                    'employee_list': employee_list,
+                 }
             )
         except KeyError:
             return redirect('/employee_list/')

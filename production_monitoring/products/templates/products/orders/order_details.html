@@ -34,3 +34,12 @@
     <a href="{% url 'order_list' %}">Back</a>
 
 {% endblock %}
+
+{% block additional %}
+    <h1>Order List</h1>
+    <ul>
+    {% for order in order_list %}
+        <ol><a href="/order_details/{{ order.id }}/">{{ order }}</a></ol>
+    {% endfor %}
+    </ul>
+{% endblock %}
