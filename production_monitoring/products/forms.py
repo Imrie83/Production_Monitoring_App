@@ -1,13 +1,14 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.core.validators import validate_email, URLValidator
 from django.core.exceptions import ValidationError
-from django.forms import BaseInlineFormSet, inlineformset_factory, \
-    CheckboxSelectMultiple, formset_factory
 
-from products.models import ComponentsModel, ComponentToolsModel, ProductsModel, \
-    OrderModel, DOOR_TYPES, PRODUCT_TYPE, GlassModel, GlassToolModel
-from tools.models import ToolsModel
+
+from products.models import (
+    ComponentsModel,
+    ComponentToolsModel,
+    GlassModel,
+    GlassToolModel,
+)
 
 
 class GlassAddForm(forms.ModelForm):
@@ -70,16 +71,3 @@ class ScanProductionForm(forms.Form):
         max_length=255,
         required=True,
     )
-
-
-class ProductAddForm(forms.Form):
-    """
-    Class creating a custom product form
-    """
-    # order = forms.ChoiceField(
-    #     choices=OrderModel.objects.all(),
-    #
-    # )
-    # class Meta:
-    #     model = ProductsModel
-    #     exclude = []

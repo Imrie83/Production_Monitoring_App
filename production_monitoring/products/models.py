@@ -69,9 +69,8 @@ class OrderModel(models.Model):
         return output
 
     def save(self, *args, **kwargs):
-        self.order_number = (self.order_number).upper()
+        self.order_number = self.order_number.upper()
         return super(OrderModel, self).save(*args, **kwargs)
-
 
     def __str__(self):
         return self.order_number
@@ -130,6 +129,9 @@ class ComponentsModel(models.Model):
         return self.component_description[:50]
 
     short_description.short_description = 'Description'
+
+    def component_small_list(self):
+        return f'Name: {self.name} Stock: {self.stock}'
 
     def __str__(self):
         return f'{self.name}'
@@ -276,6 +278,8 @@ class ProductsModel(models.Model):
 
     full_job_no.short_description = 'Job number'
 
+
+
     def __str__(self):
         return self.full_job_no()
 
@@ -407,6 +411,9 @@ class GlassModel(models.Model):
 
     def short_description(self):
         return self.description[:50]
+
+    def glass_small_list(self):
+        return f'Name: {self.glass_name} Stock: {self.stock}'
 
     def __str__(self):
         return f'{self.glass_name} - door type allowed: {self.glass_door_type}'

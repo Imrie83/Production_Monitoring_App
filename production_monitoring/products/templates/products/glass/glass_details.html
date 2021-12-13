@@ -2,7 +2,11 @@
 {% load static %}
 {% block title %}{% endblock %}
 {% block side_menu %}
-
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="search" placeholder="search tools">
+        <input type="submit" value="Search">
+    </form>
 {% endblock %}
 {% block content %}
     <h2>Name: {{ glass_detail.glass_name }}</h2>
@@ -21,4 +25,12 @@
     <a href="/delete_glass/{{ glass_detail.id }}/">Delete</a>
     <a href="{% url 'glass_list' %}">Back</a>
 
+{% endblock %}
+{% block additional %}
+    <h1>Glass List</h1>
+    <ul>
+    {% for glass in glass_list %}
+        <ol><a href="/glass_detail/{{ glass.id }}/">{{glass.glass_small_list }}</a></ol>
+    {% endfor %}
+    </ul>
 {% endblock %}

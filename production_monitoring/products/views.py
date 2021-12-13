@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from django.db.models import Q
 from django.utils import timezone
 
 from django.contrib.admin import TabularInline
@@ -11,8 +13,13 @@ from django.views.generic import FormView, CreateView, UpdateView, DeleteView
 import re
 
 from admin_app.models import UserProductModel, EmployeeModel
-from products.forms import ComponentAddForm, ScanProductionForm, ProductAddForm, \
-    ComponentToolsForm, GlassAddForm, GlassToolAddForm
+from products.forms import (
+    ComponentAddForm,
+    ScanProductionForm,
+    ComponentToolsForm,
+    GlassAddForm,
+    GlassToolAddForm,
+)
 from products.models import (
     OrderModel,
     ProductsModel,
@@ -21,7 +28,7 @@ from products.models import (
     DoorStyleModel,
     GlassModel, ComponentToolsModel, GlassToolModel, ProductComponent,
 )
-from tools.models import ToolsModel
+
 
 
 class OrderListView(View):
@@ -101,6 +108,20 @@ class ComponentListView(View):
             {'component_list': component_list}
         )
 
+    def post(self, request):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            component_list = ComponentsModel.objects.filter(
+                Q(name__icontains=search_q) |
+                Q(door_type__icontains=search_q) |
+                Q(product_type__icontains=search_q)
+            ).order_by('name')
+            return render(
+                request,
+                'products/components/component_list.html',
+                {'component_list': component_list}
+            )
+
 
 class ComponentDetailView(View):
     """
@@ -109,14 +130,32 @@ class ComponentDetailView(View):
 
     def get(self, request, pk):
         try:
+            component_list = ComponentsModel.objects.all()
             component_details = ComponentsModel.objects.get(id=pk)
             return render(
                 request,
                 'products/components/component_details.html',
-                {'component_details': component_details}
+                {
+                    'component_details': component_details,
+                    'component_list': component_list
+                }
             )
         except KeyError:
             return redirect('/component_list/')
+
+    def post(self, request, pk):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            component_list = ComponentsModel.objects.filter(
+                Q(name__icontains=search_q) |
+                Q(door_type__icontains=search_q) |
+                Q(product_type__icontains=search_q)
+            ).order_by('name')
+            return render(
+                request,
+                'products/components/component_list.html',
+                {'component_list': component_list}
+            )
 
 
 class AddComponentView(PermissionRequiredMixin, View):
@@ -224,6 +263,19 @@ class GlassListView(View):
             {'glass_list': glass_list}
         )
 
+    def post(self, request):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            glass_list = GlassModel.objects.filter(
+                Q(glass_name__icontains=search_q) |
+                Q(glass_door_type__icontains=search_q)
+            ).order_by('glass_name')
+            return render(
+                request,
+                'products/glass/glass_list.html',
+                {'glass_list': glass_list}
+            )
+
 
 class GlassDetailView(View):
     """
@@ -232,15 +284,32 @@ class GlassDetailView(View):
     """
 
     def get(self, request, pk):
+        glass_list = GlassModel.objects.all()
         try:
             glass_detail = GlassModel.objects.get(id=pk)
             return render(
                 request,
                 'products/glass/glass_details.html',
-                {'glass_detail': glass_detail}
+                {
+                    'glass_detail': glass_detail,
+                    'glass_list': glass_list,
+                 }
             )
         except KeyError:
             return redirect('/glass_list/')
+
+    def post(self, request, pk):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            glass_list = GlassModel.objects.filter(
+                Q(glass_name__icontains=search_q) |
+                Q(glass_door_type__icontains=search_q)
+            ).order_by('glass_name')
+            return render(
+                request,
+                'products/glass/glass_list.html',
+                {'glass_list': glass_list}
+            )
 
 
 class GlassAddView(PermissionRequiredMixin, View):
@@ -505,8 +574,8 @@ class ProductAddView(PermissionRequiredMixin, CreateView):
     permission_required = 'products.add_productsmodel'
     template_name = 'products/doors/productsmodel_form.html'
     model = ProductsModel
-    # fields = '__all__'
-    form_class = ProductAddForm
+    fields = '__all__'
+    # form_class = ProductAddForm
     success_url = '/door_list/'
 
 
@@ -668,6 +737,8 @@ class ScanProductionView(View):
                                         tool.current_run_time - tool.max_run_time
                                 )
                                 tool.stock -= 1
+                                if tool.stock < 0:
+                                    tool.stock = 0
                             tool.save()
                             # TODO: sort out exception handling
                         except ObjectDoesNotExist:
@@ -676,9 +747,9 @@ class ScanProductionView(View):
                             return redirect('/scan_product/')
 
                     glass = GlassToolModel.objects.filter(glass_id=job.glass.pk)
-                    # print(glass)
+
                     for tools in glass:
-                        # print(tool.machine_time)
+
                         try:
                             tool = tools.tool_id
                             tool.current_run_time += tools.machine_time
@@ -687,6 +758,8 @@ class ScanProductionView(View):
                                         tool.current_run_time - tool.max_run_time
                                 )
                                 tool.stock -= 1
+                                if tool.stock < 0:
+                                    tool.stock = 0
                             tool.save()
                         except ObjectDoesNotExist:
                             return redirect('/scan_product/')
@@ -699,10 +772,19 @@ class ScanProductionView(View):
                     )
                     door_trim_tool = job.trim_with
                     door_trim_tool.current_run_time += door_trim_time
+                    if door_trim_tool.current_run_time >= door_trim_tool.max_run_time:
+                        door_trim_tool.current_run_time = (
+                                door_trim_tool.current_run_time - door_trim_tool.max_run_time
+                        )
+                        door_trim_tool.stock -= 1
+                        if door_trim_tool.stock < 0:
+                            door_trim_tool.stock = 0
+
                     door_trim_tool.save()
 
                     return redirect(to='/scan_product/')
 
+# TODO: move to product creation view!
                     # Take components and glass from the stock after machining.
                 # for component in ProductComponent.objects.filter(product_id=job.pk):
                 #     comp = ComponentsModel.objects.get(id=component.component_id.id)
