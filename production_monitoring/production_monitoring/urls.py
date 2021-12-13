@@ -55,6 +55,7 @@ from products.views import (
     ProductEditView,
     ProductDeleteView,
     ScanProductionView, AddComponentToolView, GlassToolAddView,
+    ProductComponentAddView,
 )
 
 from admin_app.views import (
@@ -140,6 +141,7 @@ urlpatterns = [
     path('add_door/', ProductAddView.as_view(), name='add_door'),
     path('edit_door/<int:pk>/', ProductEditView.as_view(), name='edit_door'),
     path('delete_door/<int:pk>/', ProductDeleteView.as_view(), name='delete_door'),
+    path('add_comp_product/<int:pk>/', ProductComponentAddView.as_view(), name='add_comp_product'),
 
     path('employee_list/', EmployeeListView.as_view(), name='employee_list'),
     path('employee_details/<int:pk>/', EmployeeDetailView.as_view(), name='employee_detail'),

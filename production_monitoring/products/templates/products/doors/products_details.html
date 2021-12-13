@@ -12,11 +12,13 @@
     <p>Handing: {{ door_detail.handing }}</p>
     <p>Glass: {{ door_detail.glass }}</p>
     <p>Size: {{ door_detail.door_height }}mm x {{ door_detail.door_width }}mm</p>
-    <p><ul>
+    <p>Components:
+    <ul>
         {% for comp in door_detail.components.all %}
          <ol>{{ comp.product_type }} - {{ comp }}</ol>
         {% endfor %}
-    </ul></p>
+    </ul> <a href="/add_comp_product/{{ door_detail.id }}/" type="button">Add Components</a>
+    </p>
     <p>Production date: {{ door_detail.production_date }}</p>
     <p>Delivery date: {{ door_detail.delivery_date }}</p>
     <p>Delivery address: {{ door_detail.delivery_address }}</p>

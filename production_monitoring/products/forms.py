@@ -7,9 +7,28 @@ from products.models import (
     ComponentsModel,
     ComponentToolsModel,
     GlassModel,
-    GlassToolModel,
+    GlassToolModel, ProductsModel, ProductComponent,
 )
 
+
+class ProductAddForm(forms.ModelForm):
+    """
+    Class creating a custom form
+    for adding product lines to order.
+    """
+    class Meta:
+        model = ProductsModel
+        exclude = ['components']
+
+
+class ProductEditForm(forms.ModelForm):
+    """
+    Class creating a custom form
+    allowing to edit a door line.
+    """
+    class Meta:
+        model = ProductsModel
+        exclude = ['components']
 
 class GlassAddForm(forms.ModelForm):
     """
@@ -30,6 +49,16 @@ class GlassToolAddForm(forms.ModelForm):
     class Meta:
         model = GlassToolModel
         exclude = ['glass_id']
+
+
+class ProductComponentAddForm(forms.ModelForm):
+    """
+    Class creates a custom form used to add
+    components to each door
+    """
+    class Meta:
+        model = ProductComponent
+        exclude = ['product_id']
 
 
 class ComponentAddForm(forms.ModelForm):

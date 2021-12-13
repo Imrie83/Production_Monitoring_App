@@ -18,7 +18,7 @@ from products.forms import (
     ScanProductionForm,
     ComponentToolsForm,
     GlassAddForm,
-    GlassToolAddForm,
+    GlassToolAddForm, ProductAddForm, ProductEditForm, ProductComponentAddForm,
 )
 from products.models import (
     OrderModel,
@@ -566,17 +566,79 @@ class ProductDetailView(View):
             return redirect('/door_list/')
 
 
-class ProductAddView(PermissionRequiredMixin, CreateView):
+class ProductAddView(PermissionRequiredMixin, View):
     """
     Class displaying a form allowing
     to add a new door line to database.
     """
     permission_required = 'products.add_productsmodel'
-    template_name = 'products/doors/productsmodel_form.html'
-    model = ProductsModel
-    fields = '__all__'
-    # form_class = ProductAddForm
-    success_url = '/door_list/'
+    def get(self, request):
+        form = ProductAddForm()
+        return render(
+            request,
+            'products/doors/productsmodel_form.html',
+            {'form': form}
+        )
+
+    def post(self, request):
+        form = ProductAddForm(request.POST)
+        if form.is_valid():
+            new_door = ProductsModel.objects.create(
+                order_num=form.cleaned_data['order_num'],
+                job_no=form.cleaned_data['job_no'],
+                door_type=form.cleaned_data['door_type'],
+                color=form.cleaned_data['color'],
+                style=form.cleaned_data['style'],
+                glass=form.cleaned_data['glass'],
+                handing=form.cleaned_data['handing'],
+                door_width=form.cleaned_data['door_width'],
+                door_height=form.cleaned_data['door_height'],
+                trim_with=form.cleaned_data['trim_with'],
+                delivery_date=form.cleaned_data['delivery_date'],
+                delivery_address=form.cleaned_data['delivery_address'],
+                production_date=form.cleaned_data['production_date'],
+            )
+            return redirect(f'/door_details/{new_door.pk}/')
+        else:
+            return render(
+                request,
+                'products/doors/productsmodel_form.html',
+                {'form': form}
+            )
+
+
+class ProductComponentAddView(PermissionRequiredMixin, View):
+    """
+    Class create view displaying form
+    allowing to add components to each door.
+    """
+    permission_required = 'products.edit_productsmodel'
+    def get(self, request, pk):
+        form = ProductComponentAddForm()
+        return render(
+            request,
+            'products/doors/productsmodel_form.html',
+            {'form': form}
+        )
+    # TODO: get this crap working!
+    def post(self, request, pk):
+        form = ProductComponentAddForm(request.POST)
+        product = ProductsModel.objects.get(id=pk)
+        print(product)
+        print(type(product))
+        if form.is_valid():
+            add_comp = ProductComponent.objects.create(
+                product_id=ProductsModel.objects.get(id=pk),
+                component_id=form.cleaned_data['component_id'],
+                count=form.cleaned_data['count'],
+            )
+            return redirect(f'/door_details/{product.id}/')
+        else:
+            return render(
+                request,
+                'products/doors/productsmodel_form.html',
+                {'form': form}
+            )
 
 
 class ProductEditView(PermissionRequiredMixin, UpdateView):
@@ -586,7 +648,8 @@ class ProductEditView(PermissionRequiredMixin, UpdateView):
     permission_required = 'products.edit_productsmodel'
     template_name = 'products/doors/productsmodel_form.html'
     model = ProductsModel
-    fields = '__all__'
+    # fields = '__all__'
+    form_class = ProductEditForm
     success_url = '/door_list/'
 
 

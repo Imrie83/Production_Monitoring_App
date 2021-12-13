@@ -146,7 +146,7 @@ class ComponentToolsModel(models.Model):
     component_id = models.ForeignKey(
         ComponentsModel,
         on_delete=models.CASCADE,
-        related_name='component'
+        related_name='comp'
     )
     tools_id = models.ForeignKey(
         ToolsModel,
@@ -178,7 +178,6 @@ class ProductsModel(models.Model):
     job_no = models.CharField(
         max_length=4,
         null=False,
-        unique=True,
         verbose_name='Line number',
         help_text='four digit line number',
         default='0000',
@@ -278,6 +277,32 @@ class ProductsModel(models.Model):
 
     full_job_no.short_description = 'Job number'
 
+    def save(self, *args, **kwargs):
+        """
+        custom save method counting machine time for each tool, depending on
+        component amount and machining times.
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        self.machining_time = 0
+        self.glass_tools = GlassToolModel.objects.filter(glass_id=self.glass.id)
+        for tool in self.glass_tools:
+            self.machining_time += tool.machine_time
+        # for comp in self.components.all():
+        #     self.comp_count = ProductComponent.objects.get(
+        #         component_id=comp.id,
+        #         product_id=self.id,
+        #     ).count
+        #     self.component_tool = ComponentToolsModel.objects.filter(
+        #         component_id=comp.id,
+        #     )
+        #     for c in self.component_tool:
+        #         self.machining_time += c.machine_time * self.comp_count
+
+        super(ProductsModel, self).save(*args, **kwargs)
+
 
 
     def __str__(self):
@@ -293,6 +318,7 @@ class ProductComponent(models.Model):
     product_id = models.ForeignKey(
         to=ProductsModel,
         on_delete=models.CASCADE,
+        related_name='prod_id'
     )
     component_id = models.ForeignKey(
         to=ComponentsModel,
@@ -300,12 +326,26 @@ class ProductComponent(models.Model):
         related_name='comp_id'
     )
     count = models.IntegerField(
-        verbose_name='Component count'
+        verbose_name='Component count',
     )
 
     class Meta:
         verbose_name = 'Door component'
         verbose_name_plural = 'Door compoonents'
+
+    def save(self, *args, **kwargs):
+        product = ProductsModel.objects.get(id=self.product_id)
+        tools = self.component_id.tools_req.all()
+        for tool in tools:
+            comp_tool = ComponentToolsModel.objects.get(
+                component_id=self.component_id,
+                tools_id=tool.id,
+            )
+            m_time = comp_tool.machine_time
+            new_time = m_time * self.count
+            product.machining_time += new_time
+
+        super(ProductComponent, self).save(*args, **kwargs)
 
 
 class CustomerModel(models.Model):
