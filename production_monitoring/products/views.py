@@ -30,7 +30,6 @@ from products.models import (
 )
 
 
-
 class OrderListView(View):
     """
     Class display a list of all orders

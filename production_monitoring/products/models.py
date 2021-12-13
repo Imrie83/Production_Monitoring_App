@@ -70,6 +70,7 @@ class OrderModel(models.Model):
 
     def save(self, *args, **kwargs):
         self.order_number = self.order_number.upper()
+
         return super(OrderModel, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -286,6 +287,10 @@ class ProductsModel(models.Model):
         :param kwargs:
         :return:
         """
+        if len(self.job_no) < 4:
+            self.job_no = self.job_no.rjust(4, '0')
+
+
         self.machining_time = 0
         self.glass_tools = GlassToolModel.objects.filter(glass_id=self.glass.id)
         for tool in self.glass_tools:

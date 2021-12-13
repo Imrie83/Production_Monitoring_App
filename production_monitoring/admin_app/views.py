@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponse
@@ -18,7 +19,7 @@ from admin_app.forms import (
 from admin_app.models import (
     MachineModel,
     EmployeeModel,
-    DepartmentModel,
+    DepartmentModel, UserProductModel,
 )
 
 
@@ -62,7 +63,26 @@ class PanelView(View):
     visible after successful log in
     """
     def get(self, request):
-        return render(request, 'admin_app/main.html')
+        current_employee = EmployeeModel.objects.get(user=request.user)
+        user_group = []
+
+        for value in current_employee.user.groups.all():
+            user_group.append(value.name)
+
+        now = datetime.now().strftime('%Y-%m-%d')
+
+        if 'Shop floor staff' in user_group:
+            my_output = UserProductModel.objects.filter(
+                user_id=current_employee,
+                prod_end__icontains=now,
+            )
+        else:
+            my_output = ''
+        return render(
+            request,
+            'admin_app/main.html',
+            {'output': my_output},
+        )
 
 
 class MachineListView(View):
