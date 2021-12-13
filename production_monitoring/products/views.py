@@ -45,6 +45,18 @@ class OrderListView(View):
             {'orders': orders}
         )
 
+    def post(self, request):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            orders = OrderModel.objects.filter(
+                Q(order_number__icontains=search_q)
+            ).order_by('order_number')
+            return render(
+                request,
+                'products/orders/order_list.html',
+                {'orders': orders}
+            )
+
 
 class OrderDetailView(View):
     """
@@ -61,6 +73,18 @@ class OrderDetailView(View):
             )
         except KeyError:
             return redirect('/order_list/')
+
+    def post(self, request):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            orders = OrderModel.objects.filter(
+                Q(order_number__icontains=search_q)
+            ).order_by('order_number')
+            return render(
+                request,
+                'products/orders/order_list.html',
+                {'orders': orders}
+            )
 
 
 class EditOrderView(PermissionRequiredMixin, UpdateView):
@@ -546,6 +570,22 @@ class ProductListView(View):
             'products/doors/products_list.html',
             {'door_list': door_list}
         )
+
+    def post(self, request):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            door_list = ProductsModel.objects.filter(
+                Q(door_type__icontains=search_q) |
+                Q(delivery_date__icontains=search_q) |
+                Q(production_date__icontains=search_q) |
+                Q(delivery_address__icontains=search_q) |
+                Q(finished__icontains=search_q)
+            ).order_by('production_date')
+            return render(
+                request,
+                'products/doors/products_list.html',
+                {'door_list': door_list}
+            )
 
 
 class ProductDetailView(View):

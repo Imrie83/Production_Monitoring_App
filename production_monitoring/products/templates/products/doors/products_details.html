@@ -2,7 +2,11 @@
 {% load static %}
 {% block title %}{% endblock %}
 {% block side_menu %}
-
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="search" placeholder="search">
+        <input type="submit" value="Search">
+    </form>
 {% endblock %}
 {% block content %}
     <h2>Job no: {{ door_detail }}</h2>

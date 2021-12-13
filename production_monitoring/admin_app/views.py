@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db.models import Q
 from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
@@ -210,6 +211,22 @@ class EmployeeListView(View):
             {'employee_list': employee_list}
         )
 
+    def post(self, request):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            employee_list = EmployeeModel.objects.filter(
+                Q(id_num__icontains=search_q) |
+                Q(position__icontains=search_q) |
+                Q(user__first_name__icontains=search_q) |
+                Q(user__last_name__icontains=search_q) |
+                Q(user__email__icontains=search_q)
+            ).order_by('user__username')
+            return render(
+                request,
+                'admin_app/employees/employee_list.html',
+                {'employee_list': employee_list}
+            )
+
 
 class EmployeeDetailView(View):
     """
@@ -226,6 +243,22 @@ class EmployeeDetailView(View):
             )
         except KeyError:
             return redirect('/employee_list/')
+
+    def post(self, request, pk):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            employee_list = EmployeeModel.objects.filter(
+                Q(id_num__icontains=search_q) |
+                Q(position__icontains=search_q) |
+                Q(user__first_name__icontains=search_q) |
+                Q(user__last_name__icontains=search_q) |
+                Q(user__email__icontains=search_q)
+            ).order_by('user__username')
+            return render(
+                request,
+                'admin_app/employees/employee_list.html',
+                {'employee_list': employee_list}
+            )
 
 
 class EmployeeAddView(PermissionRequiredMixin, FormView):
