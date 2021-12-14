@@ -49,13 +49,13 @@ class ToolDetailsView(View):
     """
     def get(self, request, pk):
         try:
-            # tool_list = ToolsModel.objects.order_by('tool_name')
+            tool_list = ToolsModel.objects.order_by('tool_name')
             tool_details = ToolsModel.objects.get(id=pk)
             return render(
                 request,
                 'tools/toolsmodel_detail.html',
-                {'tool_details': tool_details})#, 'tool_list': tool_list}
-            #)
+                {'tool_details': tool_details, 'tool_list': tool_list}
+            )
         except KeyError:
             return redirect('/tool_list/')
 

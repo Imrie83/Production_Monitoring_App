@@ -10,7 +10,7 @@ def create_test_tool():
     Function creates a dummy tool.
     :return: ToolModel object.
     """
-    return ToolsModel.objects.create(
+    return [ToolsModel.objects.create(
         tool_name='Turbo Cutter',
         feed_rate=5,
         type='PCD',
@@ -18,7 +18,16 @@ def create_test_tool():
         max_run_time=600,
         description='Lorem ipsum dolor set',
         current_run_time=10,
-    )
+    ),
+    ToolsModel.objects.create(
+        tool_name='Rough Cutter',
+        feed_rate=5,
+        type='Carbide',
+        stock=10,
+        max_run_time=600,
+        description='Lorem ipsum dolor set',
+        current_run_time=10,
+    )]
 
 
 @pytest.fixture
