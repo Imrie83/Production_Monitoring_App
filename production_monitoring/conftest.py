@@ -1,4 +1,5 @@
 import pytest
+from django.contrib.auth.models import User, Group
 
 from tools.models import ToolsModel
 
@@ -18,3 +19,35 @@ def create_test_tool():
         description='Lorem ipsum dolor set',
         current_run_time=10,
     )
+
+
+@pytest.fixture
+def test_user():
+    """
+    A fixture creating a default user
+    belonging to all groups.
+    Allows testing access to all section of the app
+
+    :return: User object.
+    """
+    # groups = Group.objects.all()
+    group_1 = Group.objects.create(
+        name='Manager'
+    )
+    group_2 = Group.objects.create(
+        name='Shop floor staff'
+    )
+    group_3 = Group.objects.create(
+        name='Supervisor'
+    )
+    groups = Group.objects.all()
+
+    default_user = User.objects.create(
+        username='imrie',
+        is_superuser=True,
+        password='test123test',
+        is_active=True,
+        is_staff=True,
+    )
+    default_user.groups.set(groups)
+    return default_user
