@@ -82,6 +82,7 @@ from admin_app.views import (
 urlpatterns = [
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
+    path('login/', LoginView.as_view(), name='log-in'),
     path('', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('panel/', PanelView.as_view(), name='panel'),

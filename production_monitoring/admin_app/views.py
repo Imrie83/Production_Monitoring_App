@@ -1,7 +1,7 @@
 from datetime import datetime
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, \
+    LoginRequiredMixin
 from django.db.models import Q
-from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
@@ -9,12 +9,14 @@ from django.views import View
 from django.views.generic.edit import (
     CreateView,
     UpdateView,
-    DeleteView, FormView,
+    DeleteView,
+    FormView,
 )
 from admin_app.forms import (
     LoginForm,
     EmployeeAddForm,
-    EmployeeEditForm, DatePicker,
+    EmployeeEditForm,
+    DatePicker,
 )
 from admin_app.models import (
     MachineModel,
@@ -29,7 +31,6 @@ class LoginView(View):
     """
     Class displaying and validating a login form
     """
-
     def get(self, request):
         if request.user.is_authenticated:
             return redirect('/panel/')
@@ -59,11 +60,14 @@ class LogoutView(View):
         return redirect('/')
 
 
-class PanelView(View):
+class PanelView(LoginRequiredMixin, View):
     """
     Class display panel view
     visible after successful log in
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
+
     def get(self, request):
         current_employee = EmployeeModel.objects.get(user=request.user)
         user_group = []
@@ -102,11 +106,13 @@ class MachineListView(View):
         )
 
 
-class MachineDetailView(View):
+class MachineDetailView(LoginRequiredMixin, View):
     """
     Class display detailed view of
     specific machine.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
 
     def get(self, request, pk):
         try:
@@ -120,11 +126,13 @@ class MachineDetailView(View):
             return redirect('/machine_list/')
 
 
-class MachineAddView(PermissionRequiredMixin, CreateView):
+class MachineAddView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     """
     Class displaying a form allowing
     to add a new machine to database.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'admin_app.add_machinemodel'
     template_name = 'admin_app/machines/machinemodel_form.html'
     model = MachineModel
@@ -132,10 +140,12 @@ class MachineAddView(PermissionRequiredMixin, CreateView):
     success_url = '/machine_list/'
 
 
-class MachineEditView(PermissionRequiredMixin, UpdateView):
+class MachineEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """
     Class display form view allowing to edit machine information.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'admin_app.edit_machinemodel'
     template_name = 'admin_app/machines/machinemodel_form.html'
     model = MachineModel
@@ -143,10 +153,12 @@ class MachineEditView(PermissionRequiredMixin, UpdateView):
     success_url = '/machine_list/'
 
 
-class MachineDeleteView(PermissionRequiredMixin, DeleteView):
+class MachineDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """
     Class deleting a machine info from database.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'admin_app.delete_machinemodel'
     template_name = 'admin_app/machines/machinemodel_confirm_delete.html'
     model = MachineModel
@@ -168,11 +180,13 @@ class DepartmentListView(View):
         )
 
 
-class DepartmentDetailView(View):
+class DepartmentDetailView(LoginRequiredMixin, View):
     """
     Class display detailed view of
     department.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
 
     def get(self, request, pk):
         try:
@@ -186,11 +200,13 @@ class DepartmentDetailView(View):
             return redirect('/department_list/')
 
 
-class DepartmentAddView(PermissionRequiredMixin, CreateView):
+class DepartmentAddView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     """
     Class displaying a form allowing
     to add a new department to database.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'admin_app.add_departmentmodel'
     template_name = 'admin_app/departments/departmentmodel_form.html'
     model = DepartmentModel
@@ -198,10 +214,12 @@ class DepartmentAddView(PermissionRequiredMixin, CreateView):
     success_url = '/department_list/'
 
 
-class DepartmentEditView(PermissionRequiredMixin, UpdateView):
+class DepartmentEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """
     Class display form view allowing to edit department information.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'admin_app.edit_departmentmodel'
     template_name = 'admin_app/departments/departmentmodel_form.html'
     model = DepartmentModel
@@ -209,10 +227,12 @@ class DepartmentEditView(PermissionRequiredMixin, UpdateView):
     success_url = '/department_list/'
 
 
-class DepartmentDeleteView(PermissionRequiredMixin, DeleteView):
+class DepartmentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """
     Class deleting a department info from database.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'admin_app.delete_departmentmodel'
     template_name = 'admin_app/departments/departmentmodel_confirm_delete.html'
     model = DepartmentModel
@@ -250,10 +270,12 @@ class EmployeeListView(View):
             )
 
 
-class EmployeeDetailView(View):
+class EmployeeDetailView(LoginRequiredMixin, View):
     """
     Class display detailed information about an employee.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
 
     def get(self, request, pk):
         try:
@@ -287,11 +309,13 @@ class EmployeeDetailView(View):
             )
 
 
-class EmployeeAddView(PermissionRequiredMixin, FormView):
+class EmployeeAddView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
     """
     Class display and process a custom form allowing for
     addition of a new employee to database.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'admin_app.add_employeemodel'
     template_name = 'admin_app/employees/employeemodel_form.html'
     form_class = EmployeeAddForm
@@ -326,11 +350,13 @@ class EmployeeAddView(PermissionRequiredMixin, FormView):
         return super().form_valid(form)
 
 
-class EmployeeEditView(PermissionRequiredMixin, View):
+class EmployeeEditView(LoginRequiredMixin, PermissionRequiredMixin, View):
     """
     Class display and process a custom form allowing  for
     editting of an employee.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'admin_app.update_employeemodel'
     def get(self, request, pk):
         employee = EmployeeModel.objects.get(id=pk)
@@ -379,10 +405,12 @@ class EmployeeEditView(PermissionRequiredMixin, View):
         )
 
 
-class EmployeeDeleteView(PermissionRequiredMixin, DeleteView):
+class EmployeeDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """
     Class deleting an employee from database.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'admin_app.delete_employeemodel'
     template_name = 'admin_app/employees/employeemodel_confirm_delete.html'
     model = EmployeeModel

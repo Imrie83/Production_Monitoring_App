@@ -1,4 +1,5 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, \
+    LoginRequiredMixin
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.views import View
@@ -42,11 +43,13 @@ class ToolListView(View):
         #     )
 
 
-class ToolDetailsView(View):
+class ToolDetailsView(LoginRequiredMixin, View):
     """
     Class displaying detailed information
     regarding an individual tool.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     def get(self, request, pk):
         try:
             tool_list = ToolsModel.objects.order_by('tool_name')
@@ -73,33 +76,39 @@ class ToolDetailsView(View):
             )
 
 
-class AddToolView(PermissionRequiredMixin, CreateView):
+class AddToolView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     """
     Class display a form allowing
     to add a new tool to database.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'tools.add_toolsmodel'
     model = ToolsModel
     fields = '__all__'
     success_url = '/tool_list/'
 
 
-class EditToolView(PermissionRequiredMixin, UpdateView):
+class EditToolView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """
     Class display a form allowing
     to edit a tool in database.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'tools.update_toolsmodel'
     model = ToolsModel
     fields = '__all__'
     success_url = '/tool_list/'
 
 
-class DeleteToolView(PermissionRequiredMixin, DeleteView):
+class DeleteToolView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """
     Class allows to delete
     a tool from database
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'tools.delete_toolsmodel'
     model = ToolsModel
     success_url = '/tool_list/'

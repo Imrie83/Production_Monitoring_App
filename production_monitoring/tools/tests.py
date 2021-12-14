@@ -1,5 +1,7 @@
 import pytest
 
+from tools.models import ToolsModel
+
 
 @pytest.mark.django_db
 def test_tool_detail(client, test_user, create_test_tool):
@@ -10,6 +12,7 @@ def test_tool_detail(client, test_user, create_test_tool):
     :param test_user:
     :param create_test_tool:
     """
+    client.force_login(test_user)  # view restricted to logged in users!
     response = client.get(f'/tool_details/{create_test_tool[0].pk}/')
     tool = response.context['tool_details']
     tool_list = response.context['tool_list']
@@ -27,12 +30,11 @@ def test_tool_detail(client, test_user, create_test_tool):
 @pytest.mark.django_db
 def test_tool_list(client,  test_user, create_test_tool):
     """
-    Function test if Toollist view is displayed correctly.
+    Function test if ToolList view is displayed correctly.
 
     :param client:
     :param test_user:
     :param create_test_tool:
-    :return:
     """
     response = client.get('/tool_list/')
     tool_list = response.context['tool_list']
@@ -51,6 +53,7 @@ def test_tool_list(client,  test_user, create_test_tool):
     assert len(response.context['tool_list']) == 1
     for tool in tool_search:
         assert 'Turbo Cutter' in tool.tool_name
+        assert 'Rough Cutter' not in tool.tool_name
 
     # searching for type PCD
     response = client.post('/tool_list/', {'search': 'PCD'})
@@ -59,20 +62,33 @@ def test_tool_list(client,  test_user, create_test_tool):
     assert len(response.context['tool_list']) == 1
     for tool in tool_search:
         assert 'PCD' in tool.type
+        assert 'Carbide' not in tool.type
 
 
-# @pytest.mark.django_db
-# def test_tool_add(client, test_user):
-#     response = client.get('/add_tool/')
-#     assert '/add_tool/' in response.url
-#     response = client.post('/add_tool/',
-#                            {
-#                                'tool_name': 'V-point',
-#                                'feed_rate': 10,
-#                                'type': 'HSS',
-#                                'stock': '20',
-#                                'max_run_time': 500,
-#                                'current_run_time': 0,
-#                             }
-#                            )
-#     assert ToolsModel.objects.latest().tool_name == 'V-point'
+@pytest.mark.django_db
+def test_tool_add(client, test_user):
+    response = client.get('/add_tool/')
+
+    # No user logged in -> redirect to login page
+    assert response.status_code == 302
+
+    client.force_login(test_user)
+    response = client.get('/add_tool/')
+
+    # Gain access after login
+    assert response.status_code == 200
+
+    response = client.post('/add_tool/',
+                           {
+                               'tool_name': 'V-point',
+                               'feed_rate': 10,
+                               'type': 'HSS',
+                               'stock': '20',
+                               'max_run_time': 500,
+                               'current_run_time': 0,
+                            }
+                           )
+    tool = ToolsModel.objects.last()
+    tool.image = 'static/img/tools/16mm_rough.jpg',
+    assert tool.tool_name == 'V-point'
+    assert tool.image == 'static/img/tools/16mm_rough.jpg'

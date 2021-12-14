@@ -1,10 +1,11 @@
+from datetime import datetime
+
 import pytest
 from django.contrib import auth
 from django.contrib.auth.models import User
 
-from admin_app.models import UserProductModel
 
-
+# TODO: finish this!
 @pytest.mark.django_db
 def test_login_page(client, test_user):
     """
@@ -16,13 +17,11 @@ def test_login_page(client, test_user):
     """
     response = client.get('')
     assert response.status_code == 200
-    response = client.post('', {'username': 'imrie', 'password': 'test123test'})
-    user = User.objects.get(username='imrie')
-    assert response.status_code == 200
-    assert user.is_authenticated
+    response = client.post('', {'login': 'imrie', 'password': 'test123test'})
+    # assert auth.get_user(client) == 'imrie'
+    # assert response.status_code == 302
 
 
-# TODO: check if user actually logged out!
 @pytest.mark.django_db
 def test_logout_page(client, test_user):
     """
@@ -30,18 +29,9 @@ def test_logout_page(client, test_user):
     :param client:
     :param test_user:
     """
-    response = client.get('/logout/')
+    user = client.force_login(test_user)
+    assert auth.get_user(client).username == 'imrie'  # True -check if logged in
+    response = client.get('/logout/')  # log out
+    assert auth.get_user(client).username == ''  # True -check if user logged out
     assert '/' in response.url
     assert response.status_code == 302
-
-
-@pytest.mark.django_db
-def test_panel_view(client, test_user, test_employee, test_product):
-    user = client.force_login(test_user)
-    response = client.get('/panel/')
-    assert response.status_code == 200
-    assert len(response.context['output']) == 0
-    user_product = UserProductModel.objects.create(
-        user_id=test_employee,
-        product_id=test_product,
-    )

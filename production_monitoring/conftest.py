@@ -1,7 +1,8 @@
 import pytest
 from django.contrib.auth.models import User, Group
 from datetime import datetime
-from admin_app.models import MachineModel, DepartmentModel, EmployeeModel
+from admin_app.models import MachineModel, DepartmentModel, EmployeeModel, \
+    UserProductModel
 from products.models import ProductsModel, OrderModel, CustomerModel, \
     DoorStyleModel, GlassModel
 from tools.models import ToolsModel
@@ -22,15 +23,15 @@ def create_test_tool():
         description='Lorem ipsum dolor set',
         current_run_time=10,
     ),
-    ToolsModel.objects.create(
-        tool_name='Rough Cutter',
-        feed_rate=5,
-        type='Carbide',
-        stock=10,
-        max_run_time=600,
-        description='Lorem ipsum dolor set',
-        current_run_time=10,
-    )]
+        ToolsModel.objects.create(
+            tool_name='Rough Cutter',
+            feed_rate=5,
+            type='Carbide',
+            stock=10,
+            max_run_time=600,
+            description='Lorem ipsum dolor set',
+            current_run_time=10,
+        )]
 
 
 @pytest.fixture
@@ -150,6 +151,7 @@ def test_user(test_groups):
         is_staff=True,
     )
     default_user.groups.set(test_groups)
+    # default_user.user_permissions.add()
     return default_user
 
 
@@ -167,16 +169,19 @@ def test_employee(test_user):
     return default_employee
 
 
-# @pytest.fixture
-# def test_machine():
-#     department = DepartmentModel.objects.create(
-#         section_name='CNC'
-#     )
-#     machine = MachineModel.objects.create(
-#         name='CNC1',
-#     )
-#     machine.machine_location = 'department'
-#     machine.save()
-#
-#     return machine
-#
+@pytest.fixture
+def test_user_product(test_product, test_employee):
+    """
+    Create and entry in UserProduct model.
+
+    :param test_product:
+    :param test_employee:
+    :return: user_product
+    """
+    now = datetime.now().strftime('%Y-%m-%d')
+    user_product = UserProductModel.objects.create(
+        user_id=test_employee,
+        product_id=test_product,
+        prod_end=now,
+    )
+    return user_product
