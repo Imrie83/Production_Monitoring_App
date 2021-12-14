@@ -2,7 +2,11 @@
 {% load static %}
 {% block title %}{% endblock %}
 {% block side_menu %}
-
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="search" placeholder="search">
+        <input type="submit" value="Search">
+    </form>
 {% endblock %}
 {% block content %}
     <h2>Order: {{ order_details.order_number }}</h2>
@@ -29,4 +33,13 @@
 {#    <br>#}
     <a href="{% url 'order_list' %}">Back</a>
 
+{% endblock %}
+
+{% block additional %}
+    <h1>Order List</h1>
+    <ul>
+    {% for order in order_list %}
+        <ol><a href="/order_details/{{ order.id }}/">{{ order }}</a></ol>
+    {% endfor %}
+    </ul>
 {% endblock %}

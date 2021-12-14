@@ -54,6 +54,8 @@ from products.views import (
     ProductAddView,
     ProductEditView,
     ProductDeleteView,
+    ScanProductionView, AddComponentToolView, GlassToolAddView,
+    ProductComponentAddView,
 )
 
 from admin_app.views import (
@@ -74,7 +76,7 @@ from admin_app.views import (
     EmployeeDetailView,
     EmployeeAddView,
     EmployeeEditView,
-    EmployeeDeleteView,
+    EmployeeDeleteView, TodayProductionView,
 )
 
 urlpatterns = [
@@ -101,12 +103,14 @@ urlpatterns = [
     path('add_component/', AddComponentView.as_view(), name='add_component'),
     path('edit_component/<int:pk>/', EditComponentView.as_view(), name='edit_component'),
     path('delete_component/<int:pk>/', DeleteComponentView.as_view(), name='delete_component'),
+    path('add_tool_component/<int:pk>/', AddComponentToolView.as_view()),
 
     path('glass_list/', GlassListView.as_view(), name='glass_list'),
     path('glass_detail/<int:pk>/', GlassDetailView.as_view(), name='glass_detail'),
     path('add_glass/', GlassAddView.as_view(), name='add_glass'),
     path('edit_glass/<int:pk>/', GlassEditView.as_view(), name='edit_glass'),
     path('delete_glass/<int:pk>/', GlassDeleteView.as_view(), name='delete_glass'),
+    path('add_tool_glass/<int:pk>/',  GlassToolAddView.as_view(), name='add_tool_glass'),
 
     path('style_list/', StyleListView.as_view(), name='style_list'),
     path('style_details/<int:pk>/', StyleDetailView.as_view(), name='style_detail'),
@@ -137,10 +141,15 @@ urlpatterns = [
     path('add_door/', ProductAddView.as_view(), name='add_door'),
     path('edit_door/<int:pk>/', ProductEditView.as_view(), name='edit_door'),
     path('delete_door/<int:pk>/', ProductDeleteView.as_view(), name='delete_door'),
+    path('add_comp_product/<int:pk>/', ProductComponentAddView.as_view(), name='add_comp_product'),
 
     path('employee_list/', EmployeeListView.as_view(), name='employee_list'),
     path('employee_details/<int:pk>/', EmployeeDetailView.as_view(), name='employee_detail'),
     path('add_employee/', EmployeeAddView.as_view(), name='add_employee'),
     path('edit_employee/<int:pk>/', EmployeeEditView.as_view(), name='edit_employee'),
     path('delete_employee/<int:pk>/', EmployeeDeleteView.as_view(), name='delete_employee'),
+
+    path('scan_product/', ScanProductionView.as_view(), name='scan_product'),
+
+    path('today_production/', TodayProductionView.as_view(), name='today_production')
 ]

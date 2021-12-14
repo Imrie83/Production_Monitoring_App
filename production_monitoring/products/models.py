@@ -68,6 +68,11 @@ class OrderModel(models.Model):
             output += f'{line}\n'
         return output
 
+    def save(self, *args, **kwargs):
+        self.order_number = self.order_number.upper()
+
+        return super(OrderModel, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.order_number
 
@@ -91,7 +96,7 @@ class ComponentsModel(models.Model):
     tools_req = models.ManyToManyField(
         to=ToolsModel,
         through='ComponentToolsModel',
-        verbose_name='Tools Required'
+        verbose_name='Tools Required',
     )
     door_type = models.CharField(
         choices=DOOR_TYPES,
@@ -126,6 +131,9 @@ class ComponentsModel(models.Model):
 
     short_description.short_description = 'Description'
 
+    def component_small_list(self):
+        return f'Name: {self.name} Stock: {self.stock}'
+
     def __str__(self):
         return f'{self.name}'
 
@@ -139,14 +147,14 @@ class ComponentToolsModel(models.Model):
     component_id = models.ForeignKey(
         ComponentsModel,
         on_delete=models.CASCADE,
-        related_name='component'
+        related_name='comp'
     )
     tools_id = models.ForeignKey(
         ToolsModel,
         on_delete=models.CASCADE,
-        related_name='tool'
+        related_name='comp_tool'
     )
-    machine_time = models.IntegerField(
+    machine_time = models.FloatField(
         null=True,
         default=0,
     )
@@ -171,7 +179,6 @@ class ProductsModel(models.Model):
     job_no = models.CharField(
         max_length=4,
         null=False,
-        unique=True,
         verbose_name='Line number',
         help_text='four digit line number',
         default='0000',
@@ -203,6 +210,7 @@ class ProductsModel(models.Model):
         null=False,
         on_delete=models.SET('None'),
         default=None,
+        related_name='door_glass'
     )
     components = models.ManyToManyField(
         to=ComponentsModel,
@@ -226,6 +234,13 @@ class ProductsModel(models.Model):
         null=False,
         default=0,
     )
+    trim_with = models.ForeignKey(
+        to=ToolsModel,
+        verbose_name='Trim with?',
+        default=ToolsModel.objects.get(tool_name='Turbo Cutter').pk,
+        related_name='trim_with',
+        on_delete=models.SET(1),
+    )
     delivery_date = models.DateField(
         null=True,
         blank=True,
@@ -236,7 +251,7 @@ class ProductsModel(models.Model):
         null=True,
         blank=True,
     )
-    machining_time = models.IntegerField(
+    machining_time = models.FloatField(
         null=True,
         verbose_name='Total machining time',
         editable=False,
@@ -263,6 +278,38 @@ class ProductsModel(models.Model):
 
     full_job_no.short_description = 'Job number'
 
+    def save(self, *args, **kwargs):
+        """
+        custom save method counting machine time for each tool, depending on
+        component amount and machining times.
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        if len(self.job_no) < 4:
+            self.job_no = self.job_no.rjust(4, '0')
+
+
+        self.machining_time = 0
+        self.glass_tools = GlassToolModel.objects.filter(glass_id=self.glass.id)
+        for tool in self.glass_tools:
+            self.machining_time += tool.machine_time
+        # for comp in self.components.all():
+        #     self.comp_count = ProductComponent.objects.get(
+        #         component_id=comp.id,
+        #         product_id=self.id,
+        #     ).count
+        #     self.component_tool = ComponentToolsModel.objects.filter(
+        #         component_id=comp.id,
+        #     )
+        #     for c in self.component_tool:
+        #         self.machining_time += c.machine_time * self.comp_count
+
+        super(ProductsModel, self).save(*args, **kwargs)
+
+
+
     def __str__(self):
         return self.full_job_no()
 
@@ -276,18 +323,34 @@ class ProductComponent(models.Model):
     product_id = models.ForeignKey(
         to=ProductsModel,
         on_delete=models.CASCADE,
+        related_name='prod_id'
     )
     component_id = models.ForeignKey(
         to=ComponentsModel,
         on_delete=models.CASCADE,
+        related_name='comp_id'
     )
     count = models.IntegerField(
-        verbose_name='Component count'
+        verbose_name='Component count',
     )
 
     class Meta:
         verbose_name = 'Door component'
         verbose_name_plural = 'Door compoonents'
+
+    def save(self, *args, **kwargs):
+        product = ProductsModel.objects.get(id=self.product_id)
+        tools = self.component_id.tools_req.all()
+        for tool in tools:
+            comp_tool = ComponentToolsModel.objects.get(
+                component_id=self.component_id,
+                tools_id=tool.id,
+            )
+            m_time = comp_tool.machine_time
+            new_time = m_time * self.count
+            product.machining_time += new_time
+
+        super(ProductComponent, self).save(*args, **kwargs)
 
 
 class CustomerModel(models.Model):
@@ -394,6 +457,9 @@ class GlassModel(models.Model):
     def short_description(self):
         return self.description[:50]
 
+    def glass_small_list(self):
+        return f'Name: {self.glass_name} Stock: {self.stock}'
+
     def __str__(self):
         return f'{self.glass_name} - door type allowed: {self.glass_door_type}'
 
@@ -414,7 +480,7 @@ class GlassToolModel(models.Model):
         on_delete=models.CASCADE,
         related_name='glass_tool'
     )
-    machine_time = models.IntegerField(
+    machine_time = models.FloatField(
         null=True,
         default=0,
     )

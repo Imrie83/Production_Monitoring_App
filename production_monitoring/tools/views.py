@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import FormView, CreateView, UpdateView, DeleteView
@@ -11,13 +12,34 @@ class ToolListView(View):
     available in database
     """
     def get(self, request):
-        tool_list = ToolsModel.objects.all()
+        tool_list = ToolsModel.objects.order_by('tool_name')
 
         return render(
             request,
             'tools/tool_list.html',
             {'tool_list': tool_list}
         )
+
+    def post(self, request):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            tool_list = ToolsModel.objects.filter(
+                Q(tool_name__icontains=search_q) |
+                Q(type__icontains=search_q)
+            ).order_by('tool_name')
+            return render(
+                request,
+                'tools/tool_list.html',
+                {'tool_list': tool_list}
+            )
+        # TODO : set ordering
+        # elif 'type' in request.POST:
+        #     tool_list = ToolsModel.objects.order_by(request.POST['type'])
+        #     return render(
+        #         request,
+        #         'tools/tool_list.html',
+        #         {'tool_list': tool_list}
+        #     )
 
 
 class ToolDetailsView(View):
@@ -27,14 +49,28 @@ class ToolDetailsView(View):
     """
     def get(self, request, pk):
         try:
+            tool_list = ToolsModel.objects.order_by('tool_name')
             tool_details = ToolsModel.objects.get(id=pk)
             return render(
                 request,
                 'tools/toolsmodel_detail.html',
-                {'tool_details': tool_details}
+                {'tool_details': tool_details, 'tool_list': tool_list}
             )
         except KeyError:
             return redirect('/tool_list/')
+
+    def post(self, request, pk):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            tool_list = ToolsModel.objects.filter(
+                Q(tool_name__icontains=search_q) |
+                Q(type__icontains=search_q)
+            ).order_by('tool_name')
+            return render(
+                request,
+                'tools/tool_list.html',
+                {'tool_list': tool_list}
+            )
 
 
 class AddToolView(PermissionRequiredMixin, CreateView):

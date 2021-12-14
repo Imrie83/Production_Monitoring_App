@@ -2,7 +2,11 @@
 {% load static %}
 {% block title %}{% endblock %}
 {% block side_menu %}
-
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="search" placeholder="search">
+        <input type="submit" value="Search">
+    </form>
 {% endblock %}
 {% block content %}
     <h2>Name: {{ component_details.name }}</h2>
@@ -15,11 +19,21 @@
             <li>{{ tool.tool_name }}</li>
             {% endfor %}
         </ul>
+    <a href="/add_tool_component/{{ component_details.id }}/" type="button">Add Tool</a>
     </p>
     <p>{{ component_details.component_description }}</p>
 
-    <a href="/edit_component/{{ component_details.id }}/">Edit</a>
-    <a href="/delete_component/{{ component_details.id }}/">Delete</a>
-    <a href="{% url 'component_list' %}">Back</a>
+    <a href="/edit_component/{{ component_details.id }}/" type="button">Edit</a>
+    <a href="/delete_component/{{ component_details.id }}/" type="button">Delete</a>
+    <a href="{% url 'component_list' %}" type="button">Back</a>
 
+{% endblock %}
+
+{% block additional %}
+    <h1>Component List</h1>
+    <ul>
+    {% for component in component_list %}
+        <ol><a href="/component_details/{{ component.id }}/">{{ component.component_small_list }}</a></ol>
+    {% endfor %}
+    </ul>
 {% endblock %}

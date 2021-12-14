@@ -1,14 +1,32 @@
+from datetime import datetime
+
+from django.db.models import Q
+from django.utils import timezone
+
+from django.contrib.admin import TabularInline
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.forms import inlineformset_factory
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import FormView, CreateView, UpdateView, DeleteView
+import re
+
+from admin_app.models import UserProductModel, EmployeeModel
+from products.forms import (
+    ComponentAddForm,
+    ScanProductionForm,
+    ComponentToolsForm,
+    GlassAddForm,
+    GlassToolAddForm, ProductAddForm, ProductEditForm, ProductComponentAddForm,
+)
 from products.models import (
     OrderModel,
     ProductsModel,
     ComponentsModel,
     CustomerModel,
     DoorStyleModel,
-    GlassModel,
+    GlassModel, ComponentToolsModel, GlassToolModel, ProductComponent,
 )
 
 
@@ -17,6 +35,7 @@ class OrderListView(View):
     Class display a list of all orders
     available in database.
     """
+
     def get(self, request):
         orders = OrderModel.objects.all()
         return render(
@@ -25,21 +44,50 @@ class OrderListView(View):
             {'orders': orders}
         )
 
+    def post(self, request):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            orders = OrderModel.objects.filter(
+                Q(order_number__icontains=search_q)
+            ).order_by('order_number')
+            return render(
+                request,
+                'products/orders/order_list.html',
+                {'orders': orders}
+            )
+
 
 class OrderDetailView(View):
     """
     Class display a detailed view of each order.
     """
+
     def get(self, request, pk):
         try:
             order_details = OrderModel.objects.get(id=pk)
+            order_list = OrderModel.objects.all()
             return render(
                 request,
                 'products/orders/order_details.html',
-                {'order_details': order_details}
+                {
+                    'order_details': order_details,
+                    'order_list': order_list,
+                }
             )
         except KeyError:
             return redirect('/order_list/')
+
+    def post(self, request):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            orders = OrderModel.objects.filter(
+                Q(order_number__icontains=search_q)
+            ).order_by('order_number')
+            return render(
+                request,
+                'products/orders/order_list.html',
+                {'orders': orders}
+            )
 
 
 class EditOrderView(PermissionRequiredMixin, UpdateView):
@@ -78,6 +126,7 @@ class ComponentListView(View):
     """
     Class display a list of all components available.
     """
+
     def get(self, request):
         component_list = ComponentsModel.objects.all()
         return render(
@@ -86,33 +135,123 @@ class ComponentListView(View):
             {'component_list': component_list}
         )
 
+    def post(self, request):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            component_list = ComponentsModel.objects.filter(
+                Q(name__icontains=search_q) |
+                Q(door_type__icontains=search_q) |
+                Q(product_type__icontains=search_q)
+            ).order_by('name')
+            return render(
+                request,
+                'products/components/component_list.html',
+                {'component_list': component_list}
+            )
+
 
 class ComponentDetailView(View):
     """
     Class displaying component details.
     """
+
     def get(self, request, pk):
         try:
+            component_list = ComponentsModel.objects.all()
             component_details = ComponentsModel.objects.get(id=pk)
             return render(
                 request,
                 'products/components/component_details.html',
-                {'component_details': component_details}
+                {
+                    'component_details': component_details,
+                    'component_list': component_list
+                }
             )
         except KeyError:
             return redirect('/component_list/')
 
+    def post(self, request, pk):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            component_list = ComponentsModel.objects.filter(
+                Q(name__icontains=search_q) |
+                Q(door_type__icontains=search_q) |
+                Q(product_type__icontains=search_q)
+            ).order_by('name')
+            return render(
+                request,
+                'products/components/component_list.html',
+                {'component_list': component_list}
+            )
 
-class AddComponentView(PermissionRequiredMixin, CreateView):
+
+class AddComponentView(PermissionRequiredMixin, View):
     """
     Class displaying form allowing to add a new component
     in to the database.
     """
     permission_required = 'products.add_componentsmodel'
-    template_name = 'products/components/componentsmodel_form.html'
-    model = ComponentsModel
-    fields = '__all__'
-    success_url = '/component_list/'
+
+    def get(self, request):
+        form = ComponentAddForm()
+        return render(
+            request,
+            'products/components/componentsmodel_form.html',
+            {'form': form}
+        )
+
+    def post(self, request):
+        form = ComponentAddForm(request.POST)
+        if form.is_valid():
+            new_component = ComponentsModel.objects.create(
+                name=form.cleaned_data['name'],
+                stock=form.cleaned_data['stock'],
+                door_type=form.cleaned_data['door_type'],
+                product_type=form.cleaned_data['product_type'],
+                component_description=form.cleaned_data[
+                    'component_description'],
+                img=form.cleaned_data['img']
+            )
+            return redirect(to=f'/component_details/{new_component.pk}')
+        else:
+            return render(
+                request,
+                'products/components/componentsmodel_form.html/',
+                {'form': form}
+            )
+
+
+class AddComponentToolView(PermissionRequiredMixin, View):
+    """
+    Class creating a form allowing to
+    add tools with machining times to each component.
+    """
+    permission_required = 'product.edit_componenttoolsmodel'
+
+    def get(self, request, pk):
+        form = ComponentToolsForm()
+        return render(
+            request,
+            'products/components/componentsmodel_form.html',
+            {'form': form}
+        )
+
+    def post(self, request, pk):
+        form = ComponentToolsForm(request.POST)
+        assign_to_comp = ComponentsModel.objects.get(id=pk)
+        if form.is_valid():
+            add_tool = ComponentToolsModel.objects.create(
+                component_id=assign_to_comp,
+                tools_id=form.cleaned_data['tools_id'],
+                machine_time=form.cleaned_data['machine_time'],
+            )
+            return redirect(to=f'/component_details/{assign_to_comp.pk}')
+        else:
+            return render(
+                request,
+                'products/components/componentsmodel_form.html/',
+                {'form': form}
+            )
 
 
 class EditComponentView(PermissionRequiredMixin, UpdateView):
@@ -142,6 +281,7 @@ class GlassListView(View):
     Class display a list of all
     glass available.
     """
+
     def get(self, request):
         glass_list = GlassModel.objects.all()
         return render(
@@ -150,34 +290,121 @@ class GlassListView(View):
             {'glass_list': glass_list}
         )
 
+    def post(self, request):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            glass_list = GlassModel.objects.filter(
+                Q(glass_name__icontains=search_q) |
+                Q(glass_door_type__icontains=search_q)
+            ).order_by('glass_name')
+            return render(
+                request,
+                'products/glass/glass_list.html',
+                {'glass_list': glass_list}
+            )
+
 
 class GlassDetailView(View):
     """
     Class display detailed view of
     specific glass.
     """
+
     def get(self, request, pk):
+        glass_list = GlassModel.objects.all()
         try:
             glass_detail = GlassModel.objects.get(id=pk)
             return render(
                 request,
                 'products/glass/glass_details.html',
-                {'glass_detail': glass_detail}
+                {
+                    'glass_detail': glass_detail,
+                    'glass_list': glass_list,
+                 }
             )
         except KeyError:
             return redirect('/glass_list/')
 
+    def post(self, request, pk):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            glass_list = GlassModel.objects.filter(
+                Q(glass_name__icontains=search_q) |
+                Q(glass_door_type__icontains=search_q)
+            ).order_by('glass_name')
+            return render(
+                request,
+                'products/glass/glass_list.html',
+                {'glass_list': glass_list}
+            )
 
-class GlassAddView(PermissionRequiredMixin, CreateView):
+
+class GlassAddView(PermissionRequiredMixin, View):
     """
     Class displaying a form allowing
     to add a new piece of glass  to database.
     """
     permission_required = 'products.add_glassmodel'
-    template_name = 'products/glass/glassmodel_form.html'
-    model = GlassModel
-    fields = '__all__'
-    success_url = '/glass_list/'
+
+    def get(self, request):
+        form = GlassAddForm
+        return render(
+            request,
+            'products/glass/glassmodel_form.html',
+            {'form': form}
+        )
+
+    def post(self, request):
+        form = GlassAddForm(request.POST)
+        if form.is_valid():
+            new_glass = GlassModel.objects.create(
+                glass_name=form.cleaned_data['glass_name'],
+                glass_door_type=form.cleaned_data['glass_door_type'],
+                stock=form.cleaned_data['stock'],
+                description=form.cleaned_data['description'],
+                img=form.cleaned_data['img'],
+            )
+            return redirect(to=f'/glass_detail/{new_glass.pk}/')
+        else:
+            return render(
+                request,
+                'products/glass/glassmodel_form.html',
+                {'form': form},
+            )
+
+
+class GlassToolAddView(PermissionRequiredMixin, View):
+    """
+    Class display a form allowing to
+    add tool and machining time to a piece
+    of glass.
+    """
+    permission_required = 'products.add_glasstoolmodel'
+
+    def get(self, request, pk):
+        form = GlassToolAddForm()
+        return render(
+            request,
+            'products/glass/glassmodel_form.html',
+            {'form': form}
+        )
+
+    def post(self, request, pk):
+        form = GlassToolAddForm(request.POST)
+        assign_to_glass = GlassModel.objects.get(id=pk)
+        if form.is_valid():
+            new_glass_too = GlassToolModel.objects.create(
+                glass_id=assign_to_glass,
+                tool_id=form.cleaned_data['tool_id'],
+                machine_time=form.cleaned_data['machine_time'],
+            )
+            return redirect(to=f'/glass_detail/{assign_to_glass.pk}/')
+        else:
+            return render(
+                request,
+                'products/glass/glassmodel_form.html',
+                {'form': form}
+            )
 
 
 class GlassEditView(PermissionRequiredMixin, UpdateView):
@@ -206,6 +433,7 @@ class StyleListView(View):
     Class display a list of all
     styles available.
     """
+
     def get(self, request):
         style_list = DoorStyleModel.objects.all()
         return render(
@@ -220,6 +448,7 @@ class StyleDetailView(View):
     Class display detailed view of
     specific door style.
     """
+
     def get(self, request, pk):
         try:
             style_detail = DoorStyleModel.objects.get(id=pk)
@@ -270,6 +499,7 @@ class CustomerListView(View):
     Class display a list of all
     customers available.
     """
+
     def get(self, request):
         customer_list = CustomerModel.objects.all()
         return render(
@@ -284,13 +514,18 @@ class CustomerDetailView(View):
     Class display detailed view of
     specific customer.
     """
+
     def get(self, request, pk):
+        customer_list = CustomerModel.objects.all()
         try:
             customer_detail = CustomerModel.objects.get(id=pk)
             return render(
                 request,
                 'products/customers/customer_details.html',
-                {'customer_detail': customer_detail}
+                {
+                    'customer_detail': customer_detail,
+                    'customer_list': customer_list,
+                }
             )
         except KeyError:
             return redirect('/customer_list/')
@@ -334,6 +569,7 @@ class ProductListView(View):
     Class display a list of all
     door lines available.
     """
+
     def get(self, request):
         door_list = ProductsModel.objects.all()
         return render(
@@ -342,34 +578,118 @@ class ProductListView(View):
             {'door_list': door_list}
         )
 
+    def post(self, request):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            door_list = ProductsModel.objects.filter(
+                Q(door_type__icontains=search_q) |
+                Q(delivery_date__icontains=search_q) |
+                Q(production_date__icontains=search_q) |
+                Q(delivery_address__icontains=search_q) |
+                Q(finished__icontains=search_q)
+            ).order_by('production_date')
+            return render(
+                request,
+                'products/doors/products_list.html',
+                {'door_list': door_list}
+            )
+
 
 class ProductDetailView(View):
     """
     Class display detailed view of
     specific door.
     """
+
     def get(self, request, pk):
+        product_list = ProductsModel.objects.all()
         try:
             door_detail = ProductsModel.objects.get(id=pk)
             return render(
                 request,
                 'products/doors/products_details.html',
-                {'door_detail': door_detail}
+                {
+                    'door_detail': door_detail,
+                    'door_list': product_list,
+                }
             )
         except KeyError:
             return redirect('/door_list/')
 
 
-class ProductAddView(PermissionRequiredMixin, CreateView):
+class ProductAddView(PermissionRequiredMixin, View):
     """
     Class displaying a form allowing
     to add a new door line to database.
     """
     permission_required = 'products.add_productsmodel'
-    template_name = 'products/doors/productsmodel_form.html'
-    model = ProductsModel
-    fields = '__all__'
-    success_url = '/door_list/'
+    def get(self, request):
+        form = ProductAddForm()
+        return render(
+            request,
+            'products/doors/productsmodel_form.html',
+            {'form': form}
+        )
+
+    def post(self, request):
+        form = ProductAddForm(request.POST)
+        if form.is_valid():
+            new_door = ProductsModel.objects.create(
+                order_num=form.cleaned_data['order_num'],
+                job_no=form.cleaned_data['job_no'],
+                door_type=form.cleaned_data['door_type'],
+                color=form.cleaned_data['color'],
+                style=form.cleaned_data['style'],
+                glass=form.cleaned_data['glass'],
+                handing=form.cleaned_data['handing'],
+                door_width=form.cleaned_data['door_width'],
+                door_height=form.cleaned_data['door_height'],
+                trim_with=form.cleaned_data['trim_with'],
+                delivery_date=form.cleaned_data['delivery_date'],
+                delivery_address=form.cleaned_data['delivery_address'],
+                production_date=form.cleaned_data['production_date'],
+            )
+            return redirect(f'/door_details/{new_door.pk}/')
+        else:
+            return render(
+                request,
+                'products/doors/productsmodel_form.html',
+                {'form': form}
+            )
+
+
+class ProductComponentAddView(PermissionRequiredMixin, View):
+    """
+    Class create view displaying form
+    allowing to add components to each door.
+    """
+    permission_required = 'products.edit_productsmodel'
+    def get(self, request, pk):
+        form = ProductComponentAddForm()
+        return render(
+            request,
+            'products/doors/productsmodel_form.html',
+            {'form': form}
+        )
+    # TODO: get this crap working!
+    def post(self, request, pk):
+        form = ProductComponentAddForm(request.POST)
+        product = ProductsModel.objects.get(id=pk)
+        print(product)
+        print(type(product))
+        if form.is_valid():
+            add_comp = ProductComponent.objects.create(
+                product_id=ProductsModel.objects.get(id=pk),
+                component_id=form.cleaned_data['component_id'],
+                count=form.cleaned_data['count'],
+            )
+            return redirect(f'/door_details/{product.id}/')
+        else:
+            return render(
+                request,
+                'products/doors/productsmodel_form.html',
+                {'form': form}
+            )
 
 
 class ProductEditView(PermissionRequiredMixin, UpdateView):
@@ -379,7 +699,8 @@ class ProductEditView(PermissionRequiredMixin, UpdateView):
     permission_required = 'products.edit_productsmodel'
     template_name = 'products/doors/productsmodel_form.html'
     model = ProductsModel
-    fields = '__all__'
+    # fields = '__all__'
+    form_class = ProductEditForm
     success_url = '/door_list/'
 
 
@@ -391,3 +712,201 @@ class ProductDeleteView(PermissionRequiredMixin, DeleteView):
     template_name = 'products/doors/productsmodel_confirm_delete.html'
     model = ProductsModel
     success_url = '/door_list/'
+
+
+class ScanProductionView(View):
+    """
+    class allowing to scan doors on shop floor
+    on start and end of production on each
+    production stage
+    """
+
+    def get(self, request):
+        scan_in_form = ScanProductionForm()
+
+        return render(
+            request,
+            'products/production/user_scanner_form.html',
+            {'scan_in_form': scan_in_form}
+        )
+
+    # TODO: set error messages for the operator!
+    # TODO: refactor - shorten the repeated code!
+    def post(self, request):
+        current_employee = EmployeeModel.objects.get(user=request.user)
+        user_departments = []
+
+        for key, value in list(current_employee.section_id.values_list()):
+            user_departments.append(value)
+
+        scan_filter = r'^(?P<prefix>job)(?P<order>\d{1,7})-(?P<job>\d{1,4})'
+        now = timezone.make_aware(datetime.now())
+        scan_in_form = ScanProductionForm(request.POST)
+        if scan_in_form.is_valid():
+            job_scan = scan_in_form.cleaned_data['job_no']
+
+            if 'start' in request.POST:
+                full_number = re.match(
+                    scan_filter,
+                    job_scan,
+                    flags=re.IGNORECASE,
+                )
+                prefix = full_number['prefix']
+                ord_no = full_number['order']
+                if len(ord_no) < 7:
+                    ord_no = ord_no.rjust(7, '0')
+                job_no = full_number['job']
+                if len(job_no) < 4:
+                    job_no = job_no.rjust(4, '0')
+
+                try:
+                    order = OrderModel.objects.get(
+                        order_number__icontains=prefix + ord_no
+                    )
+                except ObjectDoesNotExist:
+                    return redirect(to='/scan_product/')
+
+                try:
+                    job = ProductsModel.objects.get(
+                        order_num=order,
+                        job_no__icontains=job_no
+                    )
+                except ObjectDoesNotExist:
+                    return redirect(to='/scan_product/')
+
+                if not UserProductModel.objects.filter(
+                        product_id=job,
+                        user_id=current_employee,
+                ):
+                    scan = UserProductModel.objects.create(
+                        product_id=job,
+                        user_id=current_employee,
+                        prod_start=now,
+                    )
+                else:
+                    scan = UserProductModel.objects.update(
+                        product_id=job,
+                        user_id=current_employee,
+                        prod_start=now,
+                    )
+                return redirect(to='/scan_product/')
+
+            if 'finish' in request.POST:
+                full_number = re.match(
+                    scan_filter,
+                    job_scan,
+                    flags=re.IGNORECASE,
+                )
+                prefix = full_number['prefix']
+                ord_no = full_number['order']
+                if len(ord_no) < 7:
+                    ord_no = ord_no.rjust(7, '0')
+                job_no = full_number['job']
+                if len(job_no) < 4:
+                    job_no = job_no.rjust(4, '0')
+
+                try:
+                    order = OrderModel.objects.get(
+                        order_number__icontains=prefix + ord_no
+                    )
+                except ObjectDoesNotExist:
+                    return redirect(to='/scan_product/')
+
+                try:
+                    job = ProductsModel.objects.get(
+                        order_num=order,
+                        job_no__icontains=job_no
+                    )
+                except ObjectDoesNotExist:
+                    return redirect(to='/scan_product/')
+
+                if not UserProductModel.objects.filter(
+                        product_id=job,
+                        user_id=current_employee,
+                ):
+                    scan = UserProductModel.objects.create(
+                        product_id=job,
+                        user_id=current_employee,
+                        prod_end=now,
+                    )
+                else:
+                    scan = UserProductModel.objects.update(
+                        product_id=job,
+                        user_id=current_employee,
+                        prod_end=now,
+                    )
+
+                component_tools = ComponentToolsModel.objects.filter(
+                    component_id=job.pk
+                )
+
+                if 'CNC' in user_departments:
+                    # TODO: sort out duplicate code!
+                    for tools in component_tools:
+                        try:
+                            tool = tools.tools_id
+                            tool.current_run_time += tools.machine_time
+                            if tool.current_run_time >= tool.max_run_time:
+                                tool.current_run_time = (
+                                        tool.current_run_time - tool.max_run_time
+                                )
+                                tool.stock -= 1
+                                if tool.stock < 0:
+                                    tool.stock = 0
+                            tool.save()
+                            # TODO: sort out exception handling
+                        except ObjectDoesNotExist:
+                            return redirect('/scan_product/')
+                        except AttributeError:
+                            return redirect('/scan_product/')
+
+                    glass = GlassToolModel.objects.filter(glass_id=job.glass.pk)
+
+                    for tools in glass:
+
+                        try:
+                            tool = tools.tool_id
+                            tool.current_run_time += tools.machine_time
+                            if tool.current_run_time >= tool.max_run_time:
+                                tool.current_run_time = (
+                                        tool.current_run_time - tool.max_run_time
+                                )
+                                tool.stock -= 1
+                                if tool.stock < 0:
+                                    tool.stock = 0
+                            tool.save()
+                        except ObjectDoesNotExist:
+                            return redirect('/scan_product/')
+                        except AttributeError:
+                            return redirect('/scan_product/')
+
+                    door_trim_time = (
+                            ((job.door_height * 2) + (job.door_width * 2))
+                            / 1000 / job.trim_with.feed_rate
+                    )
+                    door_trim_tool = job.trim_with
+                    door_trim_tool.current_run_time += door_trim_time
+                    if door_trim_tool.current_run_time >= door_trim_tool.max_run_time:
+                        door_trim_tool.current_run_time = (
+                                door_trim_tool.current_run_time - door_trim_tool.max_run_time
+                        )
+                        door_trim_tool.stock -= 1
+                        if door_trim_tool.stock < 0:
+                            door_trim_tool.stock = 0
+
+                    door_trim_tool.save()
+
+                    return redirect(to='/scan_product/')
+
+# TODO: move to product creation view!
+                    # Take components and glass from the stock after machining.
+                # for component in ProductComponent.objects.filter(product_id=job.pk):
+                #     comp = ComponentsModel.objects.get(id=component.component_id.id)
+                #     comp.stock -= component.count
+                #     comp.save()
+                #
+                # glass = job.glass
+                # glass.stock -= 1
+                # glass.save()
+        else:
+            return redirect(to='/scan_product/')

@@ -14,6 +14,19 @@
   grid-area: Footer;
 }
 
+.Additional {
+  grid-area: Additional;
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+}
+
+.Additional-inner {
+  width: 80%;
+  /*margin: auto;*/
+  padding: 100px 0 0 0;
+}
+
 .Logo {
   grid-area: Logo;
   background: #664357;
@@ -33,11 +46,20 @@
   display: block;
   width: 50%;
   padding: 100px 0 0 0;
+  /*margin: auto;*/
 }
 
 .Menu {
   grid-area: Menu;
+  display: flex;
 
+}
+.menu-inner {
+  display: flex;
+  flex-direction: column;
+  padding: 100px 0 0 10px;
+  /*justify-content: center;*/
+  /*justify-self: center;*/
 }
 
 .Header {
@@ -50,6 +72,7 @@
 html, body , .container {
   height: 100%;
   margin: 0;
+  background: #a8a8a8;
 }
 
 
@@ -71,3 +94,6 @@ html, body , .container {
   justify-content: center;
 }
 
+#id_change_date{
+  width: 200px;
+}

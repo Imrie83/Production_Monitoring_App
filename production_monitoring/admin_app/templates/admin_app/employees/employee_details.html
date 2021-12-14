@@ -2,7 +2,11 @@
 {% load static %}
 {% block title %}{% endblock %}
 {% block side_menu %}
-
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="search" placeholder="search">
+        <input type="submit" value="Search">
+    </form>
 {% endblock %}
 {% block content %}
     <h2>Name: {{ employee_detail.display_employee_name }}</h2>
@@ -21,4 +25,12 @@
     <a href="/delete_employee/{{ employee_detail.id }}/">Delete</a>
     <a href="{% url 'employee_list' %}">Back</a>
 
+{% endblock %}
+{% block additional %}
+    <h1>Employees</h1>
+    <ul>
+    {% for employee in employee_list %}
+        <ol><a href="/employee_details/{{ employee.id }}/">{{ employee }}</a></ol>
+    {% endfor %}
+    </ul>
 {% endblock %}

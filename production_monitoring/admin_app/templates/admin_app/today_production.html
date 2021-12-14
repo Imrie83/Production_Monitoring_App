@@ -1,0 +1,24 @@
+{% extends "grid_base.html" %}
+{% load products_tags %}
+{% block title %}{% endblock %}
+{% block side_menu %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Change Date">
+    </form>
+{% endblock %}
+{% block content %}
+
+    <div>
+        <p>Production for {{ date }}
+            <ul>
+            {% for element in output %}
+                <ol><a href="/door_details/{{ element.id }}">{{ element }}</a> -
+                {{ element.finished|yesno:"Done, In progress" }} - {{ element.door_type }} - {{ element.order_num.customer_id.customer_name }}
+                </ol>
+            {% endfor %}
+            </ul>
+        </p>
+    </div>
+{% endblock %}

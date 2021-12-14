@@ -2,7 +2,22 @@
 {% load static %}
 {% block title %}{% endblock %}
 {% block side_menu %}
-
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="search" placeholder="search tools">
+        <input type="submit" value="Search">
+    </form>
+    <br>
+{#    Sort by:#}
+{#    <form method="post">#}
+{#        {% csrf_token %}#}
+{#        <select name="type">#}
+{#            <option name="type" value="tool_name">Name</option>#}
+{#            <option name="type" value="type">Type</option>#}
+{#            <option name="type" value="stock">Stock</option>#}
+{#        </select>#}
+{#        <input type="submit" value="Sort">#}
+{#    </form>#}
 {% endblock %}
 {% block content %}
     <ul>
@@ -14,5 +29,4 @@
         </li>
     {% endfor %}
     </ul>
-
 {% endblock %}

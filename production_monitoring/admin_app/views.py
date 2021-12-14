@@ -1,4 +1,6 @@
+from datetime import datetime
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db.models import Q
 from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
@@ -12,13 +14,15 @@ from django.views.generic.edit import (
 from admin_app.forms import (
     LoginForm,
     EmployeeAddForm,
-    EmployeeEditForm,
+    EmployeeEditForm, DatePicker,
 )
 from admin_app.models import (
     MachineModel,
     EmployeeModel,
     DepartmentModel,
+    UserProductModel,
 )
+from products.models import ProductsModel, ProductComponent
 
 
 class LoginView(View):
@@ -60,9 +64,27 @@ class PanelView(View):
     Class display panel view
     visible after successful log in
     """
-
     def get(self, request):
-        return render(request, 'admin_app/main.html')
+        current_employee = EmployeeModel.objects.get(user=request.user)
+        user_group = []
+
+        for value in current_employee.user.groups.all():
+            user_group.append(value.name)
+
+        now = datetime.now().strftime('%Y-%m-%d')
+
+        if 'Shop floor staff' in user_group:
+            my_output = UserProductModel.objects.filter(
+                user_id=current_employee,
+                prod_end__icontains=now,
+            )
+        else:
+            my_output = ''
+        return render(
+            request,
+            'admin_app/main.html',
+            {'output': my_output},
+        )
 
 
 class MachineListView(View):
@@ -211,6 +233,22 @@ class EmployeeListView(View):
             {'employee_list': employee_list}
         )
 
+    def post(self, request):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            employee_list = EmployeeModel.objects.filter(
+                Q(id_num__icontains=search_q) |
+                Q(position__icontains=search_q) |
+                Q(user__first_name__icontains=search_q) |
+                Q(user__last_name__icontains=search_q) |
+                Q(user__email__icontains=search_q)
+            ).order_by('user__username')
+            return render(
+                request,
+                'admin_app/employees/employee_list.html',
+                {'employee_list': employee_list}
+            )
+
 
 class EmployeeDetailView(View):
     """
@@ -220,13 +258,33 @@ class EmployeeDetailView(View):
     def get(self, request, pk):
         try:
             employee_detail = EmployeeModel.objects.get(id=pk)
+            employee_list = EmployeeModel.objects.all()
             return render(
                 request,
                 'admin_app/employees/employee_details.html',
-                {'employee_detail': employee_detail}
+                {
+                    'employee_detail': employee_detail,
+                    'employee_list': employee_list,
+                 }
             )
         except KeyError:
             return redirect('/employee_list/')
+
+    def post(self, request, pk):
+        if 'search' in request.POST:
+            search_q = request.POST['search']
+            employee_list = EmployeeModel.objects.filter(
+                Q(id_num__icontains=search_q) |
+                Q(position__icontains=search_q) |
+                Q(user__first_name__icontains=search_q) |
+                Q(user__last_name__icontains=search_q) |
+                Q(user__email__icontains=search_q)
+            ).order_by('user__username')
+            return render(
+                request,
+                'admin_app/employees/employee_list.html',
+                {'employee_list': employee_list}
+            )
 
 
 class EmployeeAddView(PermissionRequiredMixin, FormView):
@@ -263,6 +321,8 @@ class EmployeeAddView(PermissionRequiredMixin, FormView):
             position=position,
         )
         new_employee.section_id.set(department)
+        employee_group = form.cleaned_data['user_group']
+        new_employee.user.groups.set(employee_group)
         return super().form_valid(form)
 
 
@@ -327,3 +387,45 @@ class EmployeeDeleteView(PermissionRequiredMixin, DeleteView):
     template_name = 'admin_app/employees/employeemodel_confirm_delete.html'
     model = EmployeeModel
     success_url = '/employee_list/'
+
+
+# TODO: add current location
+class TodayProductionView(View):
+    """
+    Class creates a view generating a production list for
+    current day, with the option to lookup other days.
+    """
+    def get(self, request):
+        form = DatePicker()
+        now = datetime.now().strftime('%Y-%m-%d')
+        output = ProductsModel.objects.filter(
+            production_date__icontains=now,
+        ).order_by('order_num', 'job_no', '-finished')
+        return render(
+            request,
+            'admin_app/today_production.html',
+            {
+                'output': output,
+                'form': form,
+                'date': now,
+            }
+        )
+
+    def post(self, request):
+        form = DatePicker(request.POST)
+        if form.is_valid():
+            pick_date = form.cleaned_data['change_date']
+            print(pick_date)
+            output = ProductsModel.objects.filter(
+                production_date__icontains=pick_date,
+            ).order_by('order_num', 'job_no', '-finished')
+            return render(
+                request,
+                'admin_app/today_production.html',
+                {
+                    'output': output,
+                    'form': form,
+                    'date': pick_date,
+                }
+            )
+
