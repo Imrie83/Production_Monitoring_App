@@ -391,6 +391,10 @@ class EmployeeDeleteView(PermissionRequiredMixin, DeleteView):
 
 # TODO: add current location
 class TodayProductionView(View):
+    """
+    Class creates a view generating a production list for
+    current day, with the option to lookup other days.
+    """
     def get(self, request):
         form = DatePicker()
         now = datetime.now().strftime('%Y-%m-%d')
