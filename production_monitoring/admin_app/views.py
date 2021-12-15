@@ -24,7 +24,7 @@ from admin_app.models import (
     DepartmentModel,
     UserProductModel,
 )
-from products.models import ProductsModel, ProductComponent
+from products.models import ProductsModel
 
 
 class LoginView(View):
@@ -32,8 +32,6 @@ class LoginView(View):
     Class displaying and validating a login form
     """
     def get(self, request):
-        if request.user.is_authenticated:
-            return redirect('/panel/')
         form = LoginForm()
         return render(request, 'admin_app/login.html', {'form': form})
 
@@ -46,6 +44,8 @@ class LoginView(View):
             if user:
                 login(request, user)
                 return redirect('/panel/')
+            else:
+                return render(request, 'admin_app/login.html', {'form': form})
 
         return render(request, 'admin_app/login.html', {'form': form})
 

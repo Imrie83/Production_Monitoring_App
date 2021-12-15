@@ -5,7 +5,6 @@ from django.contrib import auth
 from django.contrib.auth.models import User
 
 
-# TODO: finish this!
 @pytest.mark.django_db
 def test_login_page(client, test_user):
     """
@@ -15,11 +14,15 @@ def test_login_page(client, test_user):
     :param client:
     :param test_user:
     """
-    response = client.get('')
+    assert User.objects.get(username='staff').username == 'staff'
+    assert User.objects.get(username='staff').password == 'staff'
+
+    response = client.get('/')
     assert response.status_code == 200
-    response = client.post('', {'login': 'imrie', 'password': 'test123test'})
-    # assert auth.get_user(client) == 'imrie'
-    # assert response.status_code == 302
+
+    # TODO: make this work!
+    response = client.post('/', {'login': 'staff', 'password': 'staff'})
+    assert response.status_code == 302
 
 
 @pytest.mark.django_db
@@ -29,7 +32,7 @@ def test_logout_page(client, test_user):
     :param client:
     :param test_user:
     """
-    user = client.force_login(test_user)
+    user = client.force_login(test_user[0])
     assert auth.get_user(client).username == 'imrie'  # True -check if logged in
     response = client.get('/logout/')  # log out
     assert auth.get_user(client).username == ''  # True -check if user logged out

@@ -1,7 +1,4 @@
-from django.conf import settings
 from django.db import models
-from django.utils.html import mark_safe
-from django.utils.html import escape
 
 
 class ToolsModel(models.Model):
@@ -12,12 +9,11 @@ class ToolsModel(models.Model):
         max_length=255,
         null=False,
         verbose_name='Tool name',
-        # help_text='Short tool name',
         unique=True,
     )
     feed_rate = models.IntegerField(
         default=5,
-        null=False,
+        null=True,
         verbose_name='Feed Rate',
     )
     type = models.CharField(
@@ -29,7 +25,7 @@ class ToolsModel(models.Model):
     )
     stock = models.IntegerField(
         verbose_name='In stock',
-        null=False,
+        null=True,
         default=0,
     )
     max_run_time = models.FloatField(

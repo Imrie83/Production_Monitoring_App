@@ -290,11 +290,12 @@ class ProductsModel(models.Model):
         if len(self.job_no) < 4:
             self.job_no = self.job_no.rjust(4, '0')
 
-
         self.machining_time = 0
         self.glass_tools = GlassToolModel.objects.filter(glass_id=self.glass.id)
         for tool in self.glass_tools:
             self.machining_time += tool.machine_time
+
+        # TODO: move to ProductComponent model
         # for comp in self.components.all():
         #     self.comp_count = ProductComponent.objects.get(
         #         component_id=comp.id,
@@ -307,7 +308,6 @@ class ProductsModel(models.Model):
         #         self.machining_time += c.machine_time * self.comp_count
 
         super(ProductsModel, self).save(*args, **kwargs)
-
 
     def __str__(self):
         return self.full_job_no()
@@ -338,7 +338,7 @@ class ProductComponent(models.Model):
         verbose_name_plural = 'Door compoonents'
 
     def save(self, *args, **kwargs):
-        product = ProductsModel.objects.get(id=self.product_id)
+        product = ProductsModel.objects.get(id=self.product_id.id)
         tools = self.component_id.tools_req.all()
         for tool in tools:
             comp_tool = ComponentToolsModel.objects.get(

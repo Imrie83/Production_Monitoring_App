@@ -1,5 +1,6 @@
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.urls import reverse
 
 from tools.models import ToolsModel
 
@@ -13,7 +14,7 @@ def test_tool_detail(client, test_user, create_test_tool):
     :param test_user:
     :param create_test_tool:
     """
-    client.force_login(test_user)  # view restricted to logged in users!
+    client.force_login(test_user[0])  # view restricted to logged in users!
     response = client.get(f'/tool_details/{create_test_tool[0].pk}/')
     tool = response.context['tool_details']
     tool_list = response.context['tool_list']
@@ -79,7 +80,7 @@ def test_tool_add(client, test_user):
     # No user logged in -> redirect to login page
     assert response.status_code == 302
 
-    client.force_login(test_user)
+    client.force_login(test_user[0])
     response = client.get('/add_tool/')
 
     # Gain access after login
@@ -106,7 +107,7 @@ def test_tool_add(client, test_user):
                            )
     assert response.status_code == 302  # redirect if tool added correctly
     tool = ToolsModel.objects.last()
-    # tool.image = test_image  # add image to existing object
+    tool.image = test_image  # add image to existing object
     assert tool.image == '16mm_rough.jpg'  # test if image exist
     assert tool.tool_name == 'V-point'
     assert response.status_code == 302  # redirect if tool added correctly
@@ -121,7 +122,7 @@ def test_tool_delete(client, test_user, create_test_tool):
     :param test_user:
     :param create_test_tool:
     """
-    client.force_login(test_user)
+    client.force_login(test_user[0])
     tools = ToolsModel.objects.all()
     tool_1 = tools[0]
     # check tools in database
@@ -141,26 +142,33 @@ def test_tool_delete(client, test_user, create_test_tool):
     assert tool_2.tool_name != 'Turbo Cutter'
 
 
-# @pytest.mark.django_db
-# def test_tool_edit(client, test_user, create_test_tool):
-#     client.force_login(test_user)
-#     old_tool = create_test_tool[0]
-#     response = client.get(f'/edit_tool/{old_tool.pk}/')
-#     assert response.status_code == 200
-#     assert b'Turbo Cutter' in response.content
-#
-#     response = client.post(
-#         f'/edit_tool/{old_tool.pk}/',
-#         {
-#             'tool_name': 'Test Name',
-#             'feed_rate': 55,
-#             'type': 'HSS',
-#             'in_stock': 10,
-#             'allowed_run_time': 450,
-#             'description': 'Lorem Ipsum',
-#             # 'img': '',
-#         }
-#     )
-#
-#     assert response.status_code == 302
+@pytest.mark.django_db
+def test_tool_edit(client, test_user, create_test_tool):
+    client.force_login(test_user[0])
+    old_tool = create_test_tool[0]
+    response = client.get(f'/edit_tool/{old_tool.pk}/')
+    assert response.status_code == 200
+
+    # check if tool loaded into form
+    assert b'Turbo Cutter' in response.content
+
+    # change tool data
+    response = client.post(
+        f'/edit_tool/{old_tool.pk}/',
+        {
+            'tool_name': 'Test Name',
+            'feed_rate': 55,
+            'type': 'HSS',
+            'stock': 10,
+            'allowed_run_time': 450,
+            'max_run_time': 500,
+            'description': 'Lorem Ipsum',
+        }
+    )
+
+    get_tool = ToolsModel.objects.get(tool_name='Test Name')
+    # check if tool data changed
+    assert get_tool.tool_name == 'Test Name'
+    assert get_tool.feed_rate == 55
+    assert response.status_code == 302
 

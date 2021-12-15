@@ -732,7 +732,6 @@ class ProductComponentAddView(LoginRequiredMixin, PermissionRequiredMixin, View)
             {'form': form}
         )
 
-    # TODO: get this working!
     def post(self, request, pk):
         form = ProductComponentAddForm(request.POST)
         product = ProductsModel.objects.get(id=pk)
