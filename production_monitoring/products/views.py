@@ -1,15 +1,12 @@
 from datetime import datetime
-
 from django.db.models import Q
 from django.utils import timezone
-
-from django.contrib.admin import TabularInline
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.forms import inlineformset_factory
+from django.contrib.auth.mixins import PermissionRequiredMixin, \
+    LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
-from django.views.generic import FormView, CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, UpdateView, DeleteView
 import re
 
 from admin_app.models import UserProductModel, EmployeeModel
@@ -18,7 +15,10 @@ from products.forms import (
     ScanProductionForm,
     ComponentToolsForm,
     GlassAddForm,
-    GlassToolAddForm, ProductAddForm, ProductEditForm, ProductComponentAddForm,
+    GlassToolAddForm,
+    ProductAddForm,
+    ProductEditForm,
+    ProductComponentAddForm,
 )
 from products.models import (
     OrderModel,
@@ -26,7 +26,10 @@ from products.models import (
     ComponentsModel,
     CustomerModel,
     DoorStyleModel,
-    GlassModel, ComponentToolsModel, GlassToolModel, ProductComponent,
+    GlassModel,
+    ComponentToolsModel,
+    GlassToolModel,
+    ProductComponent,
 )
 
 
@@ -57,10 +60,12 @@ class OrderListView(View):
             )
 
 
-class OrderDetailView(View):
+class OrderDetailView(LoginRequiredMixin, View):
     """
     Class display a detailed view of each order.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
 
     def get(self, request, pk):
         try:
@@ -77,7 +82,7 @@ class OrderDetailView(View):
         except KeyError:
             return redirect('/order_list/')
 
-    def post(self, request):
+    def post(self, request, pk):
         if 'search' in request.POST:
             search_q = request.POST['search']
             orders = OrderModel.objects.filter(
@@ -90,10 +95,12 @@ class OrderDetailView(View):
             )
 
 
-class EditOrderView(PermissionRequiredMixin, UpdateView):
+class EditOrderView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """
     Class allowing to edit order details.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'products.update_ordermodel'
     template_name = 'products/orders/ordermodel_form.html'
     model = OrderModel
@@ -101,20 +108,24 @@ class EditOrderView(PermissionRequiredMixin, UpdateView):
     success_url = '/order_list/'
 
 
-class DeleteOrderView(PermissionRequiredMixin, DeleteView):
+class DeleteOrderView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """
     class allowing to delete an order from database.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'products.delete_ordermodel'
     template_name = 'products/orders/ordermodel_confirm_delete.html'
     model = OrderModel
     success_url = '/order_list/'
 
 
-class AddOrderView(PermissionRequiredMixin, CreateView):
+class AddOrderView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     """
     Class allowing to create a new order line.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'products.add_ordermodel'
     template_name = 'products/orders/ordermodel_form.html'
     model = OrderModel
@@ -122,6 +133,7 @@ class AddOrderView(PermissionRequiredMixin, CreateView):
     success_url = '/order_list/'
 
 
+# TODO: clean duplicate code!
 class ComponentListView(View):
     """
     Class display a list of all components available.
@@ -150,10 +162,12 @@ class ComponentListView(View):
             )
 
 
-class ComponentDetailView(View):
+class ComponentDetailView(LoginRequiredMixin, View):
     """
     Class displaying component details.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
 
     def get(self, request, pk):
         try:
@@ -185,11 +199,13 @@ class ComponentDetailView(View):
             )
 
 
-class AddComponentView(PermissionRequiredMixin, View):
+class AddComponentView(LoginRequiredMixin, PermissionRequiredMixin, View):
     """
     Class displaying form allowing to add a new component
     in to the database.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'products.add_componentsmodel'
 
     def get(self, request):
@@ -221,11 +237,13 @@ class AddComponentView(PermissionRequiredMixin, View):
             )
 
 
-class AddComponentToolView(PermissionRequiredMixin, View):
+class AddComponentToolView(LoginRequiredMixin, PermissionRequiredMixin, View):
     """
     Class creating a form allowing to
     add tools with machining times to each component.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'product.edit_componenttoolsmodel'
 
     def get(self, request, pk):
@@ -254,11 +272,13 @@ class AddComponentToolView(PermissionRequiredMixin, View):
             )
 
 
-class EditComponentView(PermissionRequiredMixin, UpdateView):
+class EditComponentView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """
     Class display a form allowing to update information
     about a component.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'products.edit_componentsmodel'
     template_name = 'products/components/componentsmodel_form.html'
     model = ComponentsModel
@@ -266,10 +286,12 @@ class EditComponentView(PermissionRequiredMixin, UpdateView):
     success_url = '/component_list/'
 
 
-class DeleteComponentView(PermissionRequiredMixin, DeleteView):
+class DeleteComponentView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """
     Class deleting a component.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'products.delete_componentsmodel'
     template_name = 'products/components/componentsmodel_confirm_delete.html'
     model = ComponentsModel
@@ -304,11 +326,13 @@ class GlassListView(View):
             )
 
 
-class GlassDetailView(View):
+class GlassDetailView(LoginRequiredMixin, View):
     """
     Class display detailed view of
     specific glass.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
 
     def get(self, request, pk):
         glass_list = GlassModel.objects.all()
@@ -339,11 +363,13 @@ class GlassDetailView(View):
             )
 
 
-class GlassAddView(PermissionRequiredMixin, View):
+class GlassAddView(LoginRequiredMixin, PermissionRequiredMixin, View):
     """
     Class displaying a form allowing
     to add a new piece of glass  to database.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'products.add_glassmodel'
 
     def get(self, request):
@@ -373,12 +399,14 @@ class GlassAddView(PermissionRequiredMixin, View):
             )
 
 
-class GlassToolAddView(PermissionRequiredMixin, View):
+class GlassToolAddView(LoginRequiredMixin, PermissionRequiredMixin, View):
     """
     Class display a form allowing to
     add tool and machining time to a piece
     of glass.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'products.add_glasstoolmodel'
 
     def get(self, request, pk):
@@ -407,10 +435,12 @@ class GlassToolAddView(PermissionRequiredMixin, View):
             )
 
 
-class GlassEditView(PermissionRequiredMixin, UpdateView):
+class GlassEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """
     Class display form view allowing to edit glass information.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'products.edit_glassmodel'
     template_name = 'products/glass/glassmodel_form.html'
     model = GlassModel
@@ -418,10 +448,12 @@ class GlassEditView(PermissionRequiredMixin, UpdateView):
     success_url = '/glass_list/'
 
 
-class GlassDeleteView(PermissionRequiredMixin, DeleteView):
+class GlassDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """
     Class deleting a piece of glass from database.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'products.delete_glassmodel'
     template_name = 'products/glass/glassmodel_confirm_delete.html'
     model = GlassModel
@@ -443,11 +475,13 @@ class StyleListView(View):
         )
 
 
-class StyleDetailView(View):
+class StyleDetailView(LoginRequiredMixin, View):
     """
     Class display detailed view of
     specific door style.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
 
     def get(self, request, pk):
         try:
@@ -461,11 +495,13 @@ class StyleDetailView(View):
             return redirect('/style_list/')
 
 
-class StyleAddView(PermissionRequiredMixin, CreateView):
+class StyleAddView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     """
     Class displaying a form allowing
     to add a new door style to database.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'products.add_doorstylemodel'
     template_name = 'products/styles/doorstylemodel_form.html'
     model = DoorStyleModel
@@ -473,10 +509,12 @@ class StyleAddView(PermissionRequiredMixin, CreateView):
     success_url = '/style_list/'
 
 
-class StyleEditView(PermissionRequiredMixin, UpdateView):
+class StyleEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """
     Class display form view allowing to edit style information.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'products.edit_doorstylemodel'
     template_name = 'products/styles/doorstylemodel_form.html'
     model = DoorStyleModel
@@ -484,10 +522,12 @@ class StyleEditView(PermissionRequiredMixin, UpdateView):
     success_url = '/style_list/'
 
 
-class StyleDeleteView(PermissionRequiredMixin, DeleteView):
+class StyleDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """
     Class deleting a door style from database.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'products.delete_doorstylemodel'
     template_name = 'products/styles/doorstylemodel_confirm_delete.html'
     model = DoorStyleModel
@@ -509,11 +549,13 @@ class CustomerListView(View):
         )
 
 
-class CustomerDetailView(View):
+class CustomerDetailView(LoginRequiredMixin, View):
     """
     Class display detailed view of
     specific customer.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
 
     def get(self, request, pk):
         customer_list = CustomerModel.objects.all()
@@ -531,11 +573,13 @@ class CustomerDetailView(View):
             return redirect('/customer_list/')
 
 
-class CustomerAddView(PermissionRequiredMixin, CreateView):
+class CustomerAddView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     """
     Class displaying a form allowing
     to add a new customer to database.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'products.add_customermodel'
     template_name = 'products/customers/customermodel_form.html'
     model = CustomerModel
@@ -543,10 +587,12 @@ class CustomerAddView(PermissionRequiredMixin, CreateView):
     success_url = '/customer_list/'
 
 
-class CustomerEditView(PermissionRequiredMixin, UpdateView):
+class CustomerEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """
     Class display form view allowing to edit customer information.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'products.edit_customermodel'
     template_name = 'products/customers/customermodel_form.html'
     model = CustomerModel
@@ -554,10 +600,12 @@ class CustomerEditView(PermissionRequiredMixin, UpdateView):
     success_url = '/customer_list/'
 
 
-class CustomerDeleteView(PermissionRequiredMixin, DeleteView):
+class CustomerDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """
     Class deleting a customer info from database.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'products.delete_customermodel'
     template_name = 'products/customers/customermodel_confirm_delete.html'
     model = CustomerModel
@@ -571,7 +619,11 @@ class ProductListView(View):
     """
 
     def get(self, request):
-        door_list = ProductsModel.objects.all()
+        door_list = ProductsModel.objects.all().order_by(
+            'production_date',
+            'order_num',
+            'job_no',
+        )
         return render(
             request,
             'products/doors/products_list.html',
@@ -587,7 +639,7 @@ class ProductListView(View):
                 Q(production_date__icontains=search_q) |
                 Q(delivery_address__icontains=search_q) |
                 Q(finished__icontains=search_q)
-            ).order_by('production_date')
+            ).order_by('production_date', 'order_num', 'job_no')
             return render(
                 request,
                 'products/doors/products_list.html',
@@ -595,11 +647,13 @@ class ProductListView(View):
             )
 
 
-class ProductDetailView(View):
+class ProductDetailView(LoginRequiredMixin, View):
     """
     Class display detailed view of
     specific door.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
 
     def get(self, request, pk):
         product_list = ProductsModel.objects.all()
@@ -617,11 +671,14 @@ class ProductDetailView(View):
             return redirect('/door_list/')
 
 
-class ProductAddView(PermissionRequiredMixin, View):
+class ProductAddView(LoginRequiredMixin, PermissionRequiredMixin, View):
     """
     Class displaying a form allowing
     to add a new door line to database.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
+
     permission_required = 'products.add_productsmodel'
     def get(self, request):
         form = ProductAddForm()
@@ -658,12 +715,15 @@ class ProductAddView(PermissionRequiredMixin, View):
             )
 
 
-class ProductComponentAddView(PermissionRequiredMixin, View):
+class ProductComponentAddView(LoginRequiredMixin, PermissionRequiredMixin, View):
     """
     Class create view displaying form
     allowing to add components to each door.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'products.edit_productsmodel'
+
     def get(self, request, pk):
         form = ProductComponentAddForm()
         return render(
@@ -671,15 +731,15 @@ class ProductComponentAddView(PermissionRequiredMixin, View):
             'products/doors/productsmodel_form.html',
             {'form': form}
         )
-    # TODO: get this crap working!
+
+    # TODO: get this working!
     def post(self, request, pk):
         form = ProductComponentAddForm(request.POST)
         product = ProductsModel.objects.get(id=pk)
-        print(product)
-        print(type(product))
+
         if form.is_valid():
             add_comp = ProductComponent.objects.create(
-                product_id=ProductsModel.objects.get(id=pk),
+                product_id=product,
                 component_id=form.cleaned_data['component_id'],
                 count=form.cleaned_data['count'],
             )
@@ -692,10 +752,12 @@ class ProductComponentAddView(PermissionRequiredMixin, View):
             )
 
 
-class ProductEditView(PermissionRequiredMixin, UpdateView):
+class ProductEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """
     Class display form view allowing to edit door information.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'products.edit_productsmodel'
     template_name = 'products/doors/productsmodel_form.html'
     model = ProductsModel
@@ -704,22 +766,26 @@ class ProductEditView(PermissionRequiredMixin, UpdateView):
     success_url = '/door_list/'
 
 
-class ProductDeleteView(PermissionRequiredMixin, DeleteView):
+class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """
     Class deleting a door line from database.
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
     permission_required = 'products.delete_productsmodel'
     template_name = 'products/doors/productsmodel_confirm_delete.html'
     model = ProductsModel
     success_url = '/door_list/'
 
 
-class ScanProductionView(View):
+class ScanProductionView(LoginRequiredMixin, View):
     """
     class allowing to scan doors on shop floor
     on start and end of production on each
     production stage
     """
+    login_url = '/'
+    redirect_field_name = 'redirect_to'
 
     def get(self, request):
         scan_in_form = ScanProductionForm()

@@ -309,7 +309,6 @@ class ProductsModel(models.Model):
         super(ProductsModel, self).save(*args, **kwargs)
 
 
-
     def __str__(self):
         return self.full_job_no()
 
