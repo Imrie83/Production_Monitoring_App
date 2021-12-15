@@ -1,4 +1,5 @@
 import pytest
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from tools.models import ToolsModel
 
@@ -67,6 +68,12 @@ def test_tool_list(client,  test_user, create_test_tool):
 
 @pytest.mark.django_db
 def test_tool_add(client, test_user):
+    """
+    Function test if ToolAddView creates a new ToolModel object
+    and save it to databasee.
+    :param client:
+    :param test_user:
+    """
     response = client.get('/add_tool/')
 
     # No user logged in -> redirect to login page
@@ -78,6 +85,14 @@ def test_tool_add(client, test_user):
     # Gain access after login
     assert response.status_code == 200
 
+    # test_image_2 = SimpleUploadedFile(
+    #     name='16mm_rough.jpg',
+    #     content=open('static/img/tools/16mm_rough.jpg', 'rb').read(), content_type='image/jpeg')
+
+    test_image = SimpleUploadedFile("16mm_rough.jpg", b'file_cone', content_type="image/jpeg")
+    print(test_image)
+    print(type(test_image.name))
+    # TODO: figure out a way to add image while creating the object in DB
     response = client.post('/add_tool/',
                            {
                                'tool_name': 'V-point',
@@ -86,9 +101,66 @@ def test_tool_add(client, test_user):
                                'stock': '20',
                                'max_run_time': 500,
                                'current_run_time': 0,
+                               'image': test_image.name,
                             }
                            )
+    assert response.status_code == 302  # redirect if tool added correctly
     tool = ToolsModel.objects.last()
-    tool.image = 'static/img/tools/16mm_rough.jpg',
+    # tool.image = test_image  # add image to existing object
+    assert tool.image == '16mm_rough.jpg'  # test if image exist
     assert tool.tool_name == 'V-point'
-    assert tool.image == 'static/img/tools/16mm_rough.jpg'
+    assert response.status_code == 302  # redirect if tool added correctly
+
+
+@pytest.mark.django_db
+def test_tool_delete(client, test_user, create_test_tool):
+    """
+    function tests if tool deleted from database.
+
+    :param client:
+    :param test_user:
+    :param create_test_tool:
+    """
+    client.force_login(test_user)
+    tools = ToolsModel.objects.all()
+    tool_1 = tools[0]
+    # check tools in database
+    assert tool_1.tool_name == 'Turbo Cutter'
+    assert len(tools) == 2
+
+    # delete tool
+    response = client.post(f'/delete_tool/{tool_1.pk}/')
+
+    # check redirection response code
+    assert response.status_code == 302
+    tools_2 = ToolsModel.objects.all()
+    tool_2 = tools_2[0]
+
+    # check if tools in database changed
+    assert len(tools_2) == 1
+    assert tool_2.tool_name != 'Turbo Cutter'
+
+
+# @pytest.mark.django_db
+# def test_tool_edit(client, test_user, create_test_tool):
+#     client.force_login(test_user)
+#     old_tool = create_test_tool[0]
+#     response = client.get(f'/edit_tool/{old_tool.pk}/')
+#     assert response.status_code == 200
+#     assert b'Turbo Cutter' in response.content
+#
+#     response = client.post(
+#         f'/edit_tool/{old_tool.pk}/',
+#         {
+#             'tool_name': 'Test Name',
+#             'feed_rate': 55,
+#             'type': 'HSS',
+#             'in_stock': 10,
+#             'allowed_run_time': 450,
+#             'description': 'Lorem Ipsum',
+#             # 'img': '',
+#         }
+#     )
+#
+#     assert response.status_code == 302
+

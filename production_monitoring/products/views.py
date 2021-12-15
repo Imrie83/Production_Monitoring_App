@@ -736,11 +736,10 @@ class ProductComponentAddView(LoginRequiredMixin, PermissionRequiredMixin, View)
     def post(self, request, pk):
         form = ProductComponentAddForm(request.POST)
         product = ProductsModel.objects.get(id=pk)
-        print(product)
-        print(type(product))
+
         if form.is_valid():
             add_comp = ProductComponent.objects.create(
-                product_id=ProductsModel.objects.get(id=pk),
+                product_id=product,
                 component_id=form.cleaned_data['component_id'],
                 count=form.cleaned_data['count'],
             )

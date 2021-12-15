@@ -1,10 +1,19 @@
 import pytest
 from django.contrib.auth.models import User, Group
 from datetime import datetime
-from admin_app.models import MachineModel, DepartmentModel, EmployeeModel, \
-    UserProductModel
-from products.models import ProductsModel, OrderModel, CustomerModel, \
-    DoorStyleModel, GlassModel
+from admin_app.models import (
+    EmployeeModel,
+    UserProductModel,
+)
+
+from products.models import (
+    ProductsModel,
+    OrderModel,
+    CustomerModel,
+    DoorStyleModel,
+    GlassModel,
+)
+
 from tools.models import ToolsModel
 
 
