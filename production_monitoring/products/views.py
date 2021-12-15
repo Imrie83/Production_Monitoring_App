@@ -706,6 +706,12 @@ class ProductAddView(LoginRequiredMixin, PermissionRequiredMixin, View):
                 delivery_address=form.cleaned_data['delivery_address'],
                 production_date=form.cleaned_data['production_date'],
             )
+
+            glass = GlassModel.objects.get(id=new_door.glass.pk)
+            if glass.stock > 0:
+                glass.stock -= 1
+                glass.save()
+
             return redirect(f'/door_details/{new_door.pk}/')
         else:
             return render(
@@ -742,6 +748,12 @@ class ProductComponentAddView(LoginRequiredMixin, PermissionRequiredMixin, View)
                 component_id=form.cleaned_data['component_id'],
                 count=form.cleaned_data['count'],
             )
+            component = form.cleaned_data['component_id']
+
+            if component.stock > 0:
+                component.stock -= form.cleaned_data['count']
+                component.save()
+
             return redirect(f'/door_details/{product.id}/')
         else:
             return render(
@@ -843,7 +855,7 @@ class ScanProductionView(LoginRequiredMixin, View):
                         product_id=job,
                         user_id=current_employee,
                 ):
-                    scan = UserProductModel.objects.create(
+                    scan = UserProductModel.objects.update_or_create(
                         product_id=job,
                         user_id=current_employee,
                         prod_start=now,
@@ -901,77 +913,71 @@ class ScanProductionView(LoginRequiredMixin, View):
                         prod_end=now,
                     )
 
-                component_tools = ComponentToolsModel.objects.filter(
-                    component_id=job.pk
-                )
-
-                if 'CNC' in user_departments:
-                    # TODO: sort out duplicate code!
-                    for tools in component_tools:
-                        try:
-                            tool = tools.tools_id
-                            tool.current_run_time += tools.machine_time
-                            if tool.current_run_time >= tool.max_run_time:
-                                tool.current_run_time = (
-                                        tool.current_run_time - tool.max_run_time
-                                )
-                                tool.stock -= 1
-                                if tool.stock < 0:
-                                    tool.stock = 0
-                            tool.save()
-                            # TODO: sort out exception handling
-                        except ObjectDoesNotExist:
-                            return redirect('/scan_product/')
-                        except AttributeError:
-                            return redirect('/scan_product/')
-
-                    glass = GlassToolModel.objects.filter(glass_id=job.glass.pk)
-
-                    for tools in glass:
-
-                        try:
-                            tool = tools.tool_id
-                            tool.current_run_time += tools.machine_time
-                            if tool.current_run_time >= tool.max_run_time:
-                                tool.current_run_time = (
-                                        tool.current_run_time - tool.max_run_time
-                                )
-                                tool.stock -= 1
-                                if tool.stock < 0:
-                                    tool.stock = 0
-                            tool.save()
-                        except ObjectDoesNotExist:
-                            return redirect('/scan_product/')
-                        except AttributeError:
-                            return redirect('/scan_product/')
-
-                    door_trim_time = (
-                            ((job.door_height * 2) + (job.door_width * 2))
-                            / 1000 / job.trim_with.feed_rate
-                    )
-                    door_trim_tool = job.trim_with
-                    door_trim_tool.current_run_time += door_trim_time
-                    if door_trim_tool.current_run_time >= door_trim_tool.max_run_time:
-                        door_trim_tool.current_run_time = (
-                                door_trim_tool.current_run_time - door_trim_tool.max_run_time
-                        )
-                        door_trim_tool.stock -= 1
-                        if door_trim_tool.stock < 0:
-                            door_trim_tool.stock = 0
-
-                    door_trim_tool.save()
-
+                if 'Packing' in user_departments:
+                    job.finished = True
+                    job.save()
                     return redirect(to='/scan_product/')
 
-# TODO: move to product creation view!
-                    # Take components and glass from the stock after machining.
-                # for component in ProductComponent.objects.filter(product_id=job.pk):
-                #     comp = ComponentsModel.objects.get(id=component.component_id.id)
-                #     comp.stock -= component.count
-                #     comp.save()
-                #
-                # glass = job.glass
-                # glass.stock -= 1
-                # glass.save()
+                for comp in ProductComponent.objects.filter(product_id=job):
+
+                    if 'CNC' in user_departments:
+                        # TODO: sort out duplicate code!
+                        for tool in comp.component_id.tools_req.all():
+                            try:
+
+                                if tool.current_run_time >= tool.max_run_time:
+                                    tool.current_run_time = (
+                                            tool.current_run_time - tool.max_run_time
+                                    )
+                                    tool.stock -= 1
+                                    if tool.stock < 0:
+                                        tool.stock = 0
+                                tool.save()
+                                # TODO: sort out exception handling
+                            except ObjectDoesNotExist:
+                                return redirect('/scan_product/')
+                            except AttributeError:
+                                return redirect('/scan_product/')
+
+                        glass = GlassToolModel.objects.filter(glass_id=job.glass.pk)
+
+                        for tools in glass:
+                            try:
+                                tool = tools.tool_id
+                                tool.current_run_time += tools.machine_time
+                                if tool.current_run_time >= tool.max_run_time:
+                                    tool.current_run_time = (
+                                            tool.current_run_time - tool.max_run_time
+                                    )
+                                    tool.stock -= 1
+                                    if tool.stock < 0:
+                                        tool.stock = 0
+                                tool.save()
+                            except ObjectDoesNotExist:
+                                return redirect('/scan_product/')
+                            except AttributeError:
+                                return redirect('/scan_product/')
+
+                        door_trim_time = (
+                                ((job.door_height * 2) + (job.door_width * 2))
+                                / 1000 / job.trim_with.feed_rate
+                        )
+                        door_trim_tool = job.trim_with
+                        door_trim_tool.current_run_time += door_trim_time
+                        if door_trim_tool.current_run_time >= door_trim_tool.max_run_time:
+                            door_trim_tool.current_run_time = (
+                                    door_trim_tool.current_run_time - door_trim_tool.max_run_time
+                            )
+                            door_trim_tool.stock -= 1
+                            if door_trim_tool.stock < 0:
+                                door_trim_tool.stock = 0
+
+                        door_trim_tool.save()
+
+                        return redirect(to='/scan_product/')
+                    else:
+                        return redirect(to='/scan_product/')
+                else:
+                    return redirect(to='/scan_product/')
         else:
             return redirect(to='/scan_product/')

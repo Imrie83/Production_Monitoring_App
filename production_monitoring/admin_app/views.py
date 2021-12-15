@@ -429,6 +429,9 @@ class TodayProductionView(View):
         output = ProductsModel.objects.filter(
             production_date__icontains=now,
         ).order_by('order_num', 'job_no', '-finished')
+        # for element in output:
+            # for prod in element.user_product.order_by('prod_end'):
+                # print(prod.user_id.section_id)
         return render(
             request,
             'admin_app/today_production.html',
@@ -443,7 +446,6 @@ class TodayProductionView(View):
         form = DatePicker(request.POST)
         if form.is_valid():
             pick_date = form.cleaned_data['change_date']
-            print(pick_date)
             output = ProductsModel.objects.filter(
                 production_date__icontains=pick_date,
             ).order_by('order_num', 'job_no', '-finished')

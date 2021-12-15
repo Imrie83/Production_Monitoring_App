@@ -16,6 +16,7 @@
             {% for element in output %}
                 <ol><a href="/door_details/{{ element.id }}">{{ element }}</a> -
                 {{ element.finished|yesno:"Done, In progress" }} - {{ element.door_type }} - {{ element.order_num.customer_id.customer_name }}
+                <br>Last location: {{ element.user_product.last.user_id.section_id.last }}<br><br>
                 </ol>
             {% endfor %}
             </ul>
