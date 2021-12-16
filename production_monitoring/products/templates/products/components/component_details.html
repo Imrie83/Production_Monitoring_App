@@ -9,6 +9,7 @@
     </form>
 {% endblock %}
 {% block content %}
+    <div class="content_div">
     <h2>Name: {{ component_details.name }}</h2>
     <p>Door type: {{ component_details.door_type }}</p>
     <p>Product type: {{ component_details.product_type }}</p>
@@ -26,6 +27,7 @@
     <a href="/edit_component/{{ component_details.id }}/" type="button">Edit</a>
     <a href="/delete_component/{{ component_details.id }}/" type="button">Delete</a>
     <a href="{% url 'component_list' %}" type="button">Back</a>
+    </div>
 
 {% endblock %}
 

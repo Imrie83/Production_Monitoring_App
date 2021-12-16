@@ -9,13 +9,25 @@
     </form>
 {% endblock %}
 {% block content %}
-    <ul>
-    {% for component in component_list %}
-        <li>
-            <a href="/component_details/{{ component.id }}/">{{ component.name }}</a>
-             Door type: {{ component.door_type }}  Comp. type: {{ component.product_type }}
-        </li>
-    {% endfor %}
-    </ul>
+     <table class="table_list">
+        <thead>
+        <tr>
+            <td>Name</td>
+            <td>Door Type</td>
+            <td>Comp. Type</td>
+            <td>Description</td>
+        </tr>
+        </thead>
+     <tbody>
+        {% for component in component_list %}
+            <tr>
+                <td><a href="/component_details/{{ component.id }}/">{{ component.name }}</a></td>
+                <td>{{ component.door_type }}</td>
+                <td>{{ component.product_type }}</td>
+                <td>{{ component.short_description }}</td>
+            </tr>
+        {% endfor %}
+     </tbody>
+     </table>
 
 {% endblock %}

@@ -5,12 +5,13 @@
 
 {% endblock %}
 {% block content %}
+    <div class="content_div">
     <h2>Machine: {{ machine_detail.name }}</h2>
     <p>Location: {{ machine_detail.machine_location }}</p>
 
-    <a href="/edit_machine/{{ machine_detail.id }}/">Edit</a>
-    <a href="/delete_machine/{{ machine_detail.id }}/">Delete</a>
-{#    <br>#}
-    <a href="{% url 'machine_list' %}">Back</a>
+    <a href="/edit_machine/{{ machine_detail.id }}/" type="button">Edit</a>
+    <a href="/delete_machine/{{ machine_detail.id }}/" type="button">Delete</a>
+    <a href="{% url 'machine_list' %}" type="button">Back</a>
+    </div>
 
 {% endblock %}

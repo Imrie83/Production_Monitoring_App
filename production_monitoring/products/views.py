@@ -635,6 +635,8 @@ class ProductListView(View):
         if 'search' in request.POST:
             search_q = request.POST['search']
             door_list = ProductsModel.objects.filter(
+                Q(job_no__icontains=search_q) |
+                Q(order_num__order_number__icontains=search_q) |
                 Q(door_type__icontains=search_q) |
                 Q(delivery_date__icontains=search_q) |
                 Q(production_date__icontains=search_q) |
@@ -657,7 +659,10 @@ class ProductDetailView(LoginRequiredMixin, View):
     redirect_field_name = 'redirect_to'
 
     def get(self, request, pk):
-        product_list = ProductsModel.objects.all()
+        product_list = ProductsModel.objects.order_by(
+            'order_num',
+            'job_no',
+        )
         try:
             door_detail = ProductsModel.objects.get(id=pk)
             return render(

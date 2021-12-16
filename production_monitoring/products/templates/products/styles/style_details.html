@@ -5,12 +5,13 @@
 
 {% endblock %}
 {% block content %}
+    <div class="content_div">
     <h2>Style: {{ style_detail.style_name }}</h2>
     <p>Door type: {{ style_detail.style_type }}</p>
 
-    <a href="/edit_style/{{ style_detail.id }}/">Edit</a>
-    <a href="/delete_style/{{ style_detail.id }}/">Delete</a>
-{#    <br>#}
-    <a href="{% url 'style_list' %}">Back</a>
+    <a href="/edit_style/{{ style_detail.id }}/" type="button">Edit</a>
+    <a href="/delete_style/{{ style_detail.id }}/" type="button">Delete</a>
+    <a href="{% url 'style_list' %}" type="button">Back</a>
+    </div>
 
 {% endblock %}

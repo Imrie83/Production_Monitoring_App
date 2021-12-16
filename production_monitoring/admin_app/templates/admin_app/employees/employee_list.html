@@ -10,13 +10,26 @@
     </form>
 {% endblock %}
 {% block content %}
-    <ul>
-    {% for employee in employee_list %}
-        <li>
-            <a href="/employee_details/{{ employee.id }}/">{{ employee.display_employee_name }}</a>
-            ID: {{ employee.id_num }} Position: {{ employee.position }}
-        </li>
-    {% endfor %}
-    </ul>
+     <table class="table_list">
+        <thead>
+        <tr>
+            <td>Name</td>
+            <td>ID.</td>
+            <td>Position</td>
+            <td>Department</td>
+        </tr>
+        </thead>
+        <tbody>
+            {% for employee in employee_list %}
+                <tr>
+                    <td><a href="/employee_details/{{ employee.id }}/">{{ employee.display_employee_name }}</a></td>
+                    <td>{{ employee.id_num }}</td>
+                    <td>{{ employee.position }}</td>
+                    <td>{{ employee.show_all_departments }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+     </table>
+
 
 {% endblock %}

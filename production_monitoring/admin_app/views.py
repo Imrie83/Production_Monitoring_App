@@ -38,15 +38,15 @@ class LoginView(View):
     def post(self, request):
         form = LoginForm(request.POST)
         if form.is_valid():
-            log_in = form.cleaned_data['login']
-            password = form.cleaned_data['password']
-            user = authenticate(username=log_in, password=password)
+            user = authenticate(
+                username=form.cleaned_data['login'],
+                password=form.cleaned_data['password'],
+            )
             if user:
                 login(request, user)
                 return redirect('/panel/')
             else:
                 return render(request, 'admin_app/login.html', {'form': form})
-
         return render(request, 'admin_app/login.html', {'form': form})
 
 
@@ -417,7 +417,6 @@ class EmployeeDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView
     success_url = '/employee_list/'
 
 
-# TODO: add current location
 class TodayProductionView(View):
     """
     Class creates a view generating a production list for
@@ -429,9 +428,10 @@ class TodayProductionView(View):
         output = ProductsModel.objects.filter(
             production_date__icontains=now,
         ).order_by('order_num', 'job_no', '-finished')
-        # for element in output:
-            # for prod in element.user_product.order_by('prod_end'):
-                # print(prod.user_id.section_id)
+        finished_today = ProductsModel.objects.filter(
+            production_date__icontains=now,
+            finished=True,
+        )
         return render(
             request,
             'admin_app/today_production.html',
@@ -439,6 +439,7 @@ class TodayProductionView(View):
                 'output': output,
                 'form': form,
                 'date': now,
+                'finished': finished_today,
             }
         )
 
@@ -449,6 +450,10 @@ class TodayProductionView(View):
             output = ProductsModel.objects.filter(
                 production_date__icontains=pick_date,
             ).order_by('order_num', 'job_no', '-finished')
+            finished_today = ProductsModel.objects.filter(
+                production_date__icontains=pick_date,
+                finished=True,
+            )
             return render(
                 request,
                 'admin_app/today_production.html',
@@ -456,6 +461,6 @@ class TodayProductionView(View):
                     'output': output,
                     'form': form,
                     'date': pick_date,
+                    'finished': finished_today,
                 }
             )
-

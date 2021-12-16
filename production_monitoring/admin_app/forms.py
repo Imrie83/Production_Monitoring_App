@@ -155,4 +155,4 @@ class DatePicker(forms.Form):
     """
     Create a form allowing to pick a date
     """
-    change_date = forms.DateField(widget=DatePickerField)
+    change_date = forms.DateField(widget=DatePickerField, label='')

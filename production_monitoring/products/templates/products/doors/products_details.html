@@ -9,7 +9,9 @@
     </form>
 {% endblock %}
 {% block content %}
+    <div class="content_div">
     <h2>Job no: {{ door_detail }}</h2>
+    <p>Last Location: {{ door_detail.user_product.last.user_id.section_id.last }}</p>
     <p>Door type: {{ door_detail.door_type }}</p>
     <p>Style: {{ door_detail.style }}</p>
     <p>Color: {{ door_detail.color }}</p>
@@ -31,8 +33,8 @@
 
     <a href="/edit_door/{{ door_detail.id }}/" type="button">Edit</a>
     <a href="/delete_door/{{ door_detail.id }}/" type="button">Delete</a>
-
     <a href="{% url 'door_list' %}" type="button">Back</a>
+    </div>
 
 {% endblock %}
 

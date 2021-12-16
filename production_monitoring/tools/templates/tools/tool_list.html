@@ -20,13 +20,22 @@
 {#    </form>#}
 {% endblock %}
 {% block content %}
-    <ul>
-    {% for tool in tool_list %}
-        <li>
-            <h2><a href="/tool_details/{{ tool.id }}/">{{ tool.tool_name }}</a></h2>
-            <ol>In stock: {{ tool.stock }}</ol>
-            <ol>{{ tool.short_description }}</ol>
-        </li>
-    {% endfor %}
-    </ul>
+     <table class="table_list">
+        <thead>
+        <tr>
+            <td>Tool</td>
+            <td>Stock</td>
+            <td>Description</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for tool in tool_list %}
+        <tr>
+            <td><a href="/tool_details/{{ tool.id }}/">{{ tool.tool_name }}</a></td>
+            <td>{{ tool.stock }}</td>
+            <td>{{ tool.short_description }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+     </table>
 {% endblock %}

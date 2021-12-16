@@ -86,13 +86,7 @@ def test_tool_add(client, test_user):
     # Gain access after login
     assert response.status_code == 200
 
-    # test_image_2 = SimpleUploadedFile(
-    #     name='16mm_rough.jpg',
-    #     content=open('static/img/tools/16mm_rough.jpg', 'rb').read(), content_type='image/jpeg')
-
     test_image = SimpleUploadedFile("16mm_rough.jpg", b'file_cone', content_type="image/jpeg")
-    print(test_image)
-    print(type(test_image.name))
     # TODO: figure out a way to add image while creating the object in DB
     response = client.post('/add_tool/',
                            {

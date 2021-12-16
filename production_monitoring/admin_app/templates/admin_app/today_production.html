@@ -11,15 +11,37 @@
 {% block content %}
 
     <div>
-        <p>Production for {{ date }}
-            <ul>
-            {% for element in output %}
-                <ol><a href="/door_details/{{ element.id }}">{{ element }}</a> -
-                {{ element.finished|yesno:"Done, In progress" }} - {{ element.door_type }} - {{ element.order_num.customer_id.customer_name }}
-                <br>Last location: {{ element.user_product.last.user_id.section_id.last }}<br><br>
-                </ol>
-            {% endfor %}
-            </ul>
+        <p class="title">Production for {{ date }}, (finished: {{ finished.count }})
+    <table class="table_list">
+        <thead>
+        <tr>
+            <td>Job</td>
+            <td>Type</td>
+            <td>Customer</td>
+            <td>Status</td>
+            <td>Location</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for element in output %}
+            <tr>
+            <td><a href="/door_details/{{ element.id }}">{{ element }}</a></td>
+            <td>{{ element.door_type }}</td>
+            <td>{{ element.order_num.customer_id.customer_name }}</td>
+            <td>{{ element.finished|yesno:"Done, In progress" }}</td>
+            <td>{{ element.user_product.last.user_id.section_id.last }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{#            <ul>#}
+{#            {% for element in output %}#}
+{#                <ol><a href="/door_details/{{ element.id }}">{{ element }}</a> -#}
+{#                {{ element.finished|yesno:"Done, In progress" }} - {{ element.door_type }} - {{ element.order_num.customer_id.customer_name }}#}
+{#                <br>Last location: {{ element.user_product.last.user_id.section_id.last }}<br><br>#}
+{#                </ol>#}
+{#            {% endfor %}#}
+{#            </ul>#}
         </p>
     </div>
 {% endblock %}

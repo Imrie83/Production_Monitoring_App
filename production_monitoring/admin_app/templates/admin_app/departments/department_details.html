@@ -5,6 +5,7 @@
 
 {% endblock %}
 {% block content %}
+    <div class="content_div">
     <h2>Department: {{ department_detail.section_name }}</h2>
     <p>Staff in department:
         <ul>
@@ -14,8 +15,9 @@
         </ul>
         </p>
 
-    <a href="/edit_department/{{ department_detail.id }}/">Edit</a>
-    <a href="/delete_department/{{ department_detail.id }}/">Delete</a>
-    <a href="{% url 'department_list' %}">Back</a>
+    <a href="/edit_department/{{ department_detail.id }}/" type="button">Edit</a>
+    <a href="/delete_department/{{ department_detail.id }}/" type="button">Delete</a>
+    <a href="{% url 'department_list' %}" type="button">Back</a>
+    </div>
 
 {% endblock %}

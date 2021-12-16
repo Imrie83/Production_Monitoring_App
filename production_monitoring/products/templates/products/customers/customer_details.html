@@ -9,6 +9,7 @@
     </form>
 {% endblock %}
 {% block content %}
+    <div class="content_div">
     <h2>Customer: {{ customer_detail.customer_name }}</h2>
     <p>e-mail: {{ customer_detail.customer_email }}</p>
     <p>phone: {{ customer_detail.customer_phone }}</p>
@@ -16,7 +17,7 @@
     <a href="/edit_customer/{{ customer_detail.id }}/" type="button">Edit</a>
     <a href="/delete_customer/{{ customer_detail.id }}/" type="button">Delete</a>
     <a href="{% url 'customer_list' %}" type="button">Back</a>
-
+    </div>
 {% endblock %}
 
 {% block additional %}
