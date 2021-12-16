@@ -828,7 +828,7 @@ class ScanProductionView(LoginRequiredMixin, View):
                     job_scan,
                     flags=re.IGNORECASE,
                 )
-                prefix = full_number['prefix']
+                prefix = full_number['prefix'].upper()
                 ord_no = full_number['order']
                 if len(ord_no) < 7:
                     ord_no = ord_no.rjust(7, '0')
@@ -838,7 +838,7 @@ class ScanProductionView(LoginRequiredMixin, View):
 
                 try:
                     order = OrderModel.objects.get(
-                        order_number__icontains=prefix + ord_no
+                        order_number=prefix + ord_no
                     )
                 except ObjectDoesNotExist:
                     return redirect(to='/scan_product/')
@@ -846,7 +846,7 @@ class ScanProductionView(LoginRequiredMixin, View):
                 try:
                     job = ProductsModel.objects.get(
                         order_num=order,
-                        job_no__icontains=job_no
+                        job_no=job_no
                     )
                 except ObjectDoesNotExist:
                     return redirect(to='/scan_product/')
@@ -855,17 +855,19 @@ class ScanProductionView(LoginRequiredMixin, View):
                         product_id=job,
                         user_id=current_employee,
                 ):
-                    scan = UserProductModel.objects.update_or_create(
+                    scan = UserProductModel.objects.create(
                         product_id=job,
                         user_id=current_employee,
                         prod_start=now,
                     )
                 else:
-                    scan = UserProductModel.objects.update(
+                    update_scan = UserProductModel.objects.get(
                         product_id=job,
                         user_id=current_employee,
-                        prod_start=now,
                     )
+                    update_scan.prod_start = now
+                    update_scan.save()
+
                 return redirect(to='/scan_product/')
 
             if 'finish' in request.POST:
@@ -874,7 +876,7 @@ class ScanProductionView(LoginRequiredMixin, View):
                     job_scan,
                     flags=re.IGNORECASE,
                 )
-                prefix = full_number['prefix']
+                prefix = full_number['prefix'].upper()
                 ord_no = full_number['order']
                 if len(ord_no) < 7:
                     ord_no = ord_no.rjust(7, '0')
@@ -884,7 +886,7 @@ class ScanProductionView(LoginRequiredMixin, View):
 
                 try:
                     order = OrderModel.objects.get(
-                        order_number__icontains=prefix + ord_no
+                        order_number=prefix + ord_no
                     )
                 except ObjectDoesNotExist:
                     return redirect(to='/scan_product/')
@@ -892,7 +894,7 @@ class ScanProductionView(LoginRequiredMixin, View):
                 try:
                     job = ProductsModel.objects.get(
                         order_num=order,
-                        job_no__icontains=job_no
+                        job_no=job_no
                     )
                 except ObjectDoesNotExist:
                     return redirect(to='/scan_product/')
@@ -907,11 +909,12 @@ class ScanProductionView(LoginRequiredMixin, View):
                         prod_end=now,
                     )
                 else:
-                    scan = UserProductModel.objects.update(
+                    update_scan = UserProductModel.objects.get(
                         product_id=job,
                         user_id=current_employee,
-                        prod_end=now,
                     )
+                    update_scan.prod_end = now
+                    update_scan.save()
 
                 if 'Packing' in user_departments:
                     job.finished = True

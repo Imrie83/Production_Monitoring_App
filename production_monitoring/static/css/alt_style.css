@@ -7,7 +7,12 @@
   grid-template-areas:
     "Header Header Header"
     "Menu Content Additional"
-    "Footer Footer Footer";
+    "Menu Content Additional"
+    /*"Footer Footer Footer";*/
+}
+
+#searchbar {
+  width: 90%;
 }
 
 .Footer {

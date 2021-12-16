@@ -4,7 +4,7 @@
 {% block side_menu %}
     <form method="post">
         {% csrf_token %}
-        <input type="text" name="search" placeholder="search tools">
+        <input id='searchbar' type="text" name="search" placeholder="search tools">
         <input type="submit" value="Search">
     </form>
 {% endblock %}
