@@ -109,7 +109,7 @@
             {% if perms.admin_app.view_productsmodel %}
             <li><a class='dropdown-arrow'>Reports</a>
               <ul class='sub-menus'>
-                <li><a href="/today_production/">Today Production</a></li>
+                <li><a href="/today_production/">Production Output</a></li>
               </ul>
             </li>
             {% endif %}
@@ -121,6 +121,9 @@
             {% endif %}
             {% if not user.is_authenticated %}
                 <li><a class="dropdown-arrow" href="/">Login</a></li>
+            {% endif %}
+            {% if user.is_authenticated %}
+                <li style="float: right; margin-right:25px; " id="user">signed as: {{ user }}</li>
             {% endif %}
 {#            <li><a class='dropdown-arrow' href="{{request.META.HTTP_REFERER|escape}}">BACK</a>#}
 {#            </li>#}

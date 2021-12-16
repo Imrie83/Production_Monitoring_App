@@ -1,5 +1,5 @@
 import pytest
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, Permission
 from datetime import datetime
 from admin_app.models import (
     EmployeeModel,
@@ -152,16 +152,92 @@ def test_user(test_groups):
 
     :return: User object.
     """
-    default_user = User.objects.create(
+    super_user = User.objects.create(
         username='imrie',
         is_superuser=True,
         password='test123test',
         is_active=True,
         is_staff=True,
     )
-    default_user.groups.set(test_groups)
-    # default_user.user_permissions.add()
-    return default_user
+    super_user.groups.set(test_groups)
+    staff = User.objects.create(
+        username='staff',
+        is_superuser=False,
+        password='staff',
+        is_active=True,
+        is_staff=True,
+    )
+    staff.groups.set(test_groups)
+    staff.user_permissions.add(Permission.objects.get(codename='add_group'))
+    staff.user_permissions.add(Permission.objects.get(codename='change_group'))
+    staff.user_permissions.add(Permission.objects.get(codename='delete_group'))
+    staff.user_permissions.add(Permission.objects.get(codename='view_group'))
+    staff.user_permissions.add(Permission.objects.get(codename='add_user'))
+    staff.user_permissions.add(Permission.objects.get(codename='change_user'))
+    staff.user_permissions.add(Permission.objects.get(codename='delete_user'))
+    staff.user_permissions.add(Permission.objects.get(codename='view_user'))
+    staff.user_permissions.add(Permission.objects.get(codename='add_employeemodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='change_employeemodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='delete_employeemodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='view_employeemodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='add_userproductmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='change_userproductmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='delete_userproductmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='view_userproductmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='add_componentsmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='change_componentsmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='delete_componentsmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='view_componentsmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='add_productcomponent'))
+    staff.user_permissions.add(Permission.objects.get(codename='change_productcomponent'))
+    staff.user_permissions.add(Permission.objects.get(codename='delete_productcomponent'))
+    staff.user_permissions.add(Permission.objects.get(codename='view_productcomponent'))
+    staff.user_permissions.add(Permission.objects.get(codename='add_productsmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='change_productsmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='delete_productsmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='view_productsmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='add_componenttoolsmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='change_componenttoolsmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='delete_componenttoolsmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='view_componenttoolsmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='add_toolsmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='change_toolsmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='delete_toolsmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='view_toolsmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='add_customermodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='change_customermodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='delete_customermodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='view_customermodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='add_machinemodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='change_machinemodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='delete_machinemodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='view_machinemodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='add_machineemployeemodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='change_machineemployeemodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='delete_machineemployeemodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='view_machineemployeemodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='add_doorstylemodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='change_doorstylemodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='delete_doorstylemodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='view_doorstylemodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='add_glassmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='change_glassmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='delete_glassmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='view_glassmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='add_glasstoolmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='change_glasstoolmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='delete_glasstoolmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='view_glasstoolmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='add_departmentmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='change_departmentmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='delete_departmentmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='view_departmentmodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='add_ordermodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='change_ordermodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='delete_ordermodel'))
+    staff.user_permissions.add(Permission.objects.get(codename='view_ordermodel'))
+    users = [super_user, staff]
+    return users
 
 
 @pytest.fixture

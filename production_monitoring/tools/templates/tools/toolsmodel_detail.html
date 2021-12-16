@@ -4,11 +4,12 @@
 {% block side_menu %}
     <form method="post">
         {% csrf_token %}
-        <input type="text" name="search" placeholder="search tools">
+        <input id='searchbar' type="text" name="search" placeholder="search tools"><br><br>
         <input type="submit" value="Search">
     </form>
 {% endblock %}
 {% block content %}
+
     <ul>
         <li>
             <h2>{{ tool_details.tool_name }}</h2>
@@ -19,12 +20,14 @@
             {% if tool_details.image.url|length > 0 %}
             <ol><img src="{{ tool_details.image.url }}" alt="{{ tool_details.tool_name }}" width="50%"></ol>
             {% endif %}
+            <br>
+            <a href="/edit_tool/{{ tool_details.id }}/" type="button">Edit</a>
+            <a href="/delete_tool/{{ tool_details.id }}/" type="button">Delete</a>
+            <a href="{% url 'tools' %}" type="button">Back</a>
         </li>
+
     </ul>
-    <a href="/edit_tool/{{ tool_details.id }}/">Edit</a>
-    <a href="/delete_tool/{{ tool_details.id }}/">Delete</a>
-    <br>
-    <a href="{% url 'tools' %}">Back</a>
+
 
 {% endblock %}
 

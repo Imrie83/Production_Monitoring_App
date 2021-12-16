@@ -4,18 +4,27 @@
 {% block side_menu %}
     <form method="post">
         {% csrf_token %}
-        <input type="text" name="search" placeholder="search">
+        <input id='searchbar' type="text" name="search" placeholder="search"><br><br>
         <input type="submit" value="Search">
     </form>
 {% endblock %}
 {% block content %}
-    <ul>
-    {% for door in door_list %}
-        <li>
-            <a href="/door_details/{{ door.id }}/">{{ door }}</a> | {{ door.production_date }}
-        | {{ door.delivery_date }}
-        </li>
-    {% endfor %}
-    </ul>
-
+     <table class="table_list">
+        <thead>
+        <tr>
+            <td>Job No.</td>
+            <td>Delivery Date</td>
+            <td>Production Date</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for door in door_list %}
+            <tr>
+                <td><a href="/door_details/{{ door.id }}/">{{ door }}</a></td>
+                <td>{{ door.production_date }}</td>
+                <td>{{ door.delivery_date }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+     </table>
 {% endblock %}

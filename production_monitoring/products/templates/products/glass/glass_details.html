@@ -4,11 +4,12 @@
 {% block side_menu %}
     <form method="post">
         {% csrf_token %}
-        <input type="text" name="search" placeholder="search">
+        <input id='searchbar' type="text" name="search" placeholder="search"><br><br>
         <input type="submit" value="Search">
     </form>
 {% endblock %}
 {% block content %}
+    <div class="content_div">
     <h2>Name: {{ glass_detail.glass_name }}</h2>
     <p>Door type: {{ glass_detail.glass_door_type }}</p>
     <p>In stock: {{ glass_detail.stock }}</p>
@@ -21,9 +22,10 @@
         <a href="/add_tool_glass/{{ glass_detail.id }}/" type="button">Add Tool</a>
     </p>
     <p>{{ glass_detail.component_description }}</p>
-    <a href="/edit_glass/{{ glass_detail.id }}/">Edit</a>
-    <a href="/delete_glass/{{ glass_detail.id }}/">Delete</a>
-    <a href="{% url 'glass_list' %}">Back</a>
+    <a href="/edit_glass/{{ glass_detail.id }}/" type="button">Edit</a>
+    <a href="/delete_glass/{{ glass_detail.id }}/" type="button">Delete</a>
+    <a href="{% url 'glass_list' %}" type="button">Back</a>
+    </div>
 
 {% endblock %}
 {% block additional %}

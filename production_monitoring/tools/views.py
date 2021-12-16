@@ -1,9 +1,12 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin, \
-    LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.views import View
-from django.views.generic import FormView, CreateView, UpdateView, DeleteView
+from django.views.generic import (
+    CreateView,
+    UpdateView,
+    DeleteView,
+)
 from tools.models import ToolsModel
 
 
@@ -33,14 +36,6 @@ class ToolListView(View):
                 'tools/tool_list.html',
                 {'tool_list': tool_list}
             )
-        # TODO : set ordering
-        # elif 'type' in request.POST:
-        #     tool_list = ToolsModel.objects.order_by(request.POST['type'])
-        #     return render(
-        #         request,
-        #         'tools/tool_list.html',
-        #         {'tool_list': tool_list}
-        #     )
 
 
 class ToolDetailsView(LoginRequiredMixin, View):
@@ -50,6 +45,7 @@ class ToolDetailsView(LoginRequiredMixin, View):
     """
     login_url = '/'
     redirect_field_name = 'redirect_to'
+
     def get(self, request, pk):
         try:
             tool_list = ToolsModel.objects.order_by('tool_name')

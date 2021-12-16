@@ -9,7 +9,7 @@
             {% if user|has_group:"Shop floor staff" %}
             <ul>
             {% for element in output %}
-                <ol>{{ element.product_id.full_job_no }}
+                <ol><a href="/door_details/{{ element.product_id_id }}">{{ element.product_id.full_job_no }}</a>
                     <ol>Start: {{ element.prod_start }}</ol>
                     <ol>Finish: {{ element.prod_end }}</ol>
                 </ol><br>

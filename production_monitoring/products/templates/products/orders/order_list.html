@@ -4,17 +4,28 @@
 {% block side_menu %}
     <form method="post">
         {% csrf_token %}
-        <input type="text" name="search" placeholder="search">
+        <input id='searchbar' type="text" name="search" placeholder="search"><br><br>
         <input type="submit" value="Search">
     </form>
 {% endblock %}
 {% block content %}
-    <ul>
-    {% for order in orders %}
-        <li>
-            <a href="/order_details/{{ order.id }}/">{{ order.order_number }}</a> - Customer: {{ order.customer_id }}
-        </li>
-    {% endfor %}
-    </ul>
+     <table class="table_list">
+        <thead>
+        <tr>
+            <td>Order No.</td>
+            <td>Customer</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>
+                 <a href="/order_details/{{ order.id }}/">{{ order.order_number }}</a>
+            </td>
+            <td>{{ order.customer_id }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+     </table>
 
 {% endblock %}

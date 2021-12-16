@@ -28,7 +28,8 @@ class ProductEditForm(forms.ModelForm):
     """
     class Meta:
         model = ProductsModel
-        exclude = ['components']
+        fields = '__all__'
+        # exclude = ['components']
 
 class GlassAddForm(forms.ModelForm):
     """
@@ -58,7 +59,23 @@ class ProductComponentAddForm(forms.ModelForm):
     """
     class Meta:
         model = ProductComponent
-        exclude = ['product_id']
+        fields = '__all__'
+
+    # TODO: figure out validation.
+    # def clean(self):
+    #     """
+    #     Validate door and glass types do match.
+    #     """
+    #     cleaned_data = super().clean()
+    #     product = cleaned_data.get('product_id')
+    #     print(product)
+    #     component = cleaned_data.get('component_id')
+    #     print(component)
+    #     # if product.door_type != component.door_type:
+    #     #     raise ValidationError('test message')
+    #     # if self.component_id.door_type != product.door_type:
+    #     #     raise ValidationError('Door and Component types must match!')
+
 
 
 class ComponentAddForm(forms.ModelForm):

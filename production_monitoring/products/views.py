@@ -86,7 +86,8 @@ class OrderDetailView(LoginRequiredMixin, View):
         if 'search' in request.POST:
             search_q = request.POST['search']
             orders = OrderModel.objects.filter(
-                Q(order_number__icontains=search_q)
+                Q(order_number__icontains=search_q) |
+                Q(customer_id__customer_name__icontains=search_q)
             ).order_by('order_number')
             return render(
                 request,
@@ -634,6 +635,8 @@ class ProductListView(View):
         if 'search' in request.POST:
             search_q = request.POST['search']
             door_list = ProductsModel.objects.filter(
+                Q(job_no__icontains=search_q) |
+                Q(order_num__order_number__icontains=search_q) |
                 Q(door_type__icontains=search_q) |
                 Q(delivery_date__icontains=search_q) |
                 Q(production_date__icontains=search_q) |
@@ -656,7 +659,10 @@ class ProductDetailView(LoginRequiredMixin, View):
     redirect_field_name = 'redirect_to'
 
     def get(self, request, pk):
-        product_list = ProductsModel.objects.all()
+        product_list = ProductsModel.objects.order_by(
+            'order_num',
+            'job_no',
+        )
         try:
             door_detail = ProductsModel.objects.get(id=pk)
             return render(
@@ -680,6 +686,7 @@ class ProductAddView(LoginRequiredMixin, PermissionRequiredMixin, View):
     redirect_field_name = 'redirect_to'
 
     permission_required = 'products.add_productsmodel'
+
     def get(self, request):
         form = ProductAddForm()
         return render(
@@ -706,6 +713,12 @@ class ProductAddView(LoginRequiredMixin, PermissionRequiredMixin, View):
                 delivery_address=form.cleaned_data['delivery_address'],
                 production_date=form.cleaned_data['production_date'],
             )
+
+            glass = GlassModel.objects.get(id=new_door.glass.pk)
+            if glass.stock > 0:
+                glass.stock -= 1
+                glass.save()
+
             return redirect(f'/door_details/{new_door.pk}/')
         else:
             return render(
@@ -732,7 +745,6 @@ class ProductComponentAddView(LoginRequiredMixin, PermissionRequiredMixin, View)
             {'form': form}
         )
 
-    # TODO: get this working!
     def post(self, request, pk):
         form = ProductComponentAddForm(request.POST)
         product = ProductsModel.objects.get(id=pk)
@@ -743,6 +755,12 @@ class ProductComponentAddView(LoginRequiredMixin, PermissionRequiredMixin, View)
                 component_id=form.cleaned_data['component_id'],
                 count=form.cleaned_data['count'],
             )
+            component = form.cleaned_data['component_id']
+
+            if component.stock > 0:
+                component.stock -= form.cleaned_data['count']
+                component.save()
+
             return redirect(f'/door_details/{product.id}/')
         else:
             return render(
@@ -817,7 +835,7 @@ class ScanProductionView(LoginRequiredMixin, View):
                     job_scan,
                     flags=re.IGNORECASE,
                 )
-                prefix = full_number['prefix']
+                prefix = full_number['prefix'].upper()
                 ord_no = full_number['order']
                 if len(ord_no) < 7:
                     ord_no = ord_no.rjust(7, '0')
@@ -827,18 +845,32 @@ class ScanProductionView(LoginRequiredMixin, View):
 
                 try:
                     order = OrderModel.objects.get(
-                        order_number__icontains=prefix + ord_no
+                        order_number=prefix + ord_no
                     )
                 except ObjectDoesNotExist:
-                    return redirect(to='/scan_product/')
+                    return render(
+                        request,
+                        'products/production/user_scanner_form.html',
+                        {
+                            'scan_in_form': scan_in_form,
+                            'error': 'Order Does Not Exist'
+                        }
+                    )
 
                 try:
                     job = ProductsModel.objects.get(
                         order_num=order,
-                        job_no__icontains=job_no
+                        job_no=job_no
                     )
                 except ObjectDoesNotExist:
-                    return redirect(to='/scan_product/')
+                    return render(
+                        request,
+                        'products/production/user_scanner_form.html',
+                        {
+                            'scan_in_form': scan_in_form,
+                            'error': 'Job Does Not Exist'
+                        }
+                    )
 
                 if not UserProductModel.objects.filter(
                         product_id=job,
@@ -850,11 +882,13 @@ class ScanProductionView(LoginRequiredMixin, View):
                         prod_start=now,
                     )
                 else:
-                    scan = UserProductModel.objects.update(
+                    update_scan = UserProductModel.objects.get(
                         product_id=job,
                         user_id=current_employee,
-                        prod_start=now,
                     )
+                    update_scan.prod_start = now
+                    update_scan.save()
+
                 return redirect(to='/scan_product/')
 
             if 'finish' in request.POST:
@@ -863,7 +897,7 @@ class ScanProductionView(LoginRequiredMixin, View):
                     job_scan,
                     flags=re.IGNORECASE,
                 )
-                prefix = full_number['prefix']
+                prefix = full_number['prefix'].upper()
                 ord_no = full_number['order']
                 if len(ord_no) < 7:
                     ord_no = ord_no.rjust(7, '0')
@@ -873,18 +907,32 @@ class ScanProductionView(LoginRequiredMixin, View):
 
                 try:
                     order = OrderModel.objects.get(
-                        order_number__icontains=prefix + ord_no
+                        order_number=prefix + ord_no
                     )
                 except ObjectDoesNotExist:
-                    return redirect(to='/scan_product/')
+                    return render(
+                        request,
+                        'products/production/user_scanner_form.html',
+                        {
+                            'scan_in_form': scan_in_form,
+                            'error': 'Order Does Not Exist'
+                        }
+                    )
 
                 try:
                     job = ProductsModel.objects.get(
                         order_num=order,
-                        job_no__icontains=job_no
+                        job_no=job_no
                     )
                 except ObjectDoesNotExist:
-                    return redirect(to='/scan_product/')
+                    return render(
+                        request,
+                        'products/production/user_scanner_form.html',
+                        {
+                            'scan_in_form': scan_in_form,
+                            'error': 'Job Does Not Exist'
+                        }
+                    )
 
                 if not UserProductModel.objects.filter(
                         product_id=job,
@@ -896,83 +944,78 @@ class ScanProductionView(LoginRequiredMixin, View):
                         prod_end=now,
                     )
                 else:
-                    scan = UserProductModel.objects.update(
+                    update_scan = UserProductModel.objects.get(
                         product_id=job,
                         user_id=current_employee,
-                        prod_end=now,
                     )
+                    update_scan.prod_end = now
+                    update_scan.save()
 
-                component_tools = ComponentToolsModel.objects.filter(
-                    component_id=job.pk
-                )
-
-                if 'CNC' in user_departments:
-                    # TODO: sort out duplicate code!
-                    for tools in component_tools:
-                        try:
-                            tool = tools.tools_id
-                            tool.current_run_time += tools.machine_time
-                            if tool.current_run_time >= tool.max_run_time:
-                                tool.current_run_time = (
-                                        tool.current_run_time - tool.max_run_time
-                                )
-                                tool.stock -= 1
-                                if tool.stock < 0:
-                                    tool.stock = 0
-                            tool.save()
-                            # TODO: sort out exception handling
-                        except ObjectDoesNotExist:
-                            return redirect('/scan_product/')
-                        except AttributeError:
-                            return redirect('/scan_product/')
-
-                    glass = GlassToolModel.objects.filter(glass_id=job.glass.pk)
-
-                    for tools in glass:
-
-                        try:
-                            tool = tools.tool_id
-                            tool.current_run_time += tools.machine_time
-                            if tool.current_run_time >= tool.max_run_time:
-                                tool.current_run_time = (
-                                        tool.current_run_time - tool.max_run_time
-                                )
-                                tool.stock -= 1
-                                if tool.stock < 0:
-                                    tool.stock = 0
-                            tool.save()
-                        except ObjectDoesNotExist:
-                            return redirect('/scan_product/')
-                        except AttributeError:
-                            return redirect('/scan_product/')
-
-                    door_trim_time = (
-                            ((job.door_height * 2) + (job.door_width * 2))
-                            / 1000 / job.trim_with.feed_rate
-                    )
-                    door_trim_tool = job.trim_with
-                    door_trim_tool.current_run_time += door_trim_time
-                    if door_trim_tool.current_run_time >= door_trim_tool.max_run_time:
-                        door_trim_tool.current_run_time = (
-                                door_trim_tool.current_run_time - door_trim_tool.max_run_time
-                        )
-                        door_trim_tool.stock -= 1
-                        if door_trim_tool.stock < 0:
-                            door_trim_tool.stock = 0
-
-                    door_trim_tool.save()
-
+                if 'Packing' in user_departments:
+                    job.finished = True
+                    job.save()
                     return redirect(to='/scan_product/')
 
-# TODO: move to product creation view!
-                    # Take components and glass from the stock after machining.
-                # for component in ProductComponent.objects.filter(product_id=job.pk):
-                #     comp = ComponentsModel.objects.get(id=component.component_id.id)
-                #     comp.stock -= component.count
-                #     comp.save()
-                #
-                # glass = job.glass
-                # glass.stock -= 1
-                # glass.save()
+                for comp in ProductComponent.objects.filter(product_id=job):
+
+                    if 'CNC' in user_departments:
+                        # TODO: sort out duplicate code!
+                        for tool in comp.component_id.tools_req.all():
+                            try:
+
+                                if tool.current_run_time >= tool.max_run_time:
+                                    tool.current_run_time = (
+                                            tool.current_run_time - tool.max_run_time
+                                    )
+                                    tool.stock -= 1
+                                    if tool.stock < 0:
+                                        tool.stock = 0
+                                tool.save()
+                                # TODO: sort out exception handling
+                            except ObjectDoesNotExist:
+                                return redirect('/scan_product/')
+                            except AttributeError:
+                                return redirect('/scan_product/')
+
+                        glass = GlassToolModel.objects.filter(glass_id=job.glass.pk)
+
+                        for tools in glass:
+                            try:
+                                tool = tools.tool_id
+                                tool.current_run_time += tools.machine_time
+                                if tool.current_run_time >= tool.max_run_time:
+                                    tool.current_run_time = (
+                                            tool.current_run_time - tool.max_run_time
+                                    )
+                                    tool.stock -= 1
+                                    if tool.stock < 0:
+                                        tool.stock = 0
+                                tool.save()
+                            except ObjectDoesNotExist:
+                                return redirect('/scan_product/')
+                            except AttributeError:
+                                return redirect('/scan_product/')
+
+                        door_trim_time = (
+                                ((job.door_height * 2) + (job.door_width * 2))
+                                / 1000 / job.trim_with.feed_rate
+                        )
+                        door_trim_tool = job.trim_with
+                        door_trim_tool.current_run_time += door_trim_time
+                        if door_trim_tool.current_run_time >= door_trim_tool.max_run_time:
+                            door_trim_tool.current_run_time = (
+                                    door_trim_tool.current_run_time - door_trim_tool.max_run_time
+                            )
+                            door_trim_tool.stock -= 1
+                            if door_trim_tool.stock < 0:
+                                door_trim_tool.stock = 0
+
+                        door_trim_tool.save()
+
+                        return redirect(to='/scan_product/')
+                    else:
+                        return redirect(to='/scan_product/')
+                else:
+                    return redirect(to='/scan_product/')
         else:
             return redirect(to='/scan_product/')

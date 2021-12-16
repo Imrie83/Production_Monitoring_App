@@ -4,11 +4,12 @@
 {% block side_menu %}
     <form method="post">
         {% csrf_token %}
-        <input type="text" name="search" placeholder="search">
+        <input id='searchbar' type="text" name="search" placeholder="search"><br><br>
         <input type="submit" value="Search">
     </form>
 {% endblock %}
 {% block content %}
+    <div class="content_div">
     <h2>Name: {{ employee_detail.display_employee_name }}</h2>
     <p>ID: {{ employee_detail.id_num }}</p>
     <p>Position: {{ employee_detail.position }}</p>
@@ -21,9 +22,10 @@
     </p>
     <p>Staff: {{ employee_detail.user.is_staff }}</p>
 
-    <a href="/edit_employee/{{ employee_detail.id }}/">Edit</a>
-    <a href="/delete_employee/{{ employee_detail.id }}/">Delete</a>
-    <a href="{% url 'employee_list' %}">Back</a>
+    <a href="/edit_employee/{{ employee_detail.id }}/" type="button">Edit</a>
+    <a href="/delete_employee/{{ employee_detail.id }}/" type="button">Delete</a>
+    <a href="{% url 'employee_list' %}" type="button">Back</a>
+    </div>
 
 {% endblock %}
 {% block additional %}

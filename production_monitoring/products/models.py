@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from tools.models import ToolsModel
 
@@ -278,6 +279,14 @@ class ProductsModel(models.Model):
 
     full_job_no.short_description = 'Job number'
 
+    def clean(self):
+        """
+        Validate door and glass types do match.
+        """
+        cleaned_data = super().clean()
+        if self.door_type != self.glass.glass_door_type:
+            raise ValidationError('Door and Glass types must match!')
+
     def save(self, *args, **kwargs):
         """
         custom save method counting machine time for each tool, depending on
@@ -290,24 +299,12 @@ class ProductsModel(models.Model):
         if len(self.job_no) < 4:
             self.job_no = self.job_no.rjust(4, '0')
 
-
         self.machining_time = 0
         self.glass_tools = GlassToolModel.objects.filter(glass_id=self.glass.id)
         for tool in self.glass_tools:
             self.machining_time += tool.machine_time
-        # for comp in self.components.all():
-        #     self.comp_count = ProductComponent.objects.get(
-        #         component_id=comp.id,
-        #         product_id=self.id,
-        #     ).count
-        #     self.component_tool = ComponentToolsModel.objects.filter(
-        #         component_id=comp.id,
-        #     )
-        #     for c in self.component_tool:
-        #         self.machining_time += c.machine_time * self.comp_count
 
         super(ProductsModel, self).save(*args, **kwargs)
-
 
     def __str__(self):
         return self.full_job_no()
@@ -322,7 +319,8 @@ class ProductComponent(models.Model):
     product_id = models.ForeignKey(
         to=ProductsModel,
         on_delete=models.CASCADE,
-        related_name='prod_id'
+        related_name='prod_id',
+        editable=False,
     )
     component_id = models.ForeignKey(
         to=ComponentsModel,
@@ -336,20 +334,6 @@ class ProductComponent(models.Model):
     class Meta:
         verbose_name = 'Door component'
         verbose_name_plural = 'Door compoonents'
-
-    def save(self, *args, **kwargs):
-        product = ProductsModel.objects.get(id=self.product_id)
-        tools = self.component_id.tools_req.all()
-        for tool in tools:
-            comp_tool = ComponentToolsModel.objects.get(
-                component_id=self.component_id,
-                tools_id=tool.id,
-            )
-            m_time = comp_tool.machine_time
-            new_time = m_time * self.count
-            product.machining_time += new_time
-
-        super(ProductComponent, self).save(*args, **kwargs)
 
 
 class CustomerModel(models.Model):

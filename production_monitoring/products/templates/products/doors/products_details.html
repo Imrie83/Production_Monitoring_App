@@ -4,12 +4,14 @@
 {% block side_menu %}
     <form method="post">
         {% csrf_token %}
-        <input type="text" name="search" placeholder="search">
+        <input id='searchbar' type="text" name="search" placeholder="search"><br><br>
         <input type="submit" value="Search">
     </form>
 {% endblock %}
 {% block content %}
+    <div class="content_div">
     <h2>Job no: {{ door_detail }}</h2>
+    <p>Last Location: {{ door_detail.user_product.last.user_id.section_id.last }}</p>
     <p>Door type: {{ door_detail.door_type }}</p>
     <p>Style: {{ door_detail.style }}</p>
     <p>Color: {{ door_detail.color }}</p>
@@ -29,10 +31,10 @@
     <p>Estimated machining time: {{ door_detail.machining_time }}</p>
     <p>Finished: {{ door_detail.finished }}</p>
 
-    <a href="/edit_door/{{ door_detail.id }}/">Edit</a>
-    <a href="/delete_door/{{ door_detail.id }}/">Delete</a>
-
-    <a href="{% url 'door_list' %}">Back</a>
+    <a href="/edit_door/{{ door_detail.id }}/" type="button">Edit</a>
+    <a href="/delete_door/{{ door_detail.id }}/" type="button">Delete</a>
+    <a href="{% url 'door_list' %}" type="button">Back</a>
+    </div>
 
 {% endblock %}
 

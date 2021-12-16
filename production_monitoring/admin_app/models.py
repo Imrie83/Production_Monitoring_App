@@ -30,6 +30,10 @@ class MachineModel(models.Model):
 
 
 class MachineEmployeeModel(models.Model):
+    """
+    Class creates a model pairing an employee
+    with the machine and records work start and end time.
+    """
     machine_id = models.ForeignKey(
         to=MachineModel,
         on_delete=models.SET_NULL,
