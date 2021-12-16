@@ -28,7 +28,8 @@ class ProductEditForm(forms.ModelForm):
     """
     class Meta:
         model = ProductsModel
-        exclude = ['components']
+        fields = '__all__'
+        # exclude = ['components']
 
 class GlassAddForm(forms.ModelForm):
     """

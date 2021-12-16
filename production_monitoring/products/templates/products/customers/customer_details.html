@@ -4,7 +4,7 @@
 {% block side_menu %}
     <form method="post">
         {% csrf_token %}
-        <input type="text" name="search" placeholder="search tools">
+        <input id='searchbar' type="text" name="search" placeholder="search tools"><br><br>
         <input type="submit" value="Search">
     </form>
 {% endblock %}
@@ -13,9 +13,9 @@
     <p>e-mail: {{ customer_detail.customer_email }}</p>
     <p>phone: {{ customer_detail.customer_phone }}</p>
 
-    <a href="/edit_customer/{{ customer_detail.id }}/">Edit</a>
-    <a href="/delete_customer/{{ customer_detail.id }}/">Delete</a>
-    <a href="{% url 'customer_list' %}">Back</a>
+    <a href="/edit_customer/{{ customer_detail.id }}/" type="button">Edit</a>
+    <a href="/delete_customer/{{ customer_detail.id }}/" type="button">Delete</a>
+    <a href="{% url 'customer_list' %}" type="button">Back</a>
 
 {% endblock %}
 

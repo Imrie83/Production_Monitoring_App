@@ -21,7 +21,7 @@ def test_login_page(client, test_user):
     assert response.status_code == 200
 
     # TODO: make this work!
-    response = client.post('/', {'login': 'staff', 'password': 'staff'})
+    response = client.post('', {'login': 'staff', 'password': 'staff'})
     assert response.status_code == 302
 
 

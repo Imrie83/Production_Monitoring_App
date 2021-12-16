@@ -4,7 +4,7 @@
 {% block side_menu %}
     <form method="post">
         {% csrf_token %}
-        <input id='searchbar' type="text" name="search" placeholder="search tools">
+        <input id='searchbar' type="text" name="search" placeholder="search tools"><br><br>
         <input type="submit" value="Search">
     </form>
 {% endblock %}
@@ -21,10 +21,10 @@
             {% endif %}
         </li>
     </ul>
-    <a href="/edit_tool/{{ tool_details.id }}/">Edit</a>
-    <a href="/delete_tool/{{ tool_details.id }}/">Delete</a>
+    <a href="/edit_tool/{{ tool_details.id }}/" type="button">Edit</a>
+    <a href="/delete_tool/{{ tool_details.id }}/" type="button">Delete</a>
     <br>
-    <a href="{% url 'tools' %}">Back</a>
+    <a href="{% url 'tools' %}" type="button">Back</a>
 
 {% endblock %}
 

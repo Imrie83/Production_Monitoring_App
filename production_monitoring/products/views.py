@@ -86,7 +86,8 @@ class OrderDetailView(LoginRequiredMixin, View):
         if 'search' in request.POST:
             search_q = request.POST['search']
             orders = OrderModel.objects.filter(
-                Q(order_number__icontains=search_q)
+                Q(order_number__icontains=search_q) |
+                Q(customer_id__customer_name__icontains=search_q)
             ).order_by('order_number')
             return render(
                 request,
@@ -680,6 +681,7 @@ class ProductAddView(LoginRequiredMixin, PermissionRequiredMixin, View):
     redirect_field_name = 'redirect_to'
 
     permission_required = 'products.add_productsmodel'
+
     def get(self, request):
         form = ProductAddForm()
         return render(
@@ -841,7 +843,14 @@ class ScanProductionView(LoginRequiredMixin, View):
                         order_number=prefix + ord_no
                     )
                 except ObjectDoesNotExist:
-                    return redirect(to='/scan_product/')
+                    return render(
+                        request,
+                        'products/production/user_scanner_form.html',
+                        {
+                            'scan_in_form': scan_in_form,
+                            'error': 'Order Does Not Exist'
+                        }
+                    )
 
                 try:
                     job = ProductsModel.objects.get(
@@ -849,7 +858,14 @@ class ScanProductionView(LoginRequiredMixin, View):
                         job_no=job_no
                     )
                 except ObjectDoesNotExist:
-                    return redirect(to='/scan_product/')
+                    return render(
+                        request,
+                        'products/production/user_scanner_form.html',
+                        {
+                            'scan_in_form': scan_in_form,
+                            'error': 'Job Does Not Exist'
+                        }
+                    )
 
                 if not UserProductModel.objects.filter(
                         product_id=job,
@@ -889,7 +905,14 @@ class ScanProductionView(LoginRequiredMixin, View):
                         order_number=prefix + ord_no
                     )
                 except ObjectDoesNotExist:
-                    return redirect(to='/scan_product/')
+                    return render(
+                        request,
+                        'products/production/user_scanner_form.html',
+                        {
+                            'scan_in_form': scan_in_form,
+                            'error': 'Order Does Not Exist'
+                        }
+                    )
 
                 try:
                     job = ProductsModel.objects.get(
@@ -897,7 +920,14 @@ class ScanProductionView(LoginRequiredMixin, View):
                         job_no=job_no
                     )
                 except ObjectDoesNotExist:
-                    return redirect(to='/scan_product/')
+                    return render(
+                        request,
+                        'products/production/user_scanner_form.html',
+                        {
+                            'scan_in_form': scan_in_form,
+                            'error': 'Job Does Not Exist'
+                        }
+                    )
 
                 if not UserProductModel.objects.filter(
                         product_id=job,
