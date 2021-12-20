@@ -1,12 +1,19 @@
 {% extends "grid_base.html" %}
 {% load static %}
+{% block  head %}
+    <link rel='stylesheet' href="{% static "css/search_card.css" %}">
+{% endblock %}
 {% block title %}{% endblock %}
 {% block side_menu %}
-    <form method="post">
-        {% csrf_token %}
-        <input id='searchbar' type="text" name="search" placeholder="search"><br><br>
-        <input type="submit" value="Search">
-    </form>
+ <div id="card">
+    <div id="card-content">
+        <form method="post" class="form">
+            {% csrf_token %}
+            <input id='searchbar' type="text" name="search" placeholder="search">
+            <input type="submit" value="Search" id="submit-btn">
+        </form>
+    </div>
+ </div>
 {% endblock %}
 {% block content %}
     <ul>

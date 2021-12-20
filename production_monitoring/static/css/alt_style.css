@@ -40,8 +40,8 @@
 .Content {
   justify-self: stretch;
   grid-area: Content;
-  border-left: 1px black solid;
-  border-right: 1px black solid;
+  /*border-left: 1px black solid;*/
+  /*border-right: 1px black solid;*/
   display: flex;
   justify-content: center;
   align-content: center;
@@ -79,7 +79,7 @@
 html, body , .container {
   height: 100%;
   margin: 0;
-  background: #a8a8a8;
+  background: #cbcbcb;
 }
 
 
@@ -131,6 +131,6 @@ li {
   padding: 5px 15px 5px 0;
 }
 
-form {
-  padding: 50px;
-}
+/*form {*/
+/*  padding: 50px;*/
+/*}*/

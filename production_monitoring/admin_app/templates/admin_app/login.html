@@ -11,7 +11,7 @@
                 <h2>LOGIN</h2>
                 <div class="underline-title"></div>
             </div>
-            <form method="post">
+            <form method="post" class="form">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <input type="submit" id="submit-btn" value="Login">
