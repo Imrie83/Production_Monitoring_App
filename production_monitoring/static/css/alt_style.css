@@ -40,6 +40,7 @@
   border-left: 1px black solid;
   border-right: 1px black solid;
   display: flex;
+  margin: 0 10px 0 10px;
 }
 
 .inner-content {
@@ -121,7 +122,9 @@ li {
   margin-left: 10%;
   margin-right: 10%;
 }
-
+.table_list{
+  margin: 20px 20px 20px 20px;
+}
 .table_list tr{
   border-bottom: solid black 1px;
 }
