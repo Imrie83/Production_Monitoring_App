@@ -19,13 +19,26 @@
 {% block content %}
 <div id="card-main">
     <div id="card-content-main">
-    <ul>
-    {% for customer in customer_list %}
-        <li>
-            <a href="/customer_details/{{ customer.id }}/">{{ customer.customer_name }}</a>
-        </li>
-    {% endfor %}
-    </ul>
+        <table class="table_list">
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in customer_list %}
+                <tr>
+                    <td>
+                        <a href="/customer_details/{{ customer.id }}/">{{ customer.customer_name }}</a>
+                    </td>
+                    <td>
+                        {{ customer.customer_phone }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}

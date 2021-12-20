@@ -125,6 +125,12 @@ li {
 .table_list tr{
   border-bottom: solid black 1px;
 }
+.table_list tbody tr:hover{
+  background: rgba(203, 203, 203, 0.25);
+}
+.table_list a:hover{
+  text-decoration: none;
+}
 .table_list td{
   padding: 5px 15px 5px 0;
 }

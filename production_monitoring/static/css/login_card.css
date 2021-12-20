@@ -9,6 +9,7 @@ label {
   /*height: 410px;*/
   margin: 6rem auto 8.1rem auto;
   width: 329px;
+  align-self: center;
 }
 #card-content {
   padding: 12px 44px;

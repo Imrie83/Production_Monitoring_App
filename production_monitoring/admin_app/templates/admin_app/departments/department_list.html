@@ -12,13 +12,22 @@
 {% block content %}
 <div id="card-main">
     <div id="card-content-main">
-        <ul>
-        {% for department in department_list %}
-            <li>
-                <a href="/department_details/{{ department.id }}/">{{ department.section_name }}</a>
-            </li>
-        {% endfor %}
-        </ul>
+        <table class="table_list">
+            <thead>
+            <tr>
+                <th>Department</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for department in department_list %}
+            <tr>
+                <td>
+                     <a href="/department_details/{{ department.id }}/">{{ department.section_name }}</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}

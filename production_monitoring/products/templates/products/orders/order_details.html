@@ -21,8 +21,8 @@
 <div id="card-main">
     <div id="card-content-main">
     <div class="content_div">
-    <h2>Order: {{ order_details.order_number }}</h2>
-        <h3>Customer:</h3>
+    <h3>Order: {{ order_details.order_number }}</h3>
+        <h4>Customer:</h4>
         <ul>
             <ol>{{ order_details.customer_id.customer_name }}</ol>
             <ol>{{ order_details.customer_id.customer_email }}</ol>
@@ -30,16 +30,24 @@
         </ul>
     </h3>
     <h4>Jobs in order:<br><br></h4>
-        <ul>
-            {% for job in order_details.product.all %}
-                <ol>
-                    Line: <a href="/door_details/{{ job.id }}/">{{ job.full_job_no }}</a> <br>
-                    Production date: {{ job.production_date }}<br>
-                    Delivery date: {{ job.delivery_date }}<hr>
-                </ol>
-            {% endfor %}
-        </ul>
-
+    <table class="table_list">
+        <thead>
+        <tr>
+            <th>Line</th>
+            <th>Prod. Date</th>
+            <th>Delivery Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for job in order_details.product.all %}
+        <tr>
+            <td><a href="/door_details/{{ job.id }}/">{{ job.full_job_no }}</a></td>
+            <td>{{ job.production_date }}</td>
+            <td>{{ job.delivery_date }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
     <a href="/edit_order/{{ order_details.id }}/" type="button">Edit</a>
     <a href="/delete_order/{{ order_details.id }}/" type="button">Delete</a>
     <a href="{% url 'order_list' %}" type="button">Back</a>
