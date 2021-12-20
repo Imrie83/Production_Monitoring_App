@@ -80,9 +80,6 @@ html, body , .container {
   margin: 0;
   background: #cbcbcb;
 }
-
-
-
 .container * {
   position: relative;
   color: black;

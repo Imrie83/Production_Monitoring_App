@@ -3,17 +3,23 @@
 {% block  head %}
     <link rel='stylesheet' href="{% static "css/search_card.css" %}">
     <link rel='stylesheet' href="{% static "css/additional_list_card.css" %}">
+    <link rel="stylesheet" href='{% static "css/main_view_card.css" %}'>
 {% endblock %}
 {% block title %}{% endblock %}
 {% block side_menu %}
-    <form method="post">
-        {% csrf_token %}
-        <input id='searchbar' type="text" name="search" placeholder="search tools">
-        <input type="submit" value="Search" id="submit-btn">
-    </form>
+<div id="card">
+    <div id="card-content">
+        <form method="post" class="form">
+            {% csrf_token %}
+            <input id='searchbar' type="text" name="search" placeholder="search tools">
+            <input type="submit" value="Search" id="submit-btn">
+        </form>
+    </div>
+</div>
 {% endblock %}
 {% block content %}
-
+<div id="card-main">
+    <div id="card-content-main">
     <ul>
         <li>
             <h2>{{ tool_details.tool_name }}</h2>
@@ -29,10 +35,9 @@
             <a href="/delete_tool/{{ tool_details.id }}/" type="button">Delete</a>
             <a href="{% url 'tools' %}" type="button">Back</a>
         </li>
-
     </ul>
-
-
+    </div>
+</div>
 {% endblock %}
 
 {% block additional %}

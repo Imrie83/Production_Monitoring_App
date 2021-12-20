@@ -1,10 +1,14 @@
 {% extends "grid_base.html" %}
 {% load static %}
-{% block title %}{% endblock %}
+{% block  head %}
+    <link rel="stylesheet" href='{% static "css/main_view_card.css" %}'>
+{% endblock %}
 {% block side_menu %}
 
 {% endblock %}
 {% block content %}
+<div id="card-main">
+    <div id="card-content-main">
     <div class="content_div">
     <h2>Machine: {{ machine_detail.name }}</h2>
     <p>Location: {{ machine_detail.machine_location }}</p>
@@ -13,5 +17,7 @@
     <a href="/delete_machine/{{ machine_detail.id }}/" type="button">Delete</a>
     <a href="{% url 'machine_list' %}" type="button">Back</a>
     </div>
+    </div>
+</div>
 
 {% endblock %}
