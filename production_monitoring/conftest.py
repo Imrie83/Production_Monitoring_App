@@ -152,7 +152,7 @@ def test_user(test_groups):
 
     :return: User object.
     """
-    super_user = User.objects.create(
+    super_user = User.objects.create_user(
         username='imrie',
         is_superuser=True,
         password='test123test',
@@ -160,7 +160,7 @@ def test_user(test_groups):
         is_staff=True,
     )
     super_user.groups.set(test_groups)
-    staff = User.objects.create(
+    staff = User.objects.create_user(
         username='staff',
         is_superuser=False,
         password='staff',
