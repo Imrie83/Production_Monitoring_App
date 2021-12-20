@@ -1,6 +1,6 @@
 .container {
   display: grid;
-  grid-template-columns: 0.4fr 1.8fr 0.8fr;
+  grid-template-columns: 0.4fr 1.8fr 0.5fr;
   grid-template-rows: 0.2fr 2.6fr 0.2fr;
   gap: 0px 0px;
   grid-auto-flow: row;
@@ -22,13 +22,11 @@
 .Additional {
   grid-area: Additional;
   display: flex;
-  justify-content: center;
-  justify-items: center;
+  margin: 0 auto;
 }
 
 .Additional-inner {
-  width: 80%;
-  /*margin: auto;*/
+  width: 100%;
   padding: 50px 0 0 0;
 }
 
@@ -38,21 +36,21 @@
 }
 
 .Content {
-  justify-self: stretch;
   grid-area: Content;
-  /*border-left: 1px black solid;*/
-  /*border-right: 1px black solid;*/
+  border-left: 1px black solid;
+  border-right: 1px black solid;
   display: flex;
-  justify-content: center;
-  align-content: center;
 }
 
 .inner-content {
-  display: block;
+  display: flex;
   width: 100%;
   padding: 50px 0 0 0;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 100px;
+  justify-content: center;
+
 }
 
 .Menu {
@@ -72,7 +70,7 @@
   grid-area: Header;
   background: #664357;
   padding: 20px 0 0 20px;
-  box-shadow: 0 1px 20px black
+  box-shadow: 0 1px 20px black;
 }
 
 

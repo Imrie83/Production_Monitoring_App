@@ -2,6 +2,7 @@
 {% load static %}
 {% block  head %}
     <link rel='stylesheet' href="{% static "css/search_card.css" %}">
+    <link rel='stylesheet' href="{% static "css/additional_list_card.css" %}">
 {% endblock %}
 {% block title %}{% endblock %}
 {% block side_menu %}
@@ -39,10 +40,13 @@
 {% endblock %}
 
 {% block additional %}
-    <h1>Component List</h1>
-    <ul>
-    {% for component in component_list %}
-        <ol><a href="/component_details/{{ component.id }}/">{{ component.component_small_list }}</a></ol>
-    {% endfor %}
-    </ul>
+<div id="card-additional">
+    <div id="card-content-additional">
+        <div><strong>Component List</strong></div>
+        {% for component in component_list %}
+            <div><a href="/component_details/{{ component.id }}/">{{ component.component_small_list }}</a></div>
+        {% endfor %}
+    </div>
+</div>
+
 {% endblock %}

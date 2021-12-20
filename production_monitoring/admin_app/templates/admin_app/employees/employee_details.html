@@ -2,6 +2,7 @@
 {% load static %}
 {% block  head %}
     <link rel='stylesheet' href="{% static "css/search_card.css" %}">
+    <link rel='stylesheet' href="{% static "css/additional_list_card.css" %}">
 {% endblock %}
 {% block title %}{% endblock %}
 {% block side_menu %}
@@ -36,10 +37,12 @@
 
 {% endblock %}
 {% block additional %}
-    <h1>Employees</h1>
-    <ul>
-    {% for employee in employee_list %}
-        <ol><a href="/employee_details/{{ employee.id }}/">{{ employee }}</a></ol>
-    {% endfor %}
-    </ul>
+<div id="card-additional">
+    <div id="card-content-additional">
+        <div><strong>Employees</strong></div>
+        {% for employee in employee_list %}
+            <div><a href="/employee_details/{{ employee.id }}/">{{ employee }}</a></div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

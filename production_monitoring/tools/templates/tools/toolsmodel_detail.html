@@ -2,6 +2,7 @@
 {% load static %}
 {% block  head %}
     <link rel='stylesheet' href="{% static "css/search_card.css" %}">
+    <link rel='stylesheet' href="{% static "css/additional_list_card.css" %}">
 {% endblock %}
 {% block title %}{% endblock %}
 {% block side_menu %}
@@ -35,10 +36,12 @@
 {% endblock %}
 
 {% block additional %}
-    <h1>Tool List</h1>
-    <ul>
-    {% for tool in tool_list %}
-        <ol><a href="/tool_details/{{ tool.id }}/">{{ tool.tool_small_list }}</a></ol>
-    {% endfor %}
-    </ul>
+<div id="card-additional">
+    <div id="card-content-additional">
+        <div><strong>Tool List</strong></div>
+        {% for tool in tool_list %}
+            <div><a href="/tool_details/{{ tool.id }}/">{{ tool.tool_small_list }}</a></div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

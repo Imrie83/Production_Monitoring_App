@@ -2,6 +2,7 @@
 {% load static %}
 {% block  head %}
     <link rel='stylesheet' href="{% static "css/search_card.css" %}">
+    <link rel='stylesheet' href="{% static "css/additional_list_card.css" %}">
 {% endblock %}
 {% block title %}{% endblock %}
 {% block side_menu %}
@@ -36,10 +37,12 @@
 
 {% endblock %}
 {% block additional %}
-    <h1>Glass List</h1>
-    <ul>
-    {% for glass in glass_list %}
-        <ol><a href="/glass_detail/{{ glass.id }}/">{{glass.glass_small_list }}</a></ol>
-    {% endfor %}
-    </ul>
+<div id="card-additional">
+    <div id="card-content-additional">
+        <div><strong>Glass List</strong></div>
+        {% for glass in glass_list %}
+            <div><a href="/glass_detail/{{ glass.id }}/">{{glass.glass_small_list }}</a></div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

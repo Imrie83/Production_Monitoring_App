@@ -1,5 +1,9 @@
 {% extends "grid_base.html" %}
+{% load static %}
 {% block title %}{% endblock %}
+{% block  head %}
+    <link rel='stylesheet' href="{% static "css/form_card.css" %}">
+{% endblock %}
 {% block side_menu %}
 
 {% endblock %}
@@ -7,6 +11,6 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Submit">
+        <input type="submit" value="Submit" class="form">
     </form>
 {% endblock %}
