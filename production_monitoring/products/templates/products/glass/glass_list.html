@@ -19,13 +19,30 @@
 {% block content %}
 <div id="card-main">
     <div id="card-content-main">
-    <ul>
-    {% for glass in glass_list %}
-        <li>
-            <a href="/glass_detail/{{ glass.id }}/">{{ glass.glass_name }}</a>
-        </li>
-    {% endfor %}
-    </ul>
+    <table class="table_list">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Stock</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for glass in glass_list %}
+        <tr>
+            <td>
+                <a href="/glass_detail/{{ glass.id }}/">{{ glass.glass_name }}</a>
+            </td>
+            <td>
+                {{ glass.glass_door_type }}
+            </td>
+            <td>
+                {{ glass.stock }}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
     </div>
 </div>
 {% endblock %}

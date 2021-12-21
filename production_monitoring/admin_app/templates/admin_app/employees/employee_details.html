@@ -21,18 +21,48 @@
 <div id="card-main">
     <div id="card-content-main">
     <div class="content_div">
-    <h2>Name: {{ employee_detail.display_employee_name }}</h2>
-    <p>ID: {{ employee_detail.id_num }}</p>
-    <p>Position: {{ employee_detail.position }}</p>
-    <p>Department:
-        <ul>
-        {% for dept in employee_detail.section_id.all %}
-            <ol>{{ dept.section_name }}</ol>
-        {% endfor %}
-        </ul>
-    </p>
-    <p>Staff: {{ employee_detail.user.is_staff }}</p>
+    <h3>Name: {{ employee_detail.display_employee_name }}</h3>
+    <table class="table-detail">
+        <tr>
+            <th>
+                ID:
+            </th>
+            <td>
+                {{ employee_detail.id_num }}
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Position:
+            </th>
+            <td>
+                {{ employee_detail.position }}
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Departments:
+            </th>
 
+            <td>
+            <ul>
+                {% for dept in employee_detail.section_id.all %}
+                    <ol>
+                {{ dept.section_name }}
+                    </ol>
+                {% endfor %}
+           </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Is Staff:
+            </th>
+            <td>
+                {{ employee_detail.user.is_staff|yesno:'Yes,No' }}
+            </td>
+        </tr>
+    </table>
     <a href="/edit_employee/{{ employee_detail.id }}/" type="button">Edit</a>
     <a href="/delete_employee/{{ employee_detail.id }}/" type="button">Delete</a>
     <a href="{% url 'employee_list' %}" type="button">Back</a>

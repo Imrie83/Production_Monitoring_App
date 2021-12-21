@@ -21,27 +21,84 @@
 <div id="card-main">
     <div id="card-content-main">
     <div class="content_div">
-    <h2>Job no: {{ door_detail }}</h2>
-    <p>Last Location: {{ door_detail.user_product.last.user_id.section_id.last }}</p>
-    <p>Door type: {{ door_detail.door_type }}</p>
-    <p>Style: {{ door_detail.style }}</p>
-    <p>Color: {{ door_detail.color }}</p>
-    <p>Handing: {{ door_detail.handing }}</p>
-    <p>Glass: {{ door_detail.glass }}</p>
-    <p>Size: {{ door_detail.door_height }}mm x {{ door_detail.door_width }}mm</p>
-    <p>Components:
-    <ul>
-        {% for comp in door_detail.components.all %}
-         <ol>{{ comp.product_type }} - {{ comp }}</ol>
-        {% endfor %}
-    </ul> <a href="/add_comp_product/{{ door_detail.id }}/" type="button">Add Components</a>
-    </p>
-    <p>Production date: {{ door_detail.production_date }}</p>
-    <p>Delivery date: {{ door_detail.delivery_date }}</p>
-    <p>Delivery address: {{ door_detail.delivery_address }}</p>
-    <p>Estimated machining time: {{ door_detail.machining_time }}</p>
-    <p>Finished: {{ door_detail.finished }}</p>
+    <h3>Job no: {{ door_detail }}</h3>
+    <table class="table-detail">
+        <tr>
+            <th>Last Location:</th>
+            <td>{{ door_detail.user_product.last.user_id.section_id.last }}</td>
+        </tr>
+        <tr>
+            <th>Door Type:</th>
+            <td>{{ door_detail.door_type }}</td>
+        </tr>
+        <tr>
+            <th>Style:</th>
+            <td>{{ door_detail.style }}</td>
+        </tr>
+        <tr>
+            <th>Color:</th>
+            <td>{{ door_detail.color }}</td>
+        </tr>
+        <tr>
+            <th>Handing:</th>
+            <td>{{ door_detail.handing }}</td>
+        </tr>
+        <tr>
+            <th>Glass:</th>
+            <td>{{ door_detail.glass }}</td>
+        </tr>
+        <tr>
+            <th>Size:</th>
+            <td>{{ door_detail.door_height }}mm x {{ door_detail.door_width }}mm</td>
+        </tr>
+        <tr>
+            <th>Production Date:</th>
+            <td>{{ door_detail.production_date }}</td>
+        </tr>
+        <tr>
+            <th>Delivery Date:</th>
+            <td>{{ door_detail.delivery_date }}</td>
+        </tr>
+        <tr>
+            <th>Delivery Address:</th>
+            <td>{{ door_detail.delivery_address }}</td>
+        </tr>
+        <tr>
+            <th>Estimated Machine Time:</th>
+            <td>{{ door_detail.machining_time }} min</td>
 
+        </tr>
+        <tr>
+            <th>Finished:</th>
+            <td>{{ door_detail.finished }}</td>
+        </tr>
+    </table>
+    <div>Components:
+    <table class="table_list">
+        <thead>
+        <th>
+            Type
+        </th>
+        <th>
+            Name
+        </th>
+        </thead>
+        <tbody>
+        {% for comp in door_detail.components.all %}
+        <tr>
+        <td>
+            {{ comp.product_type }}
+        </td>
+        <td>
+            <a href="/component_details/{{ comp.pk }}/">{{ comp }}</a>
+        </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="/add_comp_product/{{ door_detail.id }}/" type="button">Add Components</a>
+    </div>
+    <br>
     <a href="/edit_door/{{ door_detail.id }}/" type="button">Edit</a>
     <a href="/delete_door/{{ door_detail.id }}/" type="button">Delete</a>
     <a href="{% url 'door_list' %}" type="button">Back</a>

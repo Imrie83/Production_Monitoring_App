@@ -12,14 +12,32 @@
 <div id="card-main">
     <div id="card-content-main">
         <div class="content_div">
-        <h2>Department: {{ department_detail.section_name }}</h2>
+        <h3>Department: {{ department_detail.section_name }}</h3>
         <div>Staff in department:
-            <ul>
+        <table class="table_list">
+            <thead>
+            <tr>
+                <th>
+                    Employee
+                </th>
+                <th>
+                    ID
+                </th>
+            </tr>
+            </thead>
+            <tbody>
             {% for employee in department_detail.employees.all %}
-                <ol><a href="/employee_details/{{ employee.pk }}/">{{ employee }}</a></ol>
+                <tr>
+                    <td>
+                        <a href="/employee_details/{{ employee.pk }}/">{{ employee }}
+                    </td>
+                    <td>
+                        {{ employee.id_num }}
+                    </td>
+                </tr>
             {% endfor %}
-            </ul>
-            </p>
+            </tbody>
+        </table>
         </div>
     <a href="/edit_department/{{ department_detail.id }}/" type="button">Edit</a>
     <a href="/delete_department/{{ department_detail.id }}/" type="button">Delete</a>

@@ -20,22 +20,46 @@
 {% block content %}
 <div id="card-main">
     <div id="card-content-main">
-    <ul>
-        <li>
-            <h2>{{ tool_details.tool_name }}</h2>
-            <ol>Type: {{ tool_details.type }}</ol>
-            <ol>In stock: {{ tool_details.stock }}</ol>
-            <ol>Max allowed runtime: {{ tool_details.max_run_time }}</ol>
-            <ol>{{ tool_details.short_description }}</ol>
-            {% if tool_details.image.url|length > 0 %}
-            <ol><img src="{{ tool_details.image.url }}" alt="{{ tool_details.tool_name }}" width="50%"></ol>
-            {% endif %}
-            <br>
-            <a href="/edit_tool/{{ tool_details.id }}/" type="button">Edit</a>
-            <a href="/delete_tool/{{ tool_details.id }}/" type="button">Delete</a>
-            <a href="{% url 'tools' %}" type="button">Back</a>
-        </li>
-    </ul>
+    <div class="content_div">
+    <h3>{{ tool_details.tool_name }}</h3>
+        <table class="table-detail">
+            <tr>
+                <th>
+                    Type:
+                </th>
+                <td>
+                    {{ tool_details.type }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Stock:
+                </th>
+                <td>
+                    {{ tool_details.stock }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Max run time:
+                </th>
+                <td>
+                    {{ tool_details.max_run_time }} min
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Desc.
+                </th>
+                <td>
+                    {{ tool_details.short_description }}
+                </td>
+            </tr>
+        </table>
+        {% if tool_details.image.url|length > 0 %}
+        <div><img src="{{ tool_details.image.url }}" alt="{{ tool_details.tool_name }}" width="50%"></div>
+        {% endif %}
+    </div>
     </div>
 </div>
 {% endblock %}

@@ -9,13 +9,26 @@
 {% block content %}
 <div id="card-main">
     <div id="card-content-main">
-    <ul>
-    {% for machine in machine_list %}
-        <li>
-            <a href="/machine_details/{{ machine.id }}/">{{ machine.name }}</a>
-        </li>
-    {% endfor %}
-    </ul>
+    <table class="table_list">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Location</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for machine in machine_list %}
+        <tr>
+            <td>
+                <a href="/machine_details/{{ machine.id }}/">{{ machine.name }}</a>
+            </td>
+            <td>
+                {{ machine.machine_location }}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
     </div>
 </div>
 

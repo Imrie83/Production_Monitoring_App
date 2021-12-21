@@ -22,18 +22,36 @@
     <div id="card-content-main">
     <div class="content_div">
     <h2>Name: {{ component_details.name }}</h2>
-    <p>Door type: {{ component_details.door_type }}</p>
-    <p>Product type: {{ component_details.product_type }}</p>
-    <p>In stock: {{ component_details.stock }}</p>
-    <p>Tools req.
-        <ul>
-            {% for tool in component_details.tools_req.all %}
-            <li>{{ tool.tool_name }}</li>
-            {% endfor %}
-        </ul>
-    <a href="/add_tool_component/{{ component_details.id }}/" type="button">Add Tool</a>
-    </p>
-    <p>{{ component_details.component_description }}</p>
+    <table class="table-detail">
+        <tr>
+            <th>Door Type:</th>
+            <td>{{ component_details.door_type }}</td>
+        </tr>
+        <tr>
+            <th>Product Type:</th>
+            <td>{{ component_details.product_type }}</td>
+        </tr>
+        <tr>
+            <th>In Stock:</th>
+            <td>{{ component_details.stock }}</td>
+        </tr>
+        <tr>
+            <th>Description:</th>
+            <td>{{ component_details.component_description }}</td>
+        </tr>
+        <tr>
+            <th>Tools Req.</th>
+            <td>
+                <ul>
+                    {% for tool in component_details.tools_req.all %}
+                    <ol>{{ tool.tool_name }}</ol>
+                    {% endfor %}
+                </ul>
+            <a href="/add_tool_component/{{ component_details.id }}/" type="button">Add Tool</a>
+            </td>
+        </tr>
+    </table>
+
 
     <a href="/edit_component/{{ component_details.id }}/" type="button">Edit</a>
     <a href="/delete_component/{{ component_details.id }}/" type="button">Delete</a>

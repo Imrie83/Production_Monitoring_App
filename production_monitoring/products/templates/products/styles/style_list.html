@@ -11,13 +11,26 @@
 {% block content %}
 <div id="card-main">
     <div id="card-content-main">
-    <ul>
-    {% for style in style_list %}
-        <li>
+    <table class="table_list">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for style in style_list %}
+        <tr>
+            <td>
             <a href="/style_details/{{ style.id }}/">{{ style.style_name }}</a>
-        </li>
-    {% endfor %}
-    </ul>
+            </td>
+            <td>
+                {{ style.style_type }}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
     </div>
 </div>
 

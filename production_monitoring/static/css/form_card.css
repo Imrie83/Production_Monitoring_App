@@ -12,22 +12,22 @@ label {
 #card-content-form {
   padding: 12px 44px;
 }
-#submit-btn {
-  background: #2a5962;
-  border: none;
-  border-radius: 21px;
-  box-shadow: 0px 1px 8px #2a5962;
-  cursor: pointer;
-  color: white;
-  font-family: "Raleway SemiBold", sans-serif;
-  height: 30px;
-  margin: 20px auto 5px;
-  transition: 0.25s;
-  width: 110px;
-}
-#submit-btn:hover {
-  box-shadow: 0px 1px 18px #2a5962;
-}
+/*#submit-btn {*/
+/*  background: #2a5962;*/
+/*  border: none;*/
+/*  border-radius: 21px;*/
+/*  box-shadow: 0px 1px 8px #2a5962;*/
+/*  cursor: pointer;*/
+/*  color: white;*/
+/*  font-family: "Raleway SemiBold", sans-serif;*/
+/*  height: 30px;*/
+/*  margin: 20px auto 5px;*/
+/*  transition: 0.25s;*/
+/*  width: 110px;*/
+/*}*/
+/*#submit-btn:hover {*/
+/*  box-shadow: 0px 1px 18px #2a5962;*/
+/*}*/
 .form {
   align-items: left;
   display: flex;

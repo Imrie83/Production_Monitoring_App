@@ -21,13 +21,20 @@
 <div id="card-main">
     <div id="card-content-main">
     <div class="content_div">
-    <h2>Customer: {{ customer_detail.customer_name }}</h2>
-    <p>e-mail: {{ customer_detail.customer_email }}</p>
-    <p>phone: {{ customer_detail.customer_phone }}</p>
-
-    <a href="/edit_customer/{{ customer_detail.id }}/" type="button">Edit</a>
-    <a href="/delete_customer/{{ customer_detail.id }}/" type="button">Delete</a>
-    <a href="{% url 'customer_list' %}" type="button">Back</a>
+        <h3>Customer: {{ customer_detail.customer_name }}</h3>
+        <table class="table-detail">
+            <tr>
+                <th>e-mail</th>
+                <td>{{ customer_detail.customer_email }}</td>
+            </tr>
+            <tr>
+                <th>phone</th>
+                <td>{{ customer_detail.customer_phone }}</td>
+            </tr>
+        </table>
+        <a href="/edit_customer/{{ customer_detail.id }}/" type="button">Edit</a>
+        <a href="/delete_customer/{{ customer_detail.id }}/" type="button">Delete</a>
+        <a href="{% url 'customer_list' %}" type="button">Back</a>
     </div>
     </div>
 </div>

@@ -21,17 +21,31 @@
 <div id="card-main">
     <div id="card-content-main">
     <div class="content_div">
-    <h2>Name: {{ glass_detail.glass_name }}</h2>
-    <p>Door type: {{ glass_detail.glass_door_type }}</p>
-    <p>In stock: {{ glass_detail.stock }}</p>
-    <p>Tools req.
-        <ul>
+    <h3>Name: {{ glass_detail.glass_name }}</h3>
+    <table class="table-detail">
+        <tr>
+            <th>Door Type:</th>
+            <td>{{ glass_detail.glass_door_type }}</td>
+        </tr>
+        <tr>
+            <th>In Stock:</th>
+            <td>{{ glass_detail.stock }}</td>
+        </tr>
+        <tr>
+            <th>Description:</th>
+            <td>{{ glass_detail.description }}</td>
+        </tr>
+        <tr>
+            <th>Tools Req.</th>
+            <td>
+            <ul>
             {% for tool in glass_detail.tools_req.all %}
-            <li>{{ tool.tool_name }}</li>
+                <ol><a href="/tool_details/{{ tool.pk }}/">{{ tool.tool_name }}</a></ol>
             {% endfor %}
-        </ul>
-        <a href="/add_tool_glass/{{ glass_detail.id }}/" type="button">Add Tool</a>
-    </p>
+            </ul>
+            <a href="/add_tool_glass/{{ glass_detail.id }}/" type="button">Add Tool</a></td>
+        </tr>
+    </table>
     <p>{{ glass_detail.component_description }}</p>
     <a href="/edit_glass/{{ glass_detail.id }}/" type="button">Edit</a>
     <a href="/delete_glass/{{ glass_detail.id }}/" type="button">Delete</a>
