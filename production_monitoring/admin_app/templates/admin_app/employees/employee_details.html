@@ -1,38 +1,83 @@
 {% extends "grid_base.html" %}
 {% load static %}
+{% block  head %}
+    <link rel='stylesheet' href="{% static "css/search_card.css" %}">
+    <link rel='stylesheet' href="{% static "css/additional_list_card.css" %}">
+    <link rel='stylesheet' href="{% static "css/main_view_card.css" %}">
+{% endblock %}
 {% block title %}{% endblock %}
 {% block side_menu %}
-    <form method="post">
-        {% csrf_token %}
-        <input id='searchbar' type="text" name="search" placeholder="search"><br><br>
-        <input type="submit" value="Search">
-    </form>
+ <div id="card">
+    <div id="card-content">
+        <form method="post" class="form">
+            {% csrf_token %}
+            <input id='searchbar' type="text" name="search" placeholder="search">
+            <input type="submit" value="Search" id="submit-btn">
+        </form>
+    </div>
+ </div>
 {% endblock %}
 {% block content %}
+<div id="card-main">
+    <div id="card-content-main">
     <div class="content_div">
-    <h2>Name: {{ employee_detail.display_employee_name }}</h2>
-    <p>ID: {{ employee_detail.id_num }}</p>
-    <p>Position: {{ employee_detail.position }}</p>
-    <p>Department:
-        <ul>
-        {% for dept in employee_detail.section_id.all %}
-            <ol>{{ dept.section_name }}</ol>
-        {% endfor %}
-        </ul>
-    </p>
-    <p>Staff: {{ employee_detail.user.is_staff }}</p>
+    <h3>Name: {{ employee_detail.display_employee_name }}</h3>
+    <table class="table-detail">
+        <tr>
+            <th>
+                ID:
+            </th>
+            <td>
+                {{ employee_detail.id_num }}
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Position:
+            </th>
+            <td>
+                {{ employee_detail.position }}
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Departments:
+            </th>
 
+            <td>
+            <ul>
+                {% for dept in employee_detail.section_id.all %}
+                    <ol>
+                {{ dept.section_name }}
+                    </ol>
+                {% endfor %}
+           </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Is Staff:
+            </th>
+            <td>
+                {{ employee_detail.user.is_staff|yesno:'Yes,No' }}
+            </td>
+        </tr>
+    </table>
     <a href="/edit_employee/{{ employee_detail.id }}/" type="button">Edit</a>
     <a href="/delete_employee/{{ employee_detail.id }}/" type="button">Delete</a>
     <a href="{% url 'employee_list' %}" type="button">Back</a>
     </div>
+    </div>
+</div>
 
 {% endblock %}
 {% block additional %}
-    <h1>Employees</h1>
-    <ul>
-    {% for employee in employee_list %}
-        <ol><a href="/employee_details/{{ employee.id }}/">{{ employee }}</a></ol>
-    {% endfor %}
-    </ul>
+<div id="card-additional">
+    <div id="card-content-additional">
+        <div><strong>Employees</strong></div>
+        {% for employee in employee_list %}
+            <div><a href="/employee_details/{{ employee.id }}/">{{ employee }}</a></div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

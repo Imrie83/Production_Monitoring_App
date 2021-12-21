@@ -1,17 +1,28 @@
 {% extends "grid_base.html" %}
 {% load static %}
+{% block  head %}
+    <link rel='stylesheet' href="{% static "css/search_card.css" %}">
+    <link rel='stylesheet' href="{% static "css/additional_list_card.css" %}">
+    <link rel="stylesheet" href='{% static "css/main_view_card.css" %}'>
+{% endblock %}
 {% block title %}{% endblock %}
 {% block side_menu %}
-    <form method="post">
-        {% csrf_token %}
-        <input id='searchbar' type="text" name="search" placeholder="search"><br><br>
-        <input type="submit" value="Search">
-    </form>
+ <div id="card">
+    <div id="card-content">
+        <form method="post" class="form">
+            {% csrf_token %}
+            <input id='searchbar' type="text" name="search" placeholder="search">
+            <input type="submit" value="Search" id="submit-btn">
+        </form>
+    </div>
+ </div>
 {% endblock %}
 {% block content %}
+<div id="card-main">
+    <div id="card-content-main">
     <div class="content_div">
-    <h2>Order: {{ order_details.order_number }}</h2>
-        <h3>Customer:</h3>
+    <h3>Order: {{ order_details.order_number }}</h3>
+        <h4>Customer:</h4>
         <ul>
             <ol>{{ order_details.customer_id.customer_name }}</ol>
             <ol>{{ order_details.customer_id.customer_email }}</ol>
@@ -19,27 +30,39 @@
         </ul>
     </h3>
     <h4>Jobs in order:<br><br></h4>
-        <ul>
-            {% for job in order_details.product.all %}
-                <ol>
-                    Line: <a href="/door_details/{{ job.id }}/">{{ job.full_job_no }}</a> <br>
-                    Production date: {{ job.production_date }}<br>
-                    Delivery date: {{ job.delivery_date }}<hr>
-                </ol>
-            {% endfor %}
-        </ul>
-
+    <table class="table_list">
+        <thead>
+        <tr>
+            <th>Line</th>
+            <th>Prod. Date</th>
+            <th>Delivery Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for job in order_details.product.all %}
+        <tr>
+            <td><a href="/door_details/{{ job.id }}/">{{ job.full_job_no }}</a></td>
+            <td>{{ job.production_date }}</td>
+            <td>{{ job.delivery_date }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
     <a href="/edit_order/{{ order_details.id }}/" type="button">Edit</a>
     <a href="/delete_order/{{ order_details.id }}/" type="button">Delete</a>
     <a href="{% url 'order_list' %}" type="button">Back</a>
 </div>
+</div>
+</div>
 {% endblock %}
 
 {% block additional %}
-    <h1>Order List</h1>
-    <ul>
-    {% for order in order_list %}
-        <ol><a href="/order_details/{{ order.id }}/">{{ order }}</a></ol>
-    {% endfor %}
-    </ul>
+<div id="card-additional">
+    <div id="card-content-additional">
+        <div><strong>Order List</strong></div>
+        {% for order in order_list %}
+            <div><a href="/order_details/{{ order.id }}/">{{ order }}</a></div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

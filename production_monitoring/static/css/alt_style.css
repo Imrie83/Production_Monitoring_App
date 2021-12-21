@@ -1,6 +1,6 @@
 .container {
   display: grid;
-  grid-template-columns: 0.4fr 1.8fr 0.8fr;
+  grid-template-columns: 0.4fr 1.8fr 0.5fr;
   grid-template-rows: 0.2fr 2.6fr 0.2fr;
   gap: 0px 0px;
   grid-auto-flow: row;
@@ -22,13 +22,11 @@
 .Additional {
   grid-area: Additional;
   display: flex;
-  justify-content: center;
-  justify-items: center;
+  margin: 0 auto;
 }
 
 .Additional-inner {
-  width: 80%;
-  /*margin: auto;*/
+  width: 100%;
   padding: 50px 0 0 0;
 }
 
@@ -38,21 +36,22 @@
 }
 
 .Content {
-  justify-self: stretch;
   grid-area: Content;
   border-left: 1px black solid;
   border-right: 1px black solid;
   display: flex;
-  justify-content: center;
-  align-content: center;
+  margin: 0 10px 0 10px;
 }
 
 .inner-content {
-  display: block;
+  display: flex;
   width: 100%;
   padding: 50px 0 0 0;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 100px;
+  justify-content: center;
+
 }
 
 .Menu {
@@ -72,17 +71,15 @@
   grid-area: Header;
   background: #664357;
   padding: 20px 0 0 20px;
+  box-shadow: 0 1px 20px black;
 }
 
 
 html, body , .container {
   height: 100%;
   margin: 0;
-  background: #a8a8a8;
+  background: #cbcbcb;
 }
-
-
-
 .container * {
   position: relative;
   color: black;
@@ -122,14 +119,22 @@ li {
   margin-left: 10%;
   margin-right: 10%;
 }
-
+.table_list{
+  margin: 20px 20px 20px 20px;
+}
 .table_list tr{
   border-bottom: solid black 1px;
+}
+.table_list tbody tr:hover{
+  background: rgba(203, 203, 203, 0.25);
+}
+.table_list a:hover{
+  text-decoration: none;
 }
 .table_list td{
   padding: 5px 15px 5px 0;
 }
 
-form {
-  padding: 50px;
-}
+/*form {*/
+/*  padding: 50px;*/
+/*}*/

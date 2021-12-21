@@ -1,0 +1,46 @@
+label {
+  font-family: "Raleway", sans-serif;
+  font-size: 11pt;
+}
+#card {
+  background: #fbfbfb;
+  border-radius: 8px;
+  box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.65);
+  width: 0.3fr;
+  /*position: fixed;*/
+}
+#card-content {
+  /*padding: 12px 44px;*/
+}
+#submit-btn {
+  height: 30px;
+  margin: 20px auto 5px;
+  transition: 0.25s;
+  width: 110px;
+}
+#submit-btn:hover {
+
+}
+.form {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+.form-border {
+  background: #2a5962;
+  height: 1px;
+  width: 100%;
+}
+.form-content {
+  background: #fbfbfb;
+  border: none;
+  outline: none;
+  padding-top: 14px;
+}
+.underline-title {
+  background: #2a5962;
+  height: 2px;
+  margin: -1.1rem auto 0 auto;
+  width: 89px;
+}

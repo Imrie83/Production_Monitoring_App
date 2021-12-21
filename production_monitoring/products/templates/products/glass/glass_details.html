@@ -1,38 +1,67 @@
 {% extends "grid_base.html" %}
 {% load static %}
+{% block  head %}
+    <link rel='stylesheet' href="{% static "css/search_card.css" %}">
+    <link rel='stylesheet' href="{% static "css/additional_list_card.css" %}">
+    <link rel="stylesheet" href='{% static "css/main_view_card.css" %}'>
+{% endblock %}
 {% block title %}{% endblock %}
 {% block side_menu %}
-    <form method="post">
-        {% csrf_token %}
-        <input id='searchbar' type="text" name="search" placeholder="search"><br><br>
-        <input type="submit" value="Search">
-    </form>
+ <div id="card">
+    <div id="card-content">
+        <form method="post" class="form">
+            {% csrf_token %}
+            <input id='searchbar' type="text" name="search" placeholder="search">
+            <input type="submit" value="Search" id="submit-btn">
+        </form>
+    </div>
+ </div>
 {% endblock %}
 {% block content %}
+<div id="card-main">
+    <div id="card-content-main">
     <div class="content_div">
-    <h2>Name: {{ glass_detail.glass_name }}</h2>
-    <p>Door type: {{ glass_detail.glass_door_type }}</p>
-    <p>In stock: {{ glass_detail.stock }}</p>
-    <p>Tools req.
-        <ul>
+    <h3>Name: {{ glass_detail.glass_name }}</h3>
+    <table class="table-detail">
+        <tr>
+            <th>Door Type:</th>
+            <td>{{ glass_detail.glass_door_type }}</td>
+        </tr>
+        <tr>
+            <th>In Stock:</th>
+            <td>{{ glass_detail.stock }}</td>
+        </tr>
+        <tr>
+            <th>Description:</th>
+            <td>{{ glass_detail.description }}</td>
+        </tr>
+        <tr>
+            <th>Tools Req.</th>
+            <td>
+            <ul>
             {% for tool in glass_detail.tools_req.all %}
-            <li>{{ tool.tool_name }}</li>
+                <ol><a href="/tool_details/{{ tool.pk }}/">{{ tool.tool_name }}</a></ol>
             {% endfor %}
-        </ul>
-        <a href="/add_tool_glass/{{ glass_detail.id }}/" type="button">Add Tool</a>
-    </p>
+            </ul>
+            <a href="/add_tool_glass/{{ glass_detail.id }}/" type="button">Add Tool</a></td>
+        </tr>
+    </table>
     <p>{{ glass_detail.component_description }}</p>
     <a href="/edit_glass/{{ glass_detail.id }}/" type="button">Edit</a>
     <a href="/delete_glass/{{ glass_detail.id }}/" type="button">Delete</a>
     <a href="{% url 'glass_list' %}" type="button">Back</a>
     </div>
+    </div>
+</div>
 
 {% endblock %}
 {% block additional %}
-    <h1>Glass List</h1>
-    <ul>
-    {% for glass in glass_list %}
-        <ol><a href="/glass_detail/{{ glass.id }}/">{{glass.glass_small_list }}</a></ol>
-    {% endfor %}
-    </ul>
+<div id="card-additional">
+    <div id="card-content-additional">
+        <div><strong>Glass List</strong></div>
+        {% for glass in glass_list %}
+            <div><a href="/glass_detail/{{ glass.id }}/">{{glass.glass_small_list }}</a></div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
