@@ -639,9 +639,6 @@ class ProductListView(View):
 
     def post(self, request):
         order_by = request.GET.get('order_by')
-        if not order_by:
-            order_by = 'order_num' + ', ' + 'job_no'
-        print(order_by)
         if 'search' in request.POST:
             search_q = request.POST['search']
             door_list = ProductsModel.objects.filter(
@@ -652,7 +649,12 @@ class ProductListView(View):
                 Q(production_date__icontains=search_q) |
                 Q(delivery_address__icontains=search_q) |
                 Q(finished__icontains=search_q)
-            ).order_by(order_by)
+            )
+            if not order_by:
+                door_list = door_list.order_by('order_num', 'job_no')
+            else:
+                door_list = door_list.order_by(order_by, 'job_no')
+
             return render(
                 request,
                 'products/doors/products_list.html',

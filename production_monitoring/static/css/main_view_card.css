@@ -18,22 +18,7 @@ label {
   display: flex;
   justify-content: center;
 }
-/*#submit-btn {*/
-/*  background: #2a5962;*/
-/*  border: none;*/
-/*  border-radius: 21px;*/
-/*  box-shadow: 0px 1px 8px #2a5962;*/
-/*  cursor: pointer;*/
-/*  color: white;*/
-/*  font-family: "Raleway SemiBold", sans-serif;*/
-/*  height: 30px;*/
-/*  margin: 20px auto 5px;*/
-/*  transition: 0.25s;*/
-/*  width: 110px;*/
-/*}*/
-/*#submit-btn:hover {*/
-/*  box-shadow: 0px 1px 18px #2a5962;*/
-/*}*/
+
 .btn-container{
   display: flex;
   justify-content: space-between;
@@ -41,9 +26,11 @@ label {
 }
 .btn {
   min-width: 40%;
-
-  /*justify-self: flex-end;*/
 }
+/*table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {*/
+/*    content: " \25B4\25BE"*/
+/*}*/
+
 .table-detail {
   margin: 20px 0 20px 0;
 }
