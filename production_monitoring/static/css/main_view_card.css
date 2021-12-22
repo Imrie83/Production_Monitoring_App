@@ -3,7 +3,7 @@ label {
   font-size: 11pt;
 }
 #card-main {
-  background: #fbfbfb;
+  background: #E8E8E8FF;
   border-radius: 8px;
   box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.65);
   min-width: 50%;
@@ -34,7 +34,16 @@ label {
 /*#submit-btn:hover {*/
 /*  box-shadow: 0px 1px 18px #2a5962;*/
 /*}*/
+.btn-container{
+  display: flex;
+  justify-content: space-between;
+  max-width: 100%;
+}
+.btn {
+  min-width: 40%;
 
+  /*justify-self: flex-end;*/
+}
 .table-detail {
   margin: 20px 0 20px 0;
 }
@@ -50,26 +59,3 @@ label {
   border-bottom: black solid 1px;
   border-top: black solid 1px;
 }
-/*.form {*/
-/*  align-items: center;*/
-/*  display: flex;*/
-/*  flex-direction: column;*/
-/*  padding: 10px;*/
-/*}*/
-/*.form-border {*/
-/*  background: #2a5962;*/
-/*  height: 1px;*/
-/*  width: 100%;*/
-/*}*/
-/*.form-content {*/
-/*  background: #fbfbfb;*/
-/*  border: none;*/
-/*  outline: none;*/
-/*  padding-top: 14px;*/
-/*}*/
-/*.underline-title {*/
-/*  background: #2a5962;*/
-/*  height: 2px;*/
-/*  margin: -1.1rem auto 0 auto;*/
-/*  width: 89px;*/
-/*}*/

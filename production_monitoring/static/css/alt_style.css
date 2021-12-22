@@ -37,8 +37,8 @@
 
 .Content {
   grid-area: Content;
-  border-left: 1px black solid;
-  border-right: 1px black solid;
+  /*border-left: 1px black solid;*/
+  /*border-right: 1px black solid;*/
   display: flex;
   margin: 0 10px 0 10px;
 }

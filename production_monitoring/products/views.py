@@ -620,11 +620,17 @@ class ProductListView(View):
     """
 
     def get(self, request):
-        door_list = ProductsModel.objects.all().order_by(
-            'production_date',
-            'order_num',
-            'job_no',
+        order_by = request.GET.order_by = request.GET.get(
+            'order_by',
         )
+        if not order_by:
+            door_list = ProductsModel.objects.all().order_by(
+                'order_num',
+                'job_no',
+            )
+        else:
+            door_list = ProductsModel.objects.all().order_by(order_by, 'job_no')
+
         return render(
             request,
             'products/doors/products_list.html',
@@ -632,6 +638,10 @@ class ProductListView(View):
         )
 
     def post(self, request):
+        order_by = request.GET.get('order_by')
+        if not order_by:
+            order_by = 'order_num' + ', ' + 'job_no'
+        print(order_by)
         if 'search' in request.POST:
             search_q = request.POST['search']
             door_list = ProductsModel.objects.filter(
@@ -642,7 +652,7 @@ class ProductListView(View):
                 Q(production_date__icontains=search_q) |
                 Q(delivery_address__icontains=search_q) |
                 Q(finished__icontains=search_q)
-            ).order_by('production_date', 'order_num', 'job_no')
+            ).order_by(order_by)
             return render(
                 request,
                 'products/doors/products_list.html',
@@ -659,7 +669,8 @@ class ProductDetailView(LoginRequiredMixin, View):
     redirect_field_name = 'redirect_to'
 
     def get(self, request, pk):
-        product_list = ProductsModel.objects.order_by(
+        order = OrderModel.objects.get(product=pk)
+        product_list = ProductsModel.objects.filter(order_num_id=order).order_by(
             'order_num',
             'job_no',
         )
