@@ -63,9 +63,11 @@
             </td>
         </tr>
     </table>
-    <a href="/edit_employee/{{ employee_detail.id }}/" type="button">Edit</a>
-    <a href="/delete_employee/{{ employee_detail.id }}/" type="button">Delete</a>
-    <a href="{% url 'employee_list' %}" type="button">Back</a>
+    <div class="buttons-container">
+        <a href="/edit_employee/{{ employee_detail.id }}/" type="button">Edit</a>
+        <a href="/delete_employee/{{ employee_detail.id }}/" type="button">Delete</a>
+        <a href="{% url 'employee_list' %}" type="button">Back</a>
+    </div>
     </div>
     </div>
 </div>
