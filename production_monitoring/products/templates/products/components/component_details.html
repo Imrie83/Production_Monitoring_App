@@ -22,7 +22,8 @@
     <div id="card-content-main">
     <div class="content_div">
     <h2>Name: {{ component_details.name }}</h2>
-    <table class="table-detail">
+    <table class="table-detail">Description ▴
+
         <tr>
             <th>Door Type:</th>
             <td>{{ component_details.door_type }}</td>
@@ -44,15 +45,15 @@
             <td>
                 <ul>
                     {% for tool in component_details.tools_req.all %}
-                    <ol>{{ tool.tool_name }}</ol>
+                        <ol><a href="/tool_details/{{ tool.pk }}/">{{ tool.tool_name }}</a></ol>
                     {% endfor %}
                 </ul>
-            <a href="/add_tool_component/{{ component_details.id }}/" type="button">Add Tool</a>
             </td>
         </tr>
     </table>
 
 
+    <a href="/add_tool_component/{{ component_details.id }}/" type="button">Add Tool</a>
     <a href="/edit_component/{{ component_details.id }}/" type="button">Edit</a>
     <a href="/delete_component/{{ component_details.id }}/" type="button">Delete</a>
     <a href="{% url 'component_list' %}" type="button">Back</a>

@@ -10,8 +10,6 @@ label {
   max-width: 80%;
   align-self: flex-start;
 
-  /*width: 0.3fr;*/
-  /*position: fixed;*/
 }
 #card-content-main {
   padding: 20px 0 20px 0;
@@ -27,9 +25,7 @@ label {
 .btn {
   min-width: 40%;
 }
-/*table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {*/
-/*    content: " \25B4\25BE"*/
-/*}*/
+
 
 .table-detail {
   margin: 20px 0 20px 0;
@@ -39,10 +35,15 @@ label {
   padding: 5px 0 5px 10px;
 }
 
+.table-detail th {
+  border-right: solid black 1px;
+}
 .table-detail th{
   padding: 5px 10px 5px 0;
 }
-.table-detail tr {
-  border-bottom: black solid 1px;
-  border-top: black solid 1px;
+.table-detail tbody tr:nth-child(2n) td {
+  background: #d2d2d2;
+}
+.table-detail tbody tr:nth-child(2n+1) td {
+  background: rgba(203, 203, 203, 0.25);
 }

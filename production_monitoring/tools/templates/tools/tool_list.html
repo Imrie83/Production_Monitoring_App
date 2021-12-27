@@ -3,6 +3,7 @@
 {% block  head %}
     <link rel='stylesheet' href="{% static "css/search_card.css" %}">
     <link rel="stylesheet" href='{% static "css/main_view_card.css" %}'>
+    <script src="{% static 'scripts/sorttable.js' %}"></script>
 {% endblock %}
 {% block title %}{% endblock %}
 {% block side_menu %}
@@ -15,22 +16,11 @@
         </form>
     </div>
 </div>
-
-{#    Sort by:#}
-{#    <form method="post">#}
-{#        {% csrf_token %}#}
-{#        <select name="type">#}
-{#            <option name="type" value="tool_name">Name</option>#}
-{#            <option name="type" value="type">Type</option>#}
-{#            <option name="type" value="stock">Stock</option>#}
-{#        </select>#}
-{#        <input type="submit" value="Sort">#}
-{#    </form>#}
 {% endblock %}
 {% block content %}
 <div id="card-main">
     <div id="card-content-main">
-     <table class="table_list">
+     <table class="table_list sortable">
         <thead>
         <tr>
             <th>Tool</th>

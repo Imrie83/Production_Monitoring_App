@@ -618,18 +618,11 @@ class ProductListView(View):
     Class display a list of all
     door lines available.
     """
-
     def get(self, request):
-        order_by = request.GET.order_by = request.GET.get(
-            'order_by',
+        door_list = ProductsModel.objects.all().order_by(
+            'order_num',
+            'job_no',
         )
-        if not order_by:
-            door_list = ProductsModel.objects.all().order_by(
-                'order_num',
-                'job_no',
-            )
-        else:
-            door_list = ProductsModel.objects.all().order_by(order_by, 'job_no')
 
         return render(
             request,
@@ -638,7 +631,6 @@ class ProductListView(View):
         )
 
     def post(self, request):
-        order_by = request.GET.get('order_by')
         if 'search' in request.POST:
             search_q = request.POST['search']
             door_list = ProductsModel.objects.filter(
@@ -649,11 +641,7 @@ class ProductListView(View):
                 Q(production_date__icontains=search_q) |
                 Q(delivery_address__icontains=search_q) |
                 Q(finished__icontains=search_q)
-            )
-            if not order_by:
-                door_list = door_list.order_by('order_num', 'job_no')
-            else:
-                door_list = door_list.order_by(order_by, 'job_no')
+            ).order_by('order_num', 'job_no')
 
             return render(
                 request,
@@ -833,6 +821,13 @@ class ScanProductionView(LoginRequiredMixin, View):
         current_employee = EmployeeModel.objects.get(user=request.user)
         user_departments = []
 
+        # TODO: add output to scanner
+        # now = datetime.now().strftime('%Y-%m-%d')
+        # my_output = UserProductModel.objects.filter(
+        #     user_id=current_employee,
+        #     prod_end__icontains=now,
+        # )
+
         for key, value in list(current_employee.section_id.values_list()):
             user_departments.append(value)
 
@@ -866,7 +861,8 @@ class ScanProductionView(LoginRequiredMixin, View):
                         'products/production/user_scanner_form.html',
                         {
                             'scan_in_form': scan_in_form,
-                            'error': 'Order Does Not Exist'
+                            'error': 'Order Does Not Exist',
+                            'my_output': my_output,
                         }
                     )
 
@@ -881,7 +877,8 @@ class ScanProductionView(LoginRequiredMixin, View):
                         'products/production/user_scanner_form.html',
                         {
                             'scan_in_form': scan_in_form,
-                            'error': 'Job Does Not Exist'
+                            'error': 'Job Does Not Exist',
+                            'my_output': my_output,
                         }
                     )
 
