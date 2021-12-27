@@ -4,6 +4,9 @@
     <link rel='stylesheet' href="{% static "css/search_card.css" %}">
     <link rel='stylesheet' href="{% static "css/additional_list_card.css" %}">
     <link rel='stylesheet' href="{% static "css/main_view_card.css" %}">
+    <script src="{% static 'scripts/sorttable.js' %}"></script>
+
+
 {% endblock %}
 {% block title %}{% endblock %}
 {% block side_menu %}
@@ -45,7 +48,7 @@
         </tr>
         <tr>
             <th>Glass:</th>
-            <td>{{ door_detail.glass }}</td>
+            <td><a href="/glass_detail/{{ door_detail.glass.pk }}/">{{ door_detail.glass }}</a></td>
         </tr>
         <tr>
             <th>Size:</th>
@@ -73,8 +76,9 @@
             <td>{{ door_detail.finished }}</td>
         </tr>
     </table>
-    <div>Components:
-    <table class="table_list">
+
+    <div class="comp-list">Components:
+    <table class="table_list sortable">
         <thead>
         <th>
             Type
@@ -96,12 +100,13 @@
         {% endfor %}
         </tbody>
     </table>
-    <a href="/add_comp_product/{{ door_detail.id }}/" type="button">Add Components</a>
     </div>
-    <br>
-    <a href="/edit_door/{{ door_detail.id }}/" type="button">Edit</a>
-    <a href="/delete_door/{{ door_detail.id }}/" type="button">Delete</a>
-    <a href="{% url 'door_list' %}" type="button">Back</a>
+    <div class="buttons-container">
+        <a href="/add_comp_product/{{ door_detail.id }}/" class="comp-button" type="button" >Add Components</a>
+        <a href="/edit_door/{{ door_detail.id }}/" type="button">Edit</a>
+        <a href="/delete_door/{{ door_detail.id }}/" type="button">Delete</a>
+        <a href="{% url 'door_list' %}" type="button">Back</a>
+    </div>
     </div>
     </div>
 </div>

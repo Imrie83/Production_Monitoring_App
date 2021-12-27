@@ -43,13 +43,15 @@
                 <ol><a href="/tool_details/{{ tool.pk }}/">{{ tool.tool_name }}</a></ol>
             {% endfor %}
             </ul>
-            <a href="/add_tool_glass/{{ glass_detail.id }}/" type="button">Add Tool</a></td>
         </tr>
     </table>
     <p>{{ glass_detail.component_description }}</p>
-    <a href="/edit_glass/{{ glass_detail.id }}/" type="button">Edit</a>
-    <a href="/delete_glass/{{ glass_detail.id }}/" type="button">Delete</a>
-    <a href="{% url 'glass_list' %}" type="button">Back</a>
+    <div class="buttons-container">
+         <a href="/add_tool_glass/{{ glass_detail.id }}/" type="button">Add Tool</a></td>
+        <a href="/edit_glass/{{ glass_detail.id }}/" type="button">Edit</a>
+        <a href="/delete_glass/{{ glass_detail.id }}/" type="button">Delete</a>
+        <a href="{% url 'glass_list' %}" type="button">Back</a>
+    </div>
     </div>
     </div>
 </div>

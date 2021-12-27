@@ -13,9 +13,11 @@
     <h2>Machine: {{ machine_detail.name }}</h2>
     <p>Location: {{ machine_detail.machine_location }}</p>
 
-    <a href="/edit_machine/{{ machine_detail.id }}/" type="button">Edit</a>
-    <a href="/delete_machine/{{ machine_detail.id }}/" type="button">Delete</a>
-    <a href="{% url 'machine_list' %}" type="button">Back</a>
+    <div class="buttons-container">
+        <a href="/edit_machine/{{ machine_detail.id }}/" type="button">Edit</a>
+        <a href="/delete_machine/{{ machine_detail.id }}/" type="button">Delete</a>
+        <a href="{% url 'machine_list' %}" type="button">Back</a>
+    </div>
     </div>
     </div>
 </div>

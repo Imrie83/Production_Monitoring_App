@@ -4,6 +4,7 @@
     <link rel='stylesheet' href="{% static "css/search_card.css" %}">
     <link rel='stylesheet' href="{% static "css/additional_list_card.css" %}">
     <link rel="stylesheet" href='{% static "css/main_view_card.css" %}'>
+    <script src="{% static 'scripts/sorttable.js' %}"></script>
 {% endblock %}
 {% block title %}{% endblock %}
 {% block side_menu %}
@@ -30,7 +31,7 @@
         </ul>
     </h3>
     <h4>Jobs in order:<br><br></h4>
-    <table class="table_list">
+    <table class="table_list sortable">
         <thead>
         <tr>
             <th>Line</th>
@@ -48,9 +49,11 @@
         {% endfor %}
         </tbody>
     </table>
-    <a href="/edit_order/{{ order_details.id }}/" type="button">Edit</a>
-    <a href="/delete_order/{{ order_details.id }}/" type="button">Delete</a>
-    <a href="{% url 'order_list' %}" type="button">Back</a>
+    <div class="buttons-container">
+        <a href="/edit_order/{{ order_details.id }}/" type="button">Edit</a>
+        <a href="/delete_order/{{ order_details.id }}/" type="button">Delete</a>
+        <a href="{% url 'order_list' %}" type="button">Back</a>
+    </div>
 </div>
 </div>
 </div>

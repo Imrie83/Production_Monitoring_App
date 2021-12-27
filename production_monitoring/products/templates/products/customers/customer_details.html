@@ -32,9 +32,11 @@
                 <td>{{ customer_detail.customer_phone }}</td>
             </tr>
         </table>
-        <a href="/edit_customer/{{ customer_detail.id }}/" type="button">Edit</a>
-        <a href="/delete_customer/{{ customer_detail.id }}/" type="button">Delete</a>
-        <a href="{% url 'customer_list' %}" type="button">Back</a>
+        <div class="buttons-container">
+            <a href="/edit_customer/{{ customer_detail.id }}/" type="button">Edit</a>
+            <a href="/delete_customer/{{ customer_detail.id }}/" type="button">Delete</a>
+            <a href="{% url 'customer_list' %}" type="button">Back</a>
+        </div>
     </div>
     </div>
 </div>
