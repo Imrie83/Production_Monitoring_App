@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from admin_app.models import DepartmentModel, EmployeeModel
 
 
+
 class UserForm(forms.ModelForm):
 
     class Meta:

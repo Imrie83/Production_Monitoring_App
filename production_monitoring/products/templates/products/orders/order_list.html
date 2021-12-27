@@ -3,6 +3,7 @@
 {% block  head %}
     <link rel='stylesheet' href="{% static "css/search_card.css" %}">
     <link rel="stylesheet" href='{% static "css/main_view_card.css" %}'>
+    <script src="{% static 'scripts/sorttable.js' %}"></script>
 {% endblock %}
 {% block title %}{% endblock %}
 {% block side_menu %}
@@ -19,11 +20,11 @@
 {% block content %}
 <div id="card-main">
     <div id="card-content-main">
-     <table class="table_list">
+     <table class="table_list sortable">
         <thead>
         <tr>
-            <td>Order No.</td>
-            <td>Customer</td>
+            <th>Order No.</th>
+            <th>Customer</th>
         </tr>
         </thead>
         <tbody>

@@ -618,13 +618,12 @@ class ProductListView(View):
     Class display a list of all
     door lines available.
     """
-
     def get(self, request):
         door_list = ProductsModel.objects.all().order_by(
-            'production_date',
             'order_num',
             'job_no',
         )
+
         return render(
             request,
             'products/doors/products_list.html',
@@ -642,7 +641,8 @@ class ProductListView(View):
                 Q(production_date__icontains=search_q) |
                 Q(delivery_address__icontains=search_q) |
                 Q(finished__icontains=search_q)
-            ).order_by('production_date', 'order_num', 'job_no')
+            ).order_by('order_num', 'job_no')
+
             return render(
                 request,
                 'products/doors/products_list.html',
@@ -659,7 +659,8 @@ class ProductDetailView(LoginRequiredMixin, View):
     redirect_field_name = 'redirect_to'
 
     def get(self, request, pk):
-        product_list = ProductsModel.objects.order_by(
+        order = OrderModel.objects.get(product=pk)
+        product_list = ProductsModel.objects.filter(order_num_id=order).order_by(
             'order_num',
             'job_no',
         )
@@ -820,6 +821,13 @@ class ScanProductionView(LoginRequiredMixin, View):
         current_employee = EmployeeModel.objects.get(user=request.user)
         user_departments = []
 
+        # TODO: add output to scanner
+        # now = datetime.now().strftime('%Y-%m-%d')
+        # my_output = UserProductModel.objects.filter(
+        #     user_id=current_employee,
+        #     prod_end__icontains=now,
+        # )
+
         for key, value in list(current_employee.section_id.values_list()):
             user_departments.append(value)
 
@@ -853,7 +861,8 @@ class ScanProductionView(LoginRequiredMixin, View):
                         'products/production/user_scanner_form.html',
                         {
                             'scan_in_form': scan_in_form,
-                            'error': 'Order Does Not Exist'
+                            'error': 'Order Does Not Exist',
+                            'my_output': my_output,
                         }
                     )
 
@@ -868,7 +877,8 @@ class ScanProductionView(LoginRequiredMixin, View):
                         'products/production/user_scanner_form.html',
                         {
                             'scan_in_form': scan_in_form,
-                            'error': 'Job Does Not Exist'
+                            'error': 'Job Does Not Exist',
+                            'my_output': my_output,
                         }
                     )
 

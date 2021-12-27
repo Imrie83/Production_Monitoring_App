@@ -37,8 +37,8 @@
 
 .Content {
   grid-area: Content;
-  border-left: 1px black solid;
-  border-right: 1px black solid;
+  /*border-left: 1px black solid;*/
+  /*border-right: 1px black solid;*/
   display: flex;
   margin: 0 10px 0 10px;
 }
@@ -105,6 +105,12 @@ html, body , .container {
   margin-left: auto;
   margin-right: auto;
 }
+.table_list tbody tr:nth-child(2n) td {
+  background: #d2d2d2;
+}
+.table_list tbody tr:nth-child(2n):hover td {
+  background: rgba(203, 203, 203, 0.25);
+}
 .title {
   margin-left: 10%;
   margin-right: auto;
@@ -122,9 +128,6 @@ li {
 .table_list{
   margin: 20px 20px 20px 20px;
 }
-.table_list tr{
-  border-bottom: solid black 1px;
-}
 .table_list tbody tr:hover{
   background: rgba(203, 203, 203, 0.25);
 }
@@ -134,7 +137,9 @@ li {
 .table_list td{
   padding: 5px 15px 5px 0;
 }
-
-/*form {*/
-/*  padding: 50px;*/
-/*}*/
+.table_list th {
+  cursor: pointer;
+}
+.table_list thead {
+  border-bottom: solid black 1px;
+}

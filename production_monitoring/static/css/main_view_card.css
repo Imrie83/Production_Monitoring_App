@@ -3,37 +3,29 @@ label {
   font-size: 11pt;
 }
 #card-main {
-  background: #fbfbfb;
+  background: #E8E8E8FF;
   border-radius: 8px;
   box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.65);
   min-width: 50%;
   max-width: 80%;
   align-self: flex-start;
 
-  /*width: 0.3fr;*/
-  /*position: fixed;*/
 }
 #card-content-main {
   padding: 20px 0 20px 0;
   display: flex;
   justify-content: center;
 }
-/*#submit-btn {*/
-/*  background: #2a5962;*/
-/*  border: none;*/
-/*  border-radius: 21px;*/
-/*  box-shadow: 0px 1px 8px #2a5962;*/
-/*  cursor: pointer;*/
-/*  color: white;*/
-/*  font-family: "Raleway SemiBold", sans-serif;*/
-/*  height: 30px;*/
-/*  margin: 20px auto 5px;*/
-/*  transition: 0.25s;*/
-/*  width: 110px;*/
-/*}*/
-/*#submit-btn:hover {*/
-/*  box-shadow: 0px 1px 18px #2a5962;*/
-/*}*/
+
+.btn-container{
+  display: flex;
+  justify-content: space-between;
+  max-width: 100%;
+}
+.btn {
+  min-width: 40%;
+}
+
 
 .table-detail {
   margin: 20px 0 20px 0;
@@ -43,33 +35,15 @@ label {
   padding: 5px 0 5px 10px;
 }
 
+.table-detail th {
+  border-right: solid black 1px;
+}
 .table-detail th{
   padding: 5px 10px 5px 0;
 }
-.table-detail tr {
-  border-bottom: black solid 1px;
-  border-top: black solid 1px;
+.table-detail tbody tr:nth-child(2n) td {
+  background: #d2d2d2;
 }
-/*.form {*/
-/*  align-items: center;*/
-/*  display: flex;*/
-/*  flex-direction: column;*/
-/*  padding: 10px;*/
-/*}*/
-/*.form-border {*/
-/*  background: #2a5962;*/
-/*  height: 1px;*/
-/*  width: 100%;*/
-/*}*/
-/*.form-content {*/
-/*  background: #fbfbfb;*/
-/*  border: none;*/
-/*  outline: none;*/
-/*  padding-top: 14px;*/
-/*}*/
-/*.underline-title {*/
-/*  background: #2a5962;*/
-/*  height: 2px;*/
-/*  margin: -1.1rem auto 0 auto;*/
-/*  width: 89px;*/
-/*}*/
+.table-detail tbody tr:nth-child(2n+1) td {
+  background: rgba(203, 203, 203, 0.25);
+}
