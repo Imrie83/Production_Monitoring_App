@@ -91,6 +91,7 @@ class PanelView(LoginRequiredMixin, View):
         )
 
 
+
 class MachineListView(View):
     """
     Class display a list of all
