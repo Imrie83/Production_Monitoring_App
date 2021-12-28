@@ -1,13 +1,16 @@
 {% extends "grid_base.html" %}
 {% load static %}
-{% block title %}{% endblock %}
+{% block head %}
+    <title>Delete Confirmation</title>
+    <meta name="description" content="Confirm deletion page.">
+{% endblock %}
 {% block side_menu %}
 
 {% endblock %}
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        <input type="submit" value="Usuń">
+        <input type="submit" value="Delete">
         <a href="{% url 'style_list' %}">Back</a>
     </form>
 {% endblock %}

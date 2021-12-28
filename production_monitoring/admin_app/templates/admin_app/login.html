@@ -1,26 +1,23 @@
 {% extends "grid_base.html" %}
 {% load static  %}
 {% block head %}
-<link rel='stylesheet' href="{% static "css/login_card.css" %}">
+    <title>Login</title>
+    <meta name="description" content="Log in page.">
 {% endblock %}
-{% block title %}{% endblock %}
+
 {% block content %}
-    <div id="card">
-        <div id="card-content">
+    <div id="login-card">
+        <div id="login-card-content">
             <div id="card-title">
                 <h2>LOGIN</h2>
                 <div class="underline-title"></div>
             </div>
-            <form method="post" class="form">
+            <form method="post" class="login-form">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <input type="submit" id="submit-btn" value="Login">
             </form>
         </div>
     </div>
-{#    <form method="post">#}
-{#        {% csrf_token %}#}
-{#        {{ form.as_p }}#}
-{#        <input type="submit" value="Login">#}
-{#    </form>#}
+
 {% endblock %}

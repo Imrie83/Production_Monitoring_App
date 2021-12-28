@@ -158,3 +158,367 @@ a[type=button]:hover {
   box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.65);
   z-index: 99;
 }
+
+/*SEARCH BAR STYLE*/
+label {
+  font-family: "Raleway", sans-serif;
+  font-size: 11pt;
+}
+#login-card {
+  background: #E8E8E8FF;
+  border-radius: 8px;
+  box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.65);
+  width: 0.3fr;
+  /*position: fixed;*/
+}
+#login-card-content {
+}
+#search-submit-btn {
+  height: 30px;
+  margin: 20px auto 5px;
+  transition: 0.25s;
+  width: 110px;
+}
+#search-submit-btn:hover {
+  box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.65);
+}
+.search-form {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+.search-form-border {
+  background: #2a5962;
+  height: 1px;
+  width: 100%;
+}
+.search-form-content {
+  background: #fbfbfb;
+  border: none;
+  outline: none;
+  padding-top: 14px;
+}
+.underline-title {
+  background: #2a5962;
+  height: 2px;
+  margin: -1.1rem auto 0 auto;
+  width: 89px;
+}
+
+
+/*LOGIN CARD STYLE*/
+label {
+  font-family: "Raleway", sans-serif;
+  font-size: 11pt;
+}
+#login-card {
+  background: #E8E8E8FF;
+  border-radius: 8px;
+  box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.65);
+  /*height: 410px;*/
+  margin: 6rem auto 8.1rem auto;
+  width: 329px;
+  align-self: center;
+}
+#login-card-content {
+  padding: 12px 44px;
+}
+#card-title {
+  font-family: "Raleway Thin", sans-serif;
+  letter-spacing: 4px;
+  padding-bottom: 23px;
+  padding-top: 13px;
+  text-align: center;
+}
+#submit-btn {
+  background: #2a5962;
+  border: none;
+  border-radius: 21px;
+  box-shadow: 0px 1px 8px #2a5962;
+  cursor: pointer;
+  color: white;
+  font-family: "Raleway SemiBold", sans-serif;
+  height: 42.3px;
+  margin: 25px auto 25px;
+  transition: 0.25s;
+  width: 153px;
+}
+#submit-btn:hover {
+  box-shadow: 0px 1px 18px #2a5962;
+}
+.login-form {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+.login-form-border {
+  background: #2a5962;
+  height: 1px;
+  width: 100%;
+}
+.login-form-content {
+  background: #fbfbfb;
+  border: none;
+  outline: none;
+  padding-top: 14px;
+}
+.underline-title {
+  background: #2a5962;
+  height: 2px;
+  margin: -1.1rem auto 0 auto;
+  width: 89px;
+}
+
+/*FORMS STYLE*/
+label {
+  font-family: "Raleway", sans-serif;
+  font-size: 11pt;
+}
+#card-form {
+  background: #E8E8E8FF;
+  border-radius: 8px;
+  box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.65);
+  width: 80%;
+  align-self: flex-start;
+}
+#card-content-form {
+  padding: 12px 44px;
+}
+.form {
+  align-items: left;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+.form-border {
+  background: #2a5962;
+  height: 1px;
+  width: 100%;
+}
+.form-content {
+  background: #fbfbfb;
+  border: none;
+  outline: none;
+  padding-top: 14px;
+}
+.underline-title {
+  background: #2a5962;
+  height: 2px;
+  margin: -1.1rem auto 0 auto;
+  width: 89px;
+}
+
+/*ADDITIONAL LIST STYLE*/
+label {
+  font-family: "Raleway", sans-serif;
+  font-size: 11pt;
+}
+#card-additional {
+  background: #E8E8E8FF;
+  border-radius: 8px;
+  box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.65);
+  /*width: 30rem;*/
+  min-width: 25rem;
+  max-width: 30rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+#card-content-additional {
+  padding: 12px 44px;
+}
+
+/*MAIN VIEW STYLE*/
+label {
+  font-family: "Raleway", sans-serif;
+  font-size: 11pt;
+}
+#card-main {
+  background: #E8E8E8FF;
+  border-radius: 8px;
+  box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.65);
+  min-width: 50%;
+  max-width: 80%;
+  align-self: flex-start;
+
+}
+#card-content-main {
+  padding: 20px 0 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-container{
+  display: flex;
+  justify-content: space-between;
+  max-width: 100%;
+}
+.btn {
+  min-width: 40%;
+}
+.btn:hover{
+  box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.65);
+}
+
+.table-detail {
+  margin: 20px 0 20px 0;
+}
+
+.table-detail td{
+  padding: 5px 0 5px 10px;
+}
+
+.table-detail th {
+  border-right: solid black 1px;
+}
+.table-detail th{
+  padding: 5px 10px 5px 0;
+}
+.table-detail tbody tr:nth-child(2n) td {
+  background: #d2d2d2;
+}
+.table-detail tbody tr:nth-child(2n+1) td {
+  background: rgba(203, 203, 203, 0.25);
+}
+
+/*MENU STYLE*/
+#menu {
+	background: #664357;
+	color: #FFF;
+	height: 45px;
+	padding-left: 18px;
+	border-radius: 0px;
+}
+#menu ul, #menu li {
+	margin: 0 auto;
+	padding: 0;
+	list-style: none
+}
+#menu ul {
+	width: 100%;
+}
+#menu li {
+	float: left;
+	display: inline;
+	position: relative;
+}
+#login {
+	float: right;
+}
+#menu a {
+	display: block;
+	line-height: 45px;
+	padding: 0 14px;
+	text-decoration: none;
+	color: #FFFFFF;
+	font-size: 16px;
+	text-transform: capitalize;
+}
+#user {
+	display: block;
+	line-height: 45px;
+	/*padding: 0 14px;*/
+	text-decoration: none;
+	color: #FFFFFF;
+	font-size: 16px;
+	text-transform: capitalize;
+}
+#menu a.dropdown-arrow:after {
+	/*content: "\23F7";*/
+	/*margin-left: 5px;*/
+}
+#menu li a:hover {
+	color: #FFFFFF;
+	background: #452D3A;
+}
+#menu input {
+	display: none;
+	margin: 0;
+	padding: 0;
+	height: 45px;
+	width: 100%;
+	opacity: 0;
+	cursor: pointer
+}
+#menu label {
+	display: none;
+	line-height: 45px;
+	text-align: center;
+	position: absolute;
+	left: 35px
+}
+#menu label:before {
+	font-size: 1.6em;
+	content: "\2261";
+	margin-left: 20px;
+}
+#menu ul.sub-menus{
+	height: auto;
+	overflow: hidden;
+	width: 170px;
+	background: #664357;
+	position: absolute;
+	z-index: 99;
+	display: none;
+}
+#menu ul.sub-menus li {
+	display: block;
+	width: 100%;
+}
+#menu ul.sub-menus a {
+	color: #FFFFFF;
+	font-size: 16px;
+}
+#menu li:hover ul.sub-menus {
+	display: block
+}
+#menu ul.sub-menus a:hover{
+	background: #452D3A;
+	color: #FFFFFF;
+}
+@media screen and (max-width: 800px){
+	#menu {
+		position:relative;
+	}
+	#menu ul {
+		background:#111;
+		position:absolute;
+		top:100%;
+		right:0;
+		left:0;
+		z-index:3;
+		height:auto;
+		display:none;
+	}
+	#menu ul.sub-menus {
+		width:100%;
+		position:static;
+	}
+	#menu ul.sub-menus a {
+		padding-left:30px;
+	}
+	#menu li {
+		display:block;
+		float:none;
+		width:auto;
+	}
+	#menu input, #menu label {
+		position:absolute;
+		top:0;
+		left:0;
+		display:block;
+	}
+	#menu input {
+		z-index:4
+	}
+	#menu input:checked + label {
+		color:white;
+	}
+	#menu input:checked + label:before {
+		content:"\00d7";
+	}
+	#menu input:checked ~ ul {
+		display:block;
+	}
+}

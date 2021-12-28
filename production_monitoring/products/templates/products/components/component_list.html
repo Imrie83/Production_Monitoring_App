@@ -1,18 +1,17 @@
 {% extends "grid_base.html" %}
 {% load static %}
 {% block  head %}
-    <link rel='stylesheet' href="{% static "css/search_card.css" %}">
-    <link rel="stylesheet" href="{% static 'css/main_view_card.css' %}">
-    <script src="{% static 'scripts/sorttable.js' %}"></script>
+    <title>Component List</title>
+    <meta name="description" content="List of all available components.">
+    <script src="{% static 'scripts/sorttable.js' %}" async></script>
 {% endblock %}
-{% block title %}{% endblock %}
 {% block side_menu %}
- <div id="card">
-    <div id="card-content">
-        <form method="post" class="form">
+ <div id="login-card">
+    <div id="login-card-content">
+        <form method="post" class="login-form">
         {% csrf_token %}
         <input id='searchbar' type="text" name="search" placeholder="search">
-        <input type="submit" value="Search" id="submit-btn">
+        <input type="submit" value="Search" id="search-submit-btn">
         </form>
     </div>
  </div>
