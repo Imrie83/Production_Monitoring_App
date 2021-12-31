@@ -9,10 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="stylesheet" href="{% static "css/alt_style.css" %}">
-    <link rel='stylesheet' href="{% static "css/menu_style.css" %}">
-    <link rel='stylesheet' href="{% static "css/additional_list_card.css" %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bullframe.css">
-    <script src='{% static "scripts/script.js" %}'></script>
+    <script src='{% static "scripts/script.js" %}' async></script>
+    <link rel="stylesheet" href="{% static "css/bullframe.css" %}">
+    <link rel="shortcut icon" type="image/svg" href="{% static 'ico/favicon.svg' %}"/>
+    <link rel="manifest" href="{% static "manifest/manifest.webmanifest" %}">
     <title>{% block title %}{% endblock title %}</title>
 
 </head>
@@ -45,7 +45,7 @@
             <li><a href="{% url 'panel' %}">Home</a></li>
             {% endif %}
               {% if perms.products.view_customermodel %}
-            <li><a class='dropdown-arrow'>Admin</a>
+            <li><a href="#" class='dropdown-arrow'>Admin</a>
               <ul class='sub-menus'>
                 <li><a href="/customer_list/">Show Customers</a></li>
                 {% if perms.products.add_customermodel %}
@@ -63,7 +63,7 @@
             </li>
               {% endif %}
             {% if perms.products.view_ordermodel %}
-            <li><a class='dropdown-arrow'>Orders</a>
+            <li><a href="#" class='dropdown-arrow'>Orders</a>
               <ul class='sub-menus'>
                 <li><a href="/order_list/">List Orders</a></li>
                 {% if perms.products.add_ordermodel %}
@@ -77,7 +77,7 @@
             </li>
             {% endif %}
             {% if perms.products.view_ordermodel %}
-            <li><a class='dropdown-arrow'>Parts</a>
+            <li><a href="#" class='dropdown-arrow'>Parts</a>
               <ul class='sub-menus'>
                 <li><a href="/component_list/">List Components</a></li>
                 {% if perms.products.add_componentmodel %}
@@ -95,7 +95,7 @@
             </li>
             {% endif %}
             {% if perms.admin_app.view_machinemodel %}
-            <li><a class='dropdown-arrow'>CNC Menu</a>
+            <li><a href="#" class='dropdown-arrow'>CNC Menu</a>
               <ul class='sub-menus'>
                 <li><a href="/machine_list/">Show Machines</a></li>
                 {% if perms.admin_app.add_machinemodel %}
@@ -109,7 +109,7 @@
             </li>
             {% endif %}
             {% if perms.admin_app.view_productsmodel %}
-            <li><a class='dropdown-arrow'>Reports</a>
+            <li><a href="#" class='dropdown-arrow'>Reports</a>
               <ul class='sub-menus'>
                 <li><a href="/today_production/">Production Output</a></li>
               </ul>
@@ -127,8 +127,6 @@
             {% if user.is_authenticated %}
                 <li style="float: right; margin-right:25px;" id="user">signed as: {{ user }}</li>
             {% endif %}
-{#            <li><a class='dropdown-arrow' href="{{request.META.HTTP_REFERER|escape}}">BACK</a>#}
-{#            </li>#}
           </ul>
         </nav>
       </div>

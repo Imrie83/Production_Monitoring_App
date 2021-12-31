@@ -1,18 +1,17 @@
 {% extends "grid_base.html" %}
 {% load static %}
 {% block  head %}
-    <link rel='stylesheet' href="{% static "css/search_card.css" %}">
-    <link rel='stylesheet' href="{% static "css/additional_list_card.css" %}">
-    <link rel="stylesheet" href='{% static "css/main_view_card.css" %}'>
+    <title>Glass Details</title>
+    <meta name="description" content="Detailed information regarding selected glass piece.">
 {% endblock %}
-{% block title %}{% endblock %}
+
 {% block side_menu %}
- <div id="card">
-    <div id="card-content">
-        <form method="post" class="form">
+ <div id="search-card">
+    <div id="search-card-content">
+        <form method="post" class="search-form">
             {% csrf_token %}
-            <input id='searchbar' type="text" name="search" placeholder="search">
-            <input type="submit" value="Search" id="submit-btn">
+            <input id='searchbar' type="text" name="search" placeholder="search glass">
+            <input type="submit" value="Search" id="search-submit-btn">
         </form>
     </div>
  </div>

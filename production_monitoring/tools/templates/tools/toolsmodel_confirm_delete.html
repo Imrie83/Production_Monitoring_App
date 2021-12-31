@@ -1,13 +1,16 @@
 {% extends "grid_base.html" %}
 {% load static %}
-{% block title %}{% endblock %}
+{% block head %}
+    <title>Confirm DELETE?</title>
+    <meta name="description" content="Tool deletion confirmation page.">
+{% endblock %}
 {% block side_menu %}
 
 {% endblock %}
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        <input type="submit" value="Usuń">
+        <input type="submit" value="Delete">
         <a href="{% url 'tools' %}" type="button">Back</a>
     </form>
 {% endblock %}

@@ -2,7 +2,7 @@ label {
   font-family: "Raleway", sans-serif;
   font-size: 11pt;
 }
-#card {
+#login-card {
   background: #E8E8E8FF;
   border-radius: 8px;
   box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.65);
@@ -11,7 +11,7 @@ label {
   width: 329px;
   align-self: center;
 }
-#card-content {
+#login-card-content {
   padding: 12px 44px;
 }
 #card-title {
@@ -37,17 +37,17 @@ label {
 #submit-btn:hover {
   box-shadow: 0px 1px 18px #2a5962;
 }
-.form {
+.login-form {
   align-items: center;
   display: flex;
   flex-direction: column;
 }
-.form-border {
+.login-form-border {
   background: #2a5962;
   height: 1px;
   width: 100%;
 }
-.form-content {
+.login-form-content {
   background: #fbfbfb;
   border: none;
   outline: none;
