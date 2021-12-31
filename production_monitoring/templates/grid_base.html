@@ -7,11 +7,13 @@
     {% endblock %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#fff">
 
     <link rel="stylesheet" href="{% static "css/alt_style.css" %}">
     <script src='{% static "scripts/script.js" %}' async></script>
     <link rel="stylesheet" href="{% static "css/bullframe.css" %}">
     <link rel="shortcut icon" type="image/svg" href="{% static 'ico/favicon.svg' %}"/>
+    <link rel="apple-touch-icon" href="{% static 'ico/favicon.svg' %}">
     <link rel="manifest" href="{% static "manifest/manifest.webmanifest" %}">
     <title>{% block title %}{% endblock title %}</title>
 
@@ -38,8 +40,9 @@
         </div>
       </div>
       <div class="Header">
-          <nav id='menu'>
-          <input type='checkbox' id='responsive-menu' onclick='updatemenu()'><label></label>
+          <nav id='menu' aria-label="Nav Menu">
+          <input type='checkbox' id='responsive-menu' onclick='updatemenu()'aria-label="Menu">
+              <label for="responsive-menu" ></label>
           <ul>
             {% if user.is_authenticated %}
             <li><a href="{% url 'panel' %}">Home</a></li>
