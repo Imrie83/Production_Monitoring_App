@@ -6,9 +6,9 @@
 {% endblock %}
 
 {% block side_menu %}
- <div id="login-card">
-    <div id="login-card-content">
-        <form method="post" class="login-form">
+ <div id="search-card">
+    <div id="search-card-content">
+        <form method="post" class="search-form">
             {% csrf_token %}
             <input id='searchbar' type="text" name="search" placeholder="search employees">
             <input type="submit" value="Search" id="search-submit-btn">
@@ -46,9 +46,9 @@
             <td>
             <ul>
                 {% for dept in employee_detail.section_id.all %}
-                    <ol>
+                    <li>
                 {{ dept.section_name }}
-                    </ol>
+                    </li>
                 {% endfor %}
            </ul>
             </td>

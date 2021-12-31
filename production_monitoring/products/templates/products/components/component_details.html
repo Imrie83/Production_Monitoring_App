@@ -6,9 +6,9 @@
 {% endblock %}
 
 {% block side_menu %}
-  <div id="login-card">
-    <div id="login-card-content">
-        <form method="post" class="login-form">
+ <div id="search-card">
+    <div id="search-card-content">
+        <form method="post" class="search-form">
         {% csrf_token %}
         <input id='searchbar' type="text" name="search" placeholder="search">
         <input type="submit" value="Search" id="search-submit-btn">
@@ -21,7 +21,7 @@
     <div id="card-content-main">
     <div class="content_div">
     <h2>Name: {{ component_details.name }}</h2>
-    <table class="table-detail">Description ▴
+    <table class="table-detail">Description
 
         <tr>
             <th>Door Type:</th>
@@ -44,7 +44,7 @@
             <td>
                 <ul>
                     {% for tool in component_details.tools_req.all %}
-                        <ol><a href="/tool_details/{{ tool.pk }}/">{{ tool.tool_name }}</a></ol>
+                        <li><a href="/tool_details/{{ tool.pk }}/">{{ tool.tool_name }}</a></li>
                     {% endfor %}
                 </ul>
             </td>

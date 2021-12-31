@@ -5,9 +5,9 @@
     <meta name="description" content="Detailed information regarding selected tool.">
 {% endblock %}
 {% block side_menu %}
-<div id="login-card">
-    <div id="login-card-content">
-        <form method="post" class="login-form">
+<div id="search-card">
+    <div id="search-card-content">
+        <form method="post" class="search-form">
             {% csrf_token %}
             <input id='searchbar' type="text" name="search" placeholder="search tools">
             <input type="submit" value="Search" id="search-submit-btn">
@@ -55,7 +55,7 @@
             </tr>
         </table>
         {% if tool_details.image.url|length > 0 %}
-        <div><img src="{{ tool_details.image.url }}" alt="{{ tool_details.tool_name }}" width="50%"></div>
+        <div><img src="{{ tool_details.image.url }}" alt="{{ tool_details.tool_name }}" width="50%" height="auto"></div>
         {% endif %}
     </div>
     </div>
