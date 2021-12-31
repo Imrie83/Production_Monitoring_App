@@ -1,7 +1,7 @@
 {
-  "name": "AccordBox",
-  "short_name": "AccordBox",
-  "description": "Webpack boilerplate for Django & Flask",
+  "name": "Production Manager",
+  "short_name": "ProdManage",
+  "description": "Production managin app",
   "dir": "auto",
   "lang": "en-US",
   "display": "standalone",
