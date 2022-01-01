@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.decorators.cache import cache_control
+from django.views.generic import TemplateView
 
 from tools.views import (
     AddToolView,
@@ -154,5 +154,5 @@ urlpatterns = [
 
     path('scan_product/', ScanProductionView.as_view(), name='scan_product'),
 
-    path('today_production/', TodayProductionView.as_view(), name='today_production')
+    path('today_production/', TodayProductionView.as_view(), name='today_production'),
 ]
